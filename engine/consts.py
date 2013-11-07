@@ -1,0 +1,1 @@
+MAX_HEALTH = 10

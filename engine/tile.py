@@ -1,0 +1,4 @@
+PLAIN = 0
+CITY = 1
+WOODS = 2
+MOUNTAIN = 3
