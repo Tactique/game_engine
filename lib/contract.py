@@ -46,10 +46,6 @@ def _accept_base_method(self_or_not, *orig_arg_types):
 
 def _assert_is_type(arg, contract_type):
     arg_type = type(arg)
-    if hasattr(types, 'InstanceType'):
-        if isinstance(arg, types.InstanceType):
-            raise ContractBrokenError(
-                'Old style classes are not supported %s' % (arg,))
     if not isinstance(arg, contract_type):
         raise ContractBrokenError(
             'Type %s does not match contract type %s' % (

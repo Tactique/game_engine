@@ -69,16 +69,6 @@ class AcceptsTest(unittest.TestCase):
         self.assertEqual(new_taker(my_new_class), my_new_class)
         self.assertRaises(contract.ContractBrokenError, new_taker, 1)
 
-    def testDoesntAcceptOldStyleClass(self):
-        class OldSchool:
-            1
-
-        @contract.accepts(OldSchool)
-        def old_school_taker(old):
-            pass
-        old = OldSchool()
-        self.assertRaises(contract.ContractBrokenError, old_school_taker, old)
-
     def testSelfAccepts(self):
         class NewStyleClass(object):
             @contract.self_accepts(int)
