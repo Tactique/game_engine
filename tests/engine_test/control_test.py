@@ -1,16 +1,16 @@
 import unittest
 
-from engine import unit, control
+from engine import unit, control, consts
 
 
 class ControlTest(unittest.TestCase):
     def oneVsOther(self, AttackUnit, DefendUnit, delta, start_damage=0):
-        attack_unit = AttackUnit()
+        attack_unit = AttackUnit(consts.RED)
         attack_unit.health -= start_damage
-        expected_attack_unit = AttackUnit()
+        expected_attack_unit = AttackUnit(consts.RED)
         expected_attack_unit.health -= start_damage
-        defend_unit = DefendUnit()
-        expected_defend_unit = DefendUnit()
+        defend_unit = DefendUnit(consts.BLUE)
+        expected_defend_unit = DefendUnit(consts.BLUE)
         expected_defend_unit.health -= delta
 
         control.DoDamage(attack_unit, defend_unit)
