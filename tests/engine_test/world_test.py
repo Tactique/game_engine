@@ -1,36 +1,36 @@
 import unittest
 
-from engine import world, player, unit, tile
+from engine import world, player, unit, tile, consts
 
 
 #TODO Add more tests here
 class WorldTest(unittest.TestCase):
     def testWorldCreate(self):
-        world_ = world.World([1, 2])
+        world_ = world.World([13, 26])
         self.assertEqual(
             world_.terrain,
             [[tile.PLAIN for i in range(10)] for i in range(10)])
-        self.assertEqual(world_.players['Red'].units, [])
-        self.assertEqual(world_.players['Red'].uid, 1)
-        self.assertEqual(world_.players['Blue'].units, [])
-        self.assertEqual(world_.players['Blue'].uid, 2)
+        self.assertEqual(world_.players[0].units, {})
+        self.assertEqual(world_.players[0].player_id, 13)
+        self.assertEqual(world_.players[1].units, {})
+        self.assertEqual(world_.players[1].player_id, 26)
 
     def testWorldAddUnit(self):
-        world_ = world.World([1, 2])
-        tank = unit.Tank()
-        world_.add_unit(1, tank)
-        self.assertEqual(world_.get_player(1).units[0], tank)
+        world_ = world.World([13, 26])
+        tank = unit.Tank(consts.RED)
+        world_.add_unit(26, tank)
+        self.assertEqual(world_.get_player(26).units[0], tank)
 
     def testWorldGetPlayer(self):
-        world_ = world.World([1, 2])
-        player1 = world_.players['Red']
-        player2 = world_.players['Blue']
-        self.assertEqual(world_.get_player(1), player1)
-        self.assertEqual(world_.get_player(2), player2)
+        world_ = world.World([13, 26])
+        player1 = world_.players[0]
+        player2 = world_.players[1]
+        self.assertEqual(world_.get_player(13), player1)
+        self.assertEqual(world_.get_player(26), player2)
         self.assertRaises(Exception, world_.get_player, 3)
 
     def testWorldJson(self):
-        test_world = world.World([1, 2])
+        test_world = world.World([13, 26])
         expected_json_piece = '[%s0]' % ('0, ' * 9)
         expected_json = '[%s%s]' % (
             (expected_json_piece + ', ') * 9, expected_json_piece)
@@ -38,8 +38,13 @@ class WorldTest(unittest.TestCase):
 
     #TODO
     def testWorldMove(self):
-        test_world = world.World([1, 2])
-        self.assertEqual(test_world.move(1, (1, 2), []), False)
+        world_ = world.World([13, 26])
+        world_.add_unit(13, unit.Tank(consts.RED))
+        self.assertEqual(world_.move_unit(13, 0, [(1, 1)]), True)
+        self.assertEqual(world_.move_unit(13, 0, [(1, 1), (2, 2)]), False)
+        self.assertEqual(
+            world_.move_unit(13, 0, [(1, 1), (1, 2), (2, 2)]),
+            True)
 
 if __name__ == '__main__':
     unittest.main()
