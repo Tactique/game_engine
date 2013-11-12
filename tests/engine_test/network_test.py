@@ -31,6 +31,7 @@ class NetworkTest(unittest.TestCase):
 
         time.sleep(.1)
 
+        resp = send_message('view')
         resp = send_message('exit')
         self.assertEqual(resp, 'exit')
 
