@@ -14,14 +14,15 @@ def listen(host, port, world_):
     sock.bind((host, port))
     sock.listen(1)
 
-    while True:
+    running = True
+    while running:
         conn, addr = sock.accept()
         request = conn.recv(1024)
         resp = respond(world_, request)
         conn.send(resp)
         conn.close()
         if 'exit' in resp:
-            break
+            running = False
 
     sock.close()
 
