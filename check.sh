@@ -10,7 +10,7 @@ function check_ok {
     fi
 }
 
-find . -name "*.py" | xargs pep8
+find . -name "*.py" | xargs pep8 --max-line-length=99
 check_ok "pep8"
 
 for package in 'lib' 'engine'; do
