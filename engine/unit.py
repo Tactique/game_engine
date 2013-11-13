@@ -13,17 +13,6 @@ class Unit(base.BaseClass):
         self.distance = distance_
         self.team = team_
 
-    @contract.returns(bool)
-    def __eq__(self, unit):
-        return (
-            type(self) == type(unit) and
-            self.health == unit.health and
-            self.attacks == unit.attacks and
-            self.armor == unit.armor and
-            self.movement == unit.movement and
-            self.distance == unit.distance and
-            self.team == self.team)
-
     def toString(self):
         return 'Health : %s\nAttacks : %s\nArmor : %s\nMovement : %s' % (
             self.health, self.attacks, self.armor, self.movement)
