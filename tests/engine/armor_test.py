@@ -32,12 +32,12 @@ class ArmorTest(unittest.TestCase):
 
     def testChangeMapSameValues(self):
         modified = armor.BodyArmor()
-        modified.armor = {attack.BULLET: 1.0, attack.CANNON: 4.0}
+        modified.dictionary = {attack.BULLET: 1.0, attack.CANNON: 4.0}
         self.assertEqual(modified, armor.BodyArmor())
 
     def testChangeMapDifferentValues(self):
         modified = armor.BodyArmor()
-        modified.armor = {attack.BULLET: 1.5, attack.CANNON: 4.0}
+        modified.dictionary = {attack.BULLET: 1.5, attack.CANNON: 4.0}
         self.assertNotEqual(modified, armor.BodyArmor())
 
 if __name__ == '__main__':
