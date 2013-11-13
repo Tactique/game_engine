@@ -2,7 +2,7 @@ import json
 
 from lib import contract
 
-from . import unit, player, tile, move
+from . import unit, player, tile, move, consts
 
 
 class World(object):
@@ -11,8 +11,9 @@ class World(object):
         self.terrain = [[tile.PLAIN for i in range(10)] for i in range(10)]
         self.players = {}
         self.current_unit_id = 0
-        for i, player_id in enumerate(player_ids):
-            self.players[i] = player.Player(player_id)
+        for team, player_id in zip(consts.TEAMS, player_ids):
+            self.players[team] = player.Player(player_id)
+        self.turn_owner = self.players[consts.RED]
 
     @contract.self_accepts(int)
     @contract.returns(player.Player)

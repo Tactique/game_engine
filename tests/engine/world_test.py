@@ -10,10 +10,11 @@ class WorldTest(unittest.TestCase):
         self.assertEqual(
             world_.terrain,
             [[tile.PLAIN for i in range(10)] for i in range(10)])
-        self.assertEqual(world_.players[0].units, {})
-        self.assertEqual(world_.players[0].player_id, 13)
-        self.assertEqual(world_.players[1].units, {})
-        self.assertEqual(world_.players[1].player_id, 26)
+        self.assertEqual(world_.players[consts.RED].units, {})
+        self.assertEqual(world_.players[consts.RED].player_id, 13)
+        self.assertEqual(world_.players[consts.BLUE].units, {})
+        self.assertEqual(world_.players[consts.BLUE].player_id, 26)
+        self.assertEqual(world_.turn_owner, world_.players[consts.RED])
 
     def testWorldAddUnit(self):
         world_ = world.World([13, 26])
@@ -23,8 +24,8 @@ class WorldTest(unittest.TestCase):
 
     def testWorldGetPlayer(self):
         world_ = world.World([13, 26])
-        player1 = world_.players[0]
-        player2 = world_.players[1]
+        player1 = world_.players[consts.RED]
+        player2 = world_.players[consts.BLUE]
         self.assertEqual(world_.get_player(13), player1)
         self.assertEqual(world_.get_player(26), player2)
         self.assertRaises(Exception, world_.get_player, 3)

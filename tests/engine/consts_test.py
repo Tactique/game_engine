@@ -12,6 +12,9 @@ class ConstsTest(unittest.TestCase):
         self.assertEqual(consts.BLUE.team_id, 1)
         self.assertEqual(consts.GREEN.team_id, 2)
         self.assertEqual(consts.YELLOW.team_id, 3)
+        self.assertEqual(
+            consts.TEAMS,
+            [consts.RED, consts.BLUE, consts.GREEN, consts.YELLOW])
 
 if __name__ == '__main__':
     unittest.main()

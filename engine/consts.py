@@ -9,3 +9,5 @@ RED = Team(0)
 BLUE = Team(1)
 GREEN = Team(2)
 YELLOW = Team(3)
+
+TEAMS = [RED, BLUE, GREEN, YELLOW]
