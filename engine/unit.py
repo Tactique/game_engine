@@ -1,11 +1,10 @@
 from lib import contract
 
-from . import consts, attack, armor, movement
+from . import consts, attack, armor, movement, base
 
 
-class Unit(object):
-    @contract.self_accepts(
-        list, armor.Armor, movement.Movement, int, consts.Team)
+class Unit(base.BaseClass):
+    @contract.self_accepts(list, armor.Armor, movement.Movement, int, consts.Team)
     def __init__(self, attacks_, armor_, movement_, distance_, team_):
         self.health = consts.MAX_HEALTH
         self.attacks = attacks_
@@ -24,10 +23,6 @@ class Unit(object):
             self.movement == unit.movement and
             self.distance == unit.distance and
             self.team == self.team)
-
-    @contract.returns(bool)
-    def __ne__(self, unit):
-        return not self.__eq__(unit)
 
     def toString(self):
         return 'Health : %s\nAttacks : %s\nArmor : %s\nMovement : %s' % (
