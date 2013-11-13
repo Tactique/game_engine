@@ -5,15 +5,22 @@ from engine import base
 
 class BaseTest(unittest.TestCase):
     def testBaseClass(self):
-        base_1 = base.BaseClass()
-        base_1.a = 1
-        base_2 = base.BaseClass()
-        base_2.a = 2
-        base_3 = base.BaseClass()
-        base_3.a = 1
-        self.assertNotEqual(base_1, base_2)
-        self.assertNotEqual(base_1, base_3)
-        self.assertEqual(base_1, base_1)
+        class SuperBase(base.BaseClass):
+            def __init__(self, a):
+                self.a = a
+
+        class OtherSuperBase(base.BaseClass):
+            def __init__(self, a):
+                self.a = a
+
+        s1 = SuperBase(1)
+        s2 = SuperBase(2)
+        s3 = SuperBase(1)
+        os1 = OtherSuperBase(1)
+        self.assertEqual(s1, s1)
+        self.assertEqual(s1, s3)
+        self.assertNotEqual(s1, s2)
+        self.assertNotEqual(s1, os1)
 
     def testBaseDictionary(self):
         class Diction(base.BaseDictionary):
