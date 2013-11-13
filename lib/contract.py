@@ -10,13 +10,10 @@ def returns(return_type):
     def _returns(orig_func):
         def helper(*args, **kwargs):
             ret = orig_func(*args, **kwargs)
+            ret_type = return_type
             if return_type is None:
-                if ret is not None:
-                    raise ContractBrokenError(
-                        'Type %s does not match contract type %s' % (
-                            type(ret), return_type))
-            else:
-                _assert_is_type(ret, return_type)
+                ret_type = types.NoneType
+            _assert_is_type(ret, ret_type)
             return ret
         return helper
     return _returns
