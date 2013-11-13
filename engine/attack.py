@@ -12,13 +12,6 @@ class Attack(base.BaseClass):
         self.power = power
         self.attackType = attackType
 
-    @contract.returns(bool)
-    def __eq__(self, attack):
-        return (
-            type(self) == type(attack) and
-            self.power == attack.power and
-            self.attackType == attack.attackType)
-
 
 class RegularCannon(Attack):
     def __init__(self):
