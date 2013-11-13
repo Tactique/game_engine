@@ -43,12 +43,12 @@ class MovementTest(unittest.TestCase):
 
     def testChangedMapDifferentValue(self):
         modified = movement.Tires()
-        modified.movement = {tile.PLAIN: 0.0}
+        modified.dictionary = {tile.PLAIN: 0.0}
         self.assertNotEqual(modified, movement.Tires())
 
     def testChangedMapSameValue(self):
         modified = movement.Tires()
-        modified.movement = {
+        modified.dictionary = {
             tile.PLAIN: 1.5,
             tile.CITY: 1.0,
             tile.WOODS: 2.0,
