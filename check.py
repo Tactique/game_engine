@@ -38,7 +38,7 @@ def coverage_module(package, module):
     cover.start()
 
     suite = unittest.defaultTestLoader.loadTestsFromName(
-        'tests.%s_test.%s_test' % (package, module,))
+        'tests.%s.%s_test' % (package, module,))
 
     unittest.runner.TextTestRunner(descriptions=True, verbosity=1).run(suite)
     cover.stop()
@@ -50,7 +50,7 @@ def coverage_module(package, module):
     '''
     command = (
         'coverage run --branch'
-        ' --source=%s.%s tests/%s_test/%s_test.py')
+        ' --source=%s.%s tests/%s/%s_test.py')
     print subprocess.check_output(
         command % (package, module, package, module),
         stderr=subprocess.STDOUT,
