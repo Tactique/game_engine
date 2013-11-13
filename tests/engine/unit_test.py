@@ -29,9 +29,6 @@ class UnitTest(unittest.TestCase):
         self.assertEqual(recon.movement, movement.Tires())
         self.assertEqual(recon.distance, 9)
 
-    def testUnitToString(self):
-        unit_repr = unit.Tank(consts.RED).toString()
-
     def testTankEqualsTank(self):
         self.assertEqual(unit.Tank(consts.RED), unit.Tank(consts.RED))
 

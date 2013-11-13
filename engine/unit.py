@@ -13,10 +13,6 @@ class Unit(base.BaseClass):
         self.distance = distance_
         self.team = team_
 
-    def toString(self):
-        return 'Health : %s\nAttacks : %s\nArmor : %s\nMovement : %s' % (
-            self.health, self.attacks, self.armor, self.movement)
-
 
 class Tank(Unit):
     def __init__(self, team_):
