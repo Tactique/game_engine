@@ -26,7 +26,6 @@ def find_all(directory, pattern):
 
 def pep8_all():
     for file_ in find_all('.', '.py'):
-        print file_
         checker = pep8.Checker(filename=file_, max_line_length=99)
         incorrect = checker.check_all()
         if incorrect != 0:
@@ -79,6 +78,7 @@ def coverage_test_all():
 def main():
     pep8_all()
     coverage_test_all()
+    print 'OK'
 
 if __name__ == '__main__':
     main()
