@@ -15,6 +15,12 @@ class BaseClass(object):
     def __ne__(self, base_class):
         return not self.__eq__(base_class)
 
+    @contract.returns(str)
+    def to_string(self):
+        retstr = ''
+        for attr in sorted(vars(self).keys()):
+            retstr += '%s:%s ' % (attr, getattr(self, attr))
+        return retstr
 
 
 class BaseDictionary(BaseClass):

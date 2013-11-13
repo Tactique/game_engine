@@ -39,5 +39,14 @@ class BaseTest(unittest.TestCase):
         self.assertEqual(all_double[0], 2.0)
         self.assertEqual(all_double[1], 2.0)
 
+    def testToStriong(self):
+        class ThreeAttrs(base.BaseClass):
+            def __init__(self):
+                self.a = 1
+                self.b = 2
+                self.c = 3
+
+        self.assertEqual(ThreeAttrs().to_string(), 'a:1 b:2 c:3 ')
+
 if __name__ == '__main__':
     unittest.main()
