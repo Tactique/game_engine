@@ -3,8 +3,7 @@ import socket
 import time
 from threading import Thread
 
-from engine import network
-from engine import world
+from engine import network, world
 
 
 class NetworkTest(unittest.TestCase):
