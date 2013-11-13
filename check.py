@@ -59,6 +59,9 @@ def coverage_module(package, module):
         'coverage report --fail-under=100 -m',
         stderr=subprocess.STDOUT,
         shell=True)
+    subprocess.check_output(
+        'coverage erase',
+        shell=True)
 
 
 def coverage_test_package(package):
