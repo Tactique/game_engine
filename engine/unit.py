@@ -1,6 +1,6 @@
 from lib import contract
 
-from . import consts, attack, armor, movement, base
+from . import consts, types, armor, movement, base, file_loader
 
 
 class Unit(base.BaseClass):
@@ -18,7 +18,7 @@ class Tank(Unit):
     def __init__(self, team_):
         Unit.__init__(
             self,
-            [attack.RegularCannon(), attack.MachineGun()],
+            [types.new_attack('RegularCannon'), types.new_attack('MachineGun')],
             armor.HeavyMetal(),
             movement.Treads(),
             7,
@@ -29,7 +29,7 @@ class Infantry(Unit):
     def __init__(self, team_):
         Unit.__init__(
             self,
-            [attack.MachineGun()],
+            [types.new_attack('MachineGun')],
             armor.BodyArmor(),
             movement.Feet(),
             3,
@@ -40,7 +40,7 @@ class Recon(Unit):
     def __init__(self, team_):
         Unit.__init__(
             self,
-            [attack.DoubleMachineGun()],
+            [types.new_attack('DoubleMachineGun')],
             armor.WeakMetal(),
             movement.Tires(),
             9,

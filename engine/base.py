@@ -6,8 +6,8 @@ class BaseClass(object):
     def __eq__(self, base_class):
         if type(self) != type(base_class):
             return False
-        for self_attr, other_attr in zip(vars(self).keys(), vars(base_class).keys()):
-            if getattr(self, self_attr) != getattr(base_class, other_attr):
+        for self_attr, other_attr in zip(vars(self).values(), vars(base_class).values()):
+            if self_attr != other_attr:
                 return False
         return True
 
