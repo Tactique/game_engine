@@ -1,0 +1,5 @@
+{
+    "name" : "RegularCannon",
+    "power" : 5,
+    "attack_type" : "cannon"
+}

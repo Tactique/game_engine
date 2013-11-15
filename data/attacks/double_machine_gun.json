@@ -1,0 +1,5 @@
+{
+    "name" : "DoubleMachineGun",
+    "power" : 10,
+    "attack_type" : "bullet"
+}
