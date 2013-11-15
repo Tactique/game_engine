@@ -1,38 +1,38 @@
 import unittest
 
-from engine import attack
+from engine import attack, types
 
 
 class AttackTest(unittest.TestCase):
     def testRegularCannon(self):
-        regular_cannon = attack.RegularCannon()
+        regular_cannon = types.new_attack('RegularCannon')
         self.assertEqual(regular_cannon.power, 5)
-        self.assertEqual(regular_cannon.attackType, attack.CANNON)
+        self.assertEqual(regular_cannon.attackType, types.attack_types['cannon'])
 
     def testMachineGun(self):
-        machine_gun = attack.MachineGun()
+        machine_gun = types.new_attack('MachineGun')
         self.assertEqual(machine_gun.power, 5)
-        self.assertEqual(machine_gun.attackType, attack.BULLET)
+        self.assertEqual(machine_gun.attackType, types.attack_types['bullet'])
 
     def testDoubleMachineGun(self):
-        double_machine_gun = attack.DoubleMachineGun()
+        double_machine_gun = types.new_attack('DoubleMachineGun')
         self.assertEqual(double_machine_gun.power, 10)
-        self.assertEqual(double_machine_gun.attackType, attack.BULLET)
+        self.assertEqual(double_machine_gun.attackType, types.attack_types['bullet'])
 
     def testRegularCannonEqualsRegularCannon(self):
-        self.assertEqual(attack.RegularCannon(), attack.RegularCannon())
+        self.assertEqual(types.new_attack('RegularCannon'), types.new_attack('RegularCannon'))
 
     def testRegularCannonDoesNotEqualModifiedRegularCannon(self):
-        modified = attack.RegularCannon()
+        modified = types.new_attack('RegularCannon')
         modified.power += 1
-        self.assertNotEqual(modified, attack.RegularCannon())
+        self.assertNotEqual(modified, types.new_attack('RegularCannon'))
 
-        modified = attack.RegularCannon()
+        modified = types.new_attack('RegularCannon')
         modified.attackType = -1
-        self.assertNotEqual(modified, attack.RegularCannon())
+        self.assertNotEqual(modified, types.new_attack('RegularCannon'))
 
     def testRegularCannonDoesNotEqualMachineGun(self):
-        self.assertNotEqual(attack.RegularCannon(), attack.MachineGun())
+        self.assertNotEqual(types.new_attack('RegularCannon'), types.new_attack('MachineGun'))
 
 if __name__ == '__main__':
     unittest.main()
