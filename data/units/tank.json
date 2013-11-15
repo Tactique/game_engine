@@ -1,0 +1,10 @@
+{
+    "name" : "Tank",
+    "attacks" : [
+        "RegularCannon",
+        "MachineGun"
+    ],
+    "armor" : "HeavyMetal",
+    "movement" : "Treads",
+    "distance" : 7
+}

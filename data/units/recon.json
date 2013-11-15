@@ -1,0 +1,9 @@
+{
+    "name" : "Recon",
+    "attacks" : [
+        "DoubleMachineGun"
+    ],
+    "armor" : "WeakMetal",
+    "movement" : "Tires",
+    "distance" : 9
+}
