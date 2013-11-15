@@ -22,6 +22,30 @@ class BaseTest(unittest.TestCase):
         self.assertNotEqual(s1, s2)
         self.assertNotEqual(s1, os1)
 
+    def testBaseEquality(self):
+        class SuperBig(base.BaseClass):
+            def __init__(self, a, b, c):
+                self.a = a
+                self.b = b
+                self.c = c
+
+        class OtherSuperBig(base.BaseClass):
+            def __init__(self, a, b, c):
+                self.a = a
+                self.b = b
+                self.c = c
+
+        s1 = SuperBig(1, 2, 3)
+        s2 = SuperBig(1, 2, 3)
+        s3 = SuperBig(2, 2, 3)
+        os1 = OtherSuperBig(1, 2, 3)
+
+        self.assertEqual(s1, s2)
+        self.assertNotEqual(s1, s3)
+        self.assertNotEqual(os1, s1)
+        self.assertNotEqual(os1, s1)
+        self.assertNotEqual(os1, s3)
+
     def testBaseDictionary(self):
         class Diction(base.BaseDictionary):
             def __init__(self):
