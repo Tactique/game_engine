@@ -24,6 +24,10 @@ class BaseClass(object):
 
 
 class BaseDictionary(BaseClass):
+    @contract.self_accepts(dict)
+    def __init__(self, dictionary):
+        self.dictionary = dictionary
+
     @contract.self_accepts(int, float)
     @contract.returns(None)
     def __setitem__(self, index, multiplier):

@@ -49,7 +49,7 @@ class BaseTest(unittest.TestCase):
     def testBaseDictionary(self):
         class Diction(base.BaseDictionary):
             def __init__(self):
-                self.dictionary = {0: 1.0, 1: 2.0}
+                base.BaseDictionary.__init__(self, {0: 1.0, 1: 2.0})
 
         regular = Diction()
         regular_2 = Diction()
