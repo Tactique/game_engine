@@ -1,0 +1,7 @@
+{
+    "name" : "WeakMetal",
+    "resists" : {
+        "bullet" : 0.5,
+        "cannon" : 2.0
+    }
+}
