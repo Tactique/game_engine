@@ -1,0 +1,9 @@
+{
+    "name" : "Feet",
+    "speeds" : {
+        "plain" : 1.0,
+        "city" : 1.0,
+        "woods" : 1.0,
+        "mountain" : 2.0
+    }
+}
