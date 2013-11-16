@@ -1,6 +1,6 @@
 import unittest
 
-from engine import attack, types
+from engine import types
 
 
 class AttackTest(unittest.TestCase):
