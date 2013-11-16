@@ -1,6 +1,6 @@
 import unittest
 
-from engine import world, player, unit, tile, consts
+from engine import world, player, consts, types
 
 
 #TODO Add more tests here
@@ -9,7 +9,7 @@ class WorldTest(unittest.TestCase):
         world_ = world.World([13, 26])
         self.assertEqual(
             world_.terrain,
-            [[tile.PLAIN for i in range(10)] for i in range(10)])
+            [[types.tiles['plain'] for i in range(10)] for i in range(10)])
         self.assertEqual(world_.players[consts.RED].units, {})
         self.assertEqual(world_.players[consts.RED].player_id, 13)
         self.assertEqual(world_.players[consts.BLUE].units, {})
@@ -18,7 +18,7 @@ class WorldTest(unittest.TestCase):
 
     def testWorldAddUnit(self):
         world_ = world.World([13, 26])
-        tank = unit.Tank(consts.RED)
+        tank = types.new_unit('Tank', consts.RED)
         world_.add_unit(26, tank)
         self.assertEqual(world_.get_player(26).units[0], tank)
 
@@ -40,7 +40,7 @@ class WorldTest(unittest.TestCase):
     #TODO
     def testWorldMove(self):
         world_ = world.World([13, 26])
-        world_.add_unit(13, unit.Tank(consts.RED))
+        world_.add_unit(13, types.new_unit('Tank', consts.RED))
         self.assertEqual(world_.move_unit(13, 0, [(1, 1)]), True)
         self.assertEqual(world_.move_unit(13, 0, [(1, 1), (2, 2)]), False)
         self.assertEqual(

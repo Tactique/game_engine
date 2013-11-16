@@ -1,28 +1,31 @@
 import unittest
 
-from engine import move, movement, tile
+from engine import move, types
 
 
 #TODO Add more tests here
 class MoveTest(unittest.TestCase):
     def testMoveSixTreadOverTwoPlain(self):
         valid = move.valid_move(
-            6, movement.Treads(), [tile.PLAIN, tile.PLAIN], [(1, 1), (1, 2)])
+            6,
+            types.new_movement('Treads'),
+            [types.tiles['plain'], types.tiles['plain']],
+            [(1, 1), (1, 2)])
         self.assertTrue(valid)
 
     def testMoveTwoTreadOverTenPlain(self):
         invalid = move.valid_move(
             2,
-            movement.Treads(),
-            [tile.PLAIN for i in range(10)],
+            types.new_movement('Treads'),
+            [types.tiles['plain'] for i in range(10)],
             [(1, x) for x in range(10)])
         self.assertFalse(invalid)
 
     def testValidMoveInvalidTiles(self):
         invalid = move.valid_move(
             2,
-            movement.Treads(),
-            [tile.PLAIN for i in range(10)],
+            types.new_movement('Treads'),
+            [types.tiles['plain'] for i in range(10)],
             [(1, x * 2) for x in range(10)])
         self.assertFalse(invalid)
 

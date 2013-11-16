@@ -1,14 +1,14 @@
 import unittest
 
-from engine import tile
+from engine import types
 
 
 class TileTest(unittest.TestCase):
     def testTile(self):
-        self.assertEqual(tile.PLAIN, 0)
-        self.assertEqual(tile.CITY, 1)
-        self.assertEqual(tile.WOODS, 2)
-        self.assertEqual(tile.MOUNTAIN, 3)
+        self.assertEqual(types.tiles['plain'], 0)
+        self.assertEqual(types.tiles['city'], 1)
+        self.assertEqual(types.tiles['woods'], 2)
+        self.assertEqual(types.tiles['mountain'], 3)
 
 if __name__ == '__main__':
     unittest.main()

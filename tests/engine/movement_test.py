@@ -1,60 +1,60 @@
 import unittest
 
-from engine import movement, tile
+from engine import types
 
 
 class MovementTest(unittest.TestCase):
     def testTreads(self):
-        treads = movement.Treads()
-        self.assertEqual(treads[tile.PLAIN], 1.0)
-        self.assertEqual(treads[tile.CITY], 1.0)
-        self.assertEqual(treads[tile.WOODS], 1.0)
-        self.assertEqual(treads[tile.MOUNTAIN], 0.0)
+        treads = types.new_movement('Treads')
+        self.assertEqual(treads[types.tiles['plain']], 1.0)
+        self.assertEqual(treads[types.tiles['city']], 1.0)
+        self.assertEqual(treads[types.tiles['woods']], 1.0)
+        self.assertEqual(treads[types.tiles['mountain']], 0.0)
 
     def testTires(self):
-        tires = movement.Tires()
-        self.assertEqual(tires[tile.PLAIN], 1.5)
-        self.assertEqual(tires[tile.CITY], 1.0)
-        self.assertEqual(tires[tile.WOODS], 2.0)
-        self.assertEqual(tires[tile.MOUNTAIN], 0.0)
+        tires = types.new_movement('Tires')
+        self.assertEqual(tires[types.tiles['plain']], 1.5)
+        self.assertEqual(tires[types.tiles['city']], 1.0)
+        self.assertEqual(tires[types.tiles['woods']], 2.0)
+        self.assertEqual(tires[types.tiles['mountain']], 0.0)
 
     def testFeet(self):
-        feet = movement.Feet()
-        self.assertEqual(feet[tile.PLAIN], 1.0)
-        self.assertEqual(feet[tile.CITY], 1.0)
-        self.assertEqual(feet[tile.WOODS], 1.0)
-        self.assertEqual(feet[tile.MOUNTAIN], 2.0)
+        feet = types.new_movement('Feet')
+        self.assertEqual(feet[types.tiles['plain']], 1.0)
+        self.assertEqual(feet[types.tiles['city']], 1.0)
+        self.assertEqual(feet[types.tiles['woods']], 1.0)
+        self.assertEqual(feet[types.tiles['mountain']], 2.0)
 
     def testAssignment(self):
-        feet = movement.Feet()
-        feet[tile.PLAIN] = 2.0
-        self.assertEqual(feet[tile.PLAIN], 2.0)
+        feet = types.new_movement('Feet')
+        feet[types.tiles['plain']] = 2.0
+        self.assertEqual(feet[types.tiles['plain']], 2.0)
 
     def testTireEqualsTire(self):
-        self.assertEqual(movement.Tires(), movement.Tires())
+        self.assertEqual(types.new_movement('Tires'), types.new_movement('Tires'))
 
     def testTireDoesNotEqualTreads(self):
-        self.assertNotEqual(movement.Treads(), movement.Tires())
+        self.assertNotEqual(types.new_movement('Treads'), types.new_movement('Tires'))
 
     def testTireDoesNotEqualModifiedTire(self):
-        modified = movement.Tires()
-        modified[tile.PLAIN] = modified[tile.PLAIN] + 1
-        self.assertNotEqual(modified, movement.Tires())
+        modified = types.new_movement('Tires')
+        modified[types.tiles['plain']] = modified[types.tiles['plain']] + 1
+        self.assertNotEqual(modified, types.new_movement('Tires'))
 
     def testChangedMapDifferentValue(self):
-        modified = movement.Tires()
-        modified.dictionary = {tile.PLAIN: 0.0}
-        self.assertNotEqual(modified, movement.Tires())
+        modified = types.new_movement('Tires')
+        modified.dictionary = {types.tiles['plain']: 0.0}
+        self.assertNotEqual(modified, types.new_movement('Tires'))
 
     def testChangedMapSameValue(self):
-        modified = movement.Tires()
+        modified = types.new_movement('Tires')
         modified.dictionary = {
-            tile.PLAIN: 1.5,
-            tile.CITY: 1.0,
-            tile.WOODS: 2.0,
-            tile.MOUNTAIN: 0.0,
+            types.tiles['plain']: 1.5,
+            types.tiles['city']: 1.0,
+            types.tiles['woods']: 2.0,
+            types.tiles['mountain']: 0.0,
         }
-        self.assertEqual(modified, movement.Tires())
+        self.assertEqual(modified, types.new_movement('Tires'))
 
 if __name__ == '__main__':
     unittest.main()
