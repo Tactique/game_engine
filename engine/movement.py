@@ -1,37 +1,25 @@
 from lib import contract
 
-from . import tile, base
+from . import base, file_loader
 
 
 class Movement(base.BaseDictionary):
     pass
 
 
-class Treads(Movement):
-    def __init__(self):
-        self.dictionary = {
-            tile.PLAIN: 1.0,
-            tile.CITY: 1.0,
-            tile.WOODS: 1.0,
-            tile.MOUNTAIN: 0.0,
-        }
+@contract.accepts(dict)
+def load_movements(tiles):
+    args = {}
+    names = []
+    for movement_ in file_loader.read_and_parse_json('movements'):
+        name = str(movement_['name'])
+        speeds = {}
+        for tile_, multiplier in movement_['speeds'].items():
+            speeds[tiles[str(tile_)]] = multiplier
+        names.append(name)
+        args[name] = speeds
 
-
-class Tires(Movement):
-    def __init__(self):
-        self.dictionary = {
-            tile.PLAIN: 1.5,
-            tile.CITY: 1.0,
-            tile.WOODS: 2.0,
-            tile.MOUNTAIN: 0.0,
-        }
-
-
-class Feet(Movement):
-    def __init__(self):
-        self.dictionary = {
-            tile.PLAIN: 1.0,
-            tile.CITY: 1.0,
-            tile.WOODS: 1.0,
-            tile.MOUNTAIN: 2.0,
-        }
+    @contract.accepts(str)
+    def movement_getter(name):
+        return Movement(dict(args[name]))
+    return movement_getter, names
