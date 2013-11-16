@@ -16,7 +16,7 @@ class BaseClass(object):
         return not self.__eq__(base_class)
 
     @contract.returns(str)
-    def to_string(self):
+    def __repr__(self):
         retstr = ''
         for attr in sorted(vars(self).keys()):
             retstr += '%s:%s ' % (attr, getattr(self, attr))

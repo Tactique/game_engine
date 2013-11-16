@@ -70,7 +70,7 @@ class BaseTest(unittest.TestCase):
                 self.b = 2
                 self.c = 3
 
-        self.assertEqual(ThreeAttrs().to_string(), 'a:1 b:2 c:3 ')
+        self.assertEqual(ThreeAttrs().__repr__(), 'a:1 b:2 c:3 ')
 
 if __name__ == '__main__':
     unittest.main()
