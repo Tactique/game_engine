@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 
 import os
-import sys
 import subprocess
-import unittest
-import coverage
+#import unittest
+#import coverage
 
 import pep8
 
@@ -66,9 +65,11 @@ def coverage_module(package, module):
 
 def coverage_test_package(package):
     def path_to_name(name):
-        return name.split('/')[-1].split('.')[0]
+        return os.path.split(name)[1].split('.')[0]
 
-    for module in functional.removed(map(path_to_name, find_all(package, '.py')), '__init__'):
+    for module in functional.removed(
+            map(path_to_name, find_all(
+                os.path.join('src', package), '.py')), '__init__'):
         print package, module
         coverage_module(package, module)
 
@@ -79,6 +80,7 @@ def coverage_test_all():
 
 
 def main():
+    os.chdir(os.environ['PORTER'])
     pep8_all()
     coverage_test_all()
     print 'OK'
