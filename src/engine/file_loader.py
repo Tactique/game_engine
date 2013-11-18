@@ -1,11 +1,6 @@
 import os
 import json
 
-'''
-data_dir = os.path.join(
-    os.path.split(
-        os.path.split(os.path.dirname(__file__))[0])[0], 'data')
-'''
 data_dir = os.path.join(os.environ['PORTER'], 'data')
 
 
