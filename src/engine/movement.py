@@ -1,13 +1,13 @@
 from lib import contract, base
 
-from . import file_loader
+from . import file_loader, tile
 
 
 class Movement(base.BaseDictionary):
     pass
 
 
-@contract.accepts(dict)
+@contract.accepts(tile.Tiles)
 def load_movements(tiles):
     args = {}
     names = []
