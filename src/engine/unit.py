@@ -22,6 +22,7 @@ def load_units(new_attack, new_armor, new_movement):
         args[name] = unit_
 
     @contract.accepts(str, consts.Team)
+    @contract.returns(Unit)
     def unit_getter(name, team_):
         unit_ = args[name]
         attacks = []
