@@ -1,6 +1,6 @@
-from lib import contract
+from lib import contract, base
 
-from . import base, file_loader
+from . import file_loader
 
 
 class Movement(base.BaseDictionary):

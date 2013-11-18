@@ -1,6 +1,6 @@
-from lib import contract
+from lib import contract, base
 
-from . import consts, armor, movement, base, file_loader
+from . import consts, armor, movement, file_loader
 
 
 class Unit(base.BaseClass):
