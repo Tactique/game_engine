@@ -23,15 +23,13 @@ def load_attack_types():
 @contract.accepts(dict)
 def load_attacks(attack_types):
     args = {}
-    names = []
     for attack_ in file_loader.read_and_parse_json('attacks'):
         name = str(attack_['name'])
         power = attack_['power']
         attack_type = attack_types[str(attack_['attack_type'])]
-        names.append(name)
         args[name] = [name, power, attack_type]
 
     @contract.accepts(str)
     def attack_getter(name):
         return Attack(*args[name])
-    return attack_getter, names
+    return attack_getter, args.keys()
