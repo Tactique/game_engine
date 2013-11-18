@@ -1,13 +1,13 @@
 from lib import contract, base
 
-from . import file_loader
+from . import attack, file_loader
 
 
 class Armor(base.BaseDictionary):
     pass
 
 
-@contract.accepts(dict)
+@contract.accepts(attack.AttackTypes)
 def load_armors(attack_types):
     args = {}
     for armor_ in file_loader.read_and_parse_json('armors'):

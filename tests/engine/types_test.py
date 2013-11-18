@@ -1,11 +1,13 @@
 import unittest
 
+from lib import base
+
 from engine import types
 
 
 class TypesTest(unittest.TestCase):
     def testAttackTypes(self):
-        self.assertIsInstance(types.attack_types, dict)
+        self.assertIsInstance(types.attack_types, base.BaseEnum)
         self.assertGreater(len(types.attack_types), 0)
         for name, value in types.attack_types.items():
             self.assertIsInstance(name, str)
