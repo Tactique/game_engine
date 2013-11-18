@@ -3,7 +3,7 @@ from lib import contract, base
 from . import attack, file_loader
 
 
-class Armor(base.BaseDictionary):
+class Armor(base.BaseMultiplier):
     pass
 
 
