@@ -20,7 +20,7 @@ def load_movements(tiles):
         args[name] = speeds
 
     @contract.accepts(str)
-	@contract.returns(Movement)
+    @contract.returns(Movement)
     def movement_getter(name):
         return Movement(dict(args[name]))
     return movement_getter, names
