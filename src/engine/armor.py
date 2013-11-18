@@ -18,6 +18,7 @@ def load_armors(attack_types):
         args[name] = resists
 
     @contract.accepts(str)
+    @contract.returns(Armor)
     def armor_getter(name):
         return Armor(dict(args[name]))
     return armor_getter, args.keys()
