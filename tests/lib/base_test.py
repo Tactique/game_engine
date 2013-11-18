@@ -62,6 +62,24 @@ class BaseTest(unittest.TestCase):
         self.assertEqual(regular[1], 2.0)
         self.assertEqual(all_double[0], 2.0)
         self.assertEqual(all_double[1], 2.0)
+        self.assertEqual(regular.items(), [(0, 1.0), (1, 2.0)])
+        self.assertEqual(len(regular), 2)
+
+    def testBaseMultiplier(self):
+        mult1 = base.BaseMultiplier({1: 1.0})
+        mult2 = base.BaseMultiplier({1: 1.0})
+        self.assertEqual(mult1, mult2)
+        self.assertEqual(mult1[1], 1.0)
+        mult2[1] = 2.0
+        self.assertEqual(mult2[1], 2.0)
+
+    def testBaseEnum(self):
+        enum1 = base.BaseEnum({'str': 2})
+        enum2 = base.BaseEnum({'str': 2})
+        self.assertEqual(enum1, enum2)
+        self.assertEqual(enum1['str'], 2)
+        enum2['str'] = 3
+        self.assertEqual(enum2['str'], 3)
 
     def testToStriong(self):
         class ThreeAttrs(base.BaseClass):

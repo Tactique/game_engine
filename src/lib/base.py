@@ -24,10 +24,39 @@ class BaseClass(object):
 
 
 class BaseDictionary(BaseClass):
-    @contract.self_accepts(dict)
-    def __init__(self, dictionary):
+    def __init__(self, dictionary={}):
         self.dictionary = dictionary
 
+    @contract.returns(None)
+    def __setitem__(self, index, multiplier):
+        self.dictionary[index] = multiplier
+
+    @contract.self_accepts(int)
+    def __getitem__(self, index):
+        return self.dictionary[index]
+
+    @contract.returns(int)
+    def __len__(self):
+        return len(self.dictionary)
+
+    @contract.returns(list)
+    def items(self):
+        return self.dictionary.items()
+
+
+class BaseEnum(BaseDictionary):
+    @contract.self_accepts(str, int)
+    @contract.returns(None)
+    def __setitem__(self, index, name):
+        self.dictionary[index] = name
+
+    @contract.self_accepts(str)
+    @contract.returns(int)
+    def __getitem__(self, index):
+        return self.dictionary[index]
+
+
+class BaseMultiplier(BaseDictionary):
     @contract.self_accepts(int, float)
     @contract.returns(None)
     def __setitem__(self, index, multiplier):
