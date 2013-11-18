@@ -34,6 +34,7 @@ def load_attacks(attack_types):
         args[name] = [name, power, attack_type]
 
     @contract.accepts(str)
+    @contract.returns(Attack)
     def attack_getter(name):
         return Attack(*args[name])
     return attack_getter, args.keys()
