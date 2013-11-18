@@ -38,14 +38,14 @@ class World(object):
     @contract.self_accepts(int, int, list)
     @contract.returns(bool)
     def move_unit(self, player_id, unit_id, move_list):
-        player_ = self.get_player(player_id)
-        unit_ = player_.get_unit(unit_id)
-
         def get_tile_from_coord(coord_tuple):
             x, y = coord_tuple
             return self.terrain[x][y]
 
+        player_ = self.get_player(player_id)
+        unit_ = player_.get_unit(unit_id)
         tiles = map(get_tile_from_coord, move_list)
+
         return move.valid_move(
             unit_.distance,
             unit_.movement,
