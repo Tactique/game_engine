@@ -1,7 +1,9 @@
+from lib import base
+
 MAX_HEALTH = 10
 
 
-class Team(object):
+class Team(base.BaseClass):
     def __init__(self, team_id):
         self.team_id = team_id
 
