@@ -85,10 +85,11 @@ class BaseTest(unittest.TestCase):
         class ThreeAttrs(base.BaseClass):
             def __init__(self):
                 self.a = 1
-                self.b = 2
-                self.c = 3
+                self.b = "2"
+                self.c = {0: 1}
 
-        self.assertEqual(ThreeAttrs().__repr__(), 'a:1 b:2 c:3 ')
+        self.assertEqual(
+            ThreeAttrs().__repr__(), '{"ThreeAttrs": {"a": 1, "b": "2", "c": {"0": 1}}}')
 
 if __name__ == '__main__':
     unittest.main()
