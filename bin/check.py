@@ -6,6 +6,7 @@ import subprocess
 import pep8
 
 from lib import functional
+from verify_data import verify_all
 
 
 def find_all(directory, pattern):
@@ -63,6 +64,7 @@ def coverage_test_all():
 
 
 def main():
+    verify_all()
     os.chdir(os.environ['PORTER'])
     pep8_all()
     coverage_test_all()
