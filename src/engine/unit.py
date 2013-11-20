@@ -16,11 +16,6 @@ class Unit(base.BaseClass):
 
 
 def load_units(new_attack, new_armor, new_movement):
-    args = {}
-    for unit_ in file_loader.read_and_parse_json('units'):
-        name = str(unit_['name'])
-        args[name] = unit_
-
     @contract.accepts(str, consts.Team)
     @contract.returns(Unit)
     def unit_getter(name, team_):
@@ -32,4 +27,6 @@ def load_units(new_attack, new_armor, new_movement):
         movement_ = new_movement(str(unit_['movement']))
         distance = unit_['distance']
         return Unit(team_, name, attacks, armor_, movement_, distance)
+
+    args = file_loader.load_struct('units')
     return unit_getter, args.keys()
