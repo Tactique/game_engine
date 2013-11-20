@@ -17,11 +17,7 @@ class Attack(base.BaseClass):
 
 @contract.returns(AttackTypes)
 def load_attack_types():
-    attack_types = AttackTypes()
-    attack_list = file_loader.read_and_parse_json('attack_types')[0]
-    for enumeration, attack_type in enumerate(attack_list):
-        attack_types[str(attack_type)] = enumeration
-    return attack_types
+    return AttackTypes(file_loader.load_enum('attack_types'))
 
 
 @contract.accepts(AttackTypes)
