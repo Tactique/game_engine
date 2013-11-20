@@ -1,9 +1,13 @@
 import os
 import json
 
+from lib import contract
+
 data_dir = os.path.join(os.environ['PORTER'], 'data')
 
 
+@contract.accepts(str)
+@contract.returns(list)
 def read_and_parse_json(data_type):
     sub_dir = os.path.join(data_dir, data_type)
 
