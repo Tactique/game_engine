@@ -1,3 +1,5 @@
+import json
+
 from lib import contract
 
 
@@ -17,10 +19,17 @@ class BaseClass(object):
 
     @contract.returns(str)
     def __repr__(self):
-        retstr = ''
+        retstr = '{"%s": {' % self.__class__.__name__
         for attr in sorted(vars(self).keys()):
-            retstr += '%s:%s ' % (attr, getattr(self, attr))
-        return retstr
+            _attr_val = getattr(self, attr)
+            if isinstance(_attr_val, str):
+                attr_val = "\"%s\"" % (_attr_val,)
+            elif isinstance(_attr_val, dict):
+                attr_val = json.dumps(_attr_val)
+            else:
+                attr_val = _attr_val
+            retstr += '"%s": %s, ' % (attr, attr_val)
+        return retstr[:-2] + "}}"
 
 
 class BaseDictionary(BaseClass):
