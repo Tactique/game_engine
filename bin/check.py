@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+# Assumes env variable 'PORTER' is set to where the 'porter' dir exists
+
 import os
 import subprocess
 
