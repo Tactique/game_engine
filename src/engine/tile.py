@@ -9,8 +9,4 @@ class Tiles(base.BaseEnum):
 
 @contract.returns(Tiles)
 def load_tiles():
-    tiles = Tiles()
-    tile_list = file_loader.read_and_parse_json('tiles')[0]
-    for enumeration, tile_ in enumerate(tile_list):
-        tiles[str(tile_)] = enumeration
-    return tiles
+    return Tiles(file_loader.load_enum('tiles'))
