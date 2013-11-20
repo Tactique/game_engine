@@ -69,9 +69,9 @@ def coverage_test_all():
 
 
 def main():
-    verify_all()
     os.chdir(os.environ['PORTER'])
     pep8_all()
+    verify_all()
     coverage_test_all()
     print 'OK'
 
