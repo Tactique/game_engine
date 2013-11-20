@@ -37,5 +37,9 @@ def coverage_test_package(package):
 
 
 def coverage_test_all():
+    os.chdir(os.environ['PORTER'])
     for package in ['lib', 'engine']:
         coverage_test_package(package)
+
+if __name__ == '__main__':
+    coverage_test_all()

@@ -10,7 +10,6 @@ from pep8_check import pep8_all
 
 
 def main():
-    os.chdir(os.environ['PORTER'])
     pep8_all()
     verify_all()
     coverage_test_all()
