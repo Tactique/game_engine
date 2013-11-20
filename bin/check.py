@@ -2,8 +2,6 @@
 
 import os
 import subprocess
-#import unittest
-#import coverage
 
 import pep8
 
@@ -32,21 +30,6 @@ def pep8_all():
 
 
 def coverage_module(package, module):
-    '''
-    cover = coverage.coverage(branch=True, timid=True, source=['%s/%s.py' % (package, module,)])
-    cover.start()
-
-    suite = unittest.defaultTestLoader.loadTestsFromName(
-        'tests.%s.%s_test' % (package, module,))
-
-    unittest.runner.TextTestRunner(descriptions=True, verbosity=1).run(suite)
-    cover.stop()
-
-    percent = cover.report()
-    print percent
-    assert(percent == 100.0)
-
-    '''
     command = (
         'coverage run --branch'
         ' --source=%s.%s tests/%s/%s_test.py')
