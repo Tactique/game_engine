@@ -27,11 +27,12 @@ def read_and_parse_json(data_type):
 @contract.accepts(str)
 @contract.returns(dict)
 def load_enum(struct_name):
-    enum_ = {}
-    list_ = read_and_parse_json(struct_name)[0]
-    for enumeration, enum_type in enumerate(list_):
-        enum_[str(enum_type)] = enumeration
-    return enum_
+    def create_enum_map(enum_map, args):
+        enumeration, enum_type = args
+        enum_map[str(enum_type)] = enumeration
+        return enum_map
+
+    return reduce(create_enum_map, enumerate(read_and_parse_json(struct_name)[0]), {})
 
 
 @contract.accepts(str)
