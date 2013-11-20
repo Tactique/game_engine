@@ -30,6 +30,7 @@ def pep8_all():
         incorrect = checker.check_all()
         if incorrect != 0:
             raise Exception("pep8 on file %s failed" % (file_,))
+        print '%s pep8 compliant' % (file_,)
 
 
 def coverage_module(package, module):
