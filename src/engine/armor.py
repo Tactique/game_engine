@@ -9,16 +9,14 @@ class Armor(base.BaseMultiplier):
 
 @contract.accepts(attack.AttackTypes)
 def load_armors(attack_types):
-    args = {}
-    for armor_ in file_loader.read_and_parse_json('armors'):
-        name = str(armor_['name'])
-        resists = {}
-        for attack_type, multiplier in armor_['resists'].items():
-            resists[attack_types[str(attack_type)]] = multiplier
-        args[name] = resists
-
     @contract.accepts(str)
     @contract.returns(Armor)
     def armor_getter(name):
-        return Armor(dict(args[name]))
+        armor_ = args[name]
+        resists = {}
+        for attack_type, multiplier in armor_['resists'].items():
+            resists[attack_types[str(attack_type)]] = multiplier
+        return Armor(resists)
+
+    args = file_loader.load_struct('armors')
     return armor_getter, args.keys()
