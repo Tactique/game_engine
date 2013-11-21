@@ -43,6 +43,10 @@ def _accept_base_method(self_or_not, *orig_arg_types):
 
 def _assert_is_type(arg, contract_type):
     arg_type = type(arg)
+    if isinstance(contract_type, list) or isinstance(contract_type, tuple):
+        for sub_arg in arg:
+            _assert_is_type(sub_arg, contract_type[0])
+        contract_type = type(contract_type)
     if not isinstance(arg, contract_type):
         raise ContractBrokenError(
             'Type %s does not match contract type %s' % (

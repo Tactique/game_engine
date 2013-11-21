@@ -78,6 +78,20 @@ class AcceptsTest(unittest.TestCase):
         new_class = NewStyleClass()
         self.assertEqual(new_class.return_input_int(1), 1)
 
+    def testAcceptsList(self):
+        @contract.accepts([int])
+        def accepts_int_list(ints):
+            return ints
+
+        self.assertEqual(accepts_int_list([1, 2, 3]), [1, 2, 3])
+
+    def testAcceptsTuple(self):
+        @contract.accepts((int,))
+        def accepts_int_tuple(ints):
+            return ints
+
+        self.assertEqual(accepts_int_tuple((1, 2, 3)), (1, 2, 3))
+
 
 class ReturnTest(unittest.TestCase):
     def testReturnsAsPromised(self):
