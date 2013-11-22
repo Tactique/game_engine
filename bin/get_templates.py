@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 
-import json
 import os
+import json
+import argparse
+
 from lib.functional import multi_map
 
 from engine import types, consts
@@ -47,10 +49,26 @@ def generate_template(new_, name, args):
                     indent=4)))
 
 
-def main():
+def generate_all_templates():
     if not os.path.exists(template_dir):
         os.mkdir(template_dir)
     multi_map(generate_template, structs)
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    subparsers = parser.add_subparsers(help='sub-command help')
+
+    delete_parser = subparsers.add_parser(
+        'delete', help='delete all template files')
+    delete_parser.set_defaults(func=delete_all_templates)
+
+    generate_parser = subparsers.add_parser(
+        'generate', help='generate all template files')
+    generate_parser.set_defaults(func=generate_all_templates)
+
+    args = parser.parse_args()
+    args.func()
 
 if __name__ == '__main__':
     main()
