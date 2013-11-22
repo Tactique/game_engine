@@ -4,7 +4,7 @@
 
 import os
 
-from verify_data import verify_all
+from data_integrity_check import verify_all
 from coverage_check import coverage_test_all
 from pep8_check import pep8_all
 
