@@ -48,7 +48,7 @@ class BaseDictionary(BaseClass):
     def __len__(self):
         return len(self.dictionary)
 
-    @contract.returns(list)
+    @contract.returns([tuple])
     def items(self):
         return self.dictionary.items()
 

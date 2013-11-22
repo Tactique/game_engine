@@ -9,7 +9,7 @@ def get_distance(first, second):
     return abs(first - second)
 
 
-@contract.accepts(list)
+@contract.accepts([(int,)])
 @contract.returns(bool)
 def assert_all_tiles_touch(move_list):
     old_x, old_y = move_list[0]
@@ -20,7 +20,7 @@ def assert_all_tiles_touch(move_list):
     return True
 
 
-@contract.accepts(int, movement.Movement, list, list)
+@contract.accepts(int, movement.Movement, [int], [(int,)])
 @contract.returns(bool)
 def valid_move(moves, movement_type, tiles, move_list):
     if not assert_all_tiles_touch(move_list):

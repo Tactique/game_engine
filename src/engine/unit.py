@@ -1,10 +1,10 @@
 from lib import contract, base
 
-from . import consts, armor, movement, file_loader
+from . import consts, attack, armor, movement, file_loader
 
 
 class Unit(base.BaseClass):
-    @contract.self_accepts(consts.Team, str, list, armor.Armor, movement.Movement, int)
+    @contract.self_accepts(consts.Team, str, [attack.Attack], armor.Armor, movement.Movement, int)
     def __init__(self, team_, name, attacks_, armor_, movement_, distance_):
         self.team = team_
         self.name = name

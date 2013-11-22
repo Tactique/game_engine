@@ -6,7 +6,7 @@ from . import unit, player, types, move, consts
 
 
 class World(object):
-    @contract.self_accepts(list)
+    @contract.self_accepts([int])
     def __init__(self, player_ids):
         self.terrain = [[types.tiles['plain'] for i in range(10)] for i in range(10)]
         self.players = {}
@@ -35,7 +35,7 @@ class World(object):
     def to_json(self):
         return json.dumps(self.terrain)
 
-    @contract.self_accepts(int, int, list)
+    @contract.self_accepts(int, int, [(int,)])
     @contract.returns(bool)
     def move_unit(self, player_id, unit_id, move_list):
         def get_tile_from_coord(coord_tuple):
