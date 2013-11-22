@@ -23,6 +23,19 @@ def without_trailing_whitespace(string):
     return '\n'.join(map(remove_trailing_whitespace, string.split('\n')))
 
 
+def delete_all_templates():
+    do_delete = raw_input('Print remove contents of %s? (y/n) ' % (template_dir,))
+    if do_delete == 'y':
+        multi_map(delete_template, structs)
+        os.rmdir(template_dir)
+    else:
+        print 'Aborting on user request'
+
+
+def delete_template(new_, name, args):
+    os.remove(os.path.join(template_dir, '%s.json' % (name,)))
+
+
 def generate_template(new_, name, args):
     with open(os.path.join(template_dir, '%s.json' % (name,)), 'w') as f:
         f.write(
