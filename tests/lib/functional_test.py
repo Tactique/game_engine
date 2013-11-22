@@ -28,5 +28,11 @@ class FunctionalTest(unittest.TestCase):
         self.assertEqual(a, [1, 2, 3, 4])
         self.assertEqual(b, [1, 2, 3, 4])
 
+    def testMultiMap(self):
+        def accepts_two(x, y):
+            return x + y
+
+        self.assertEqual(functional.multi_map(accepts_two, enumerate([10, 20, 30])), [10, 21, 32])
+
 if __name__ == '__main__':
     unittest.main()
