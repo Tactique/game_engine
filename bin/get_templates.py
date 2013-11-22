@@ -2,6 +2,7 @@
 
 import json
 import os
+from lib.functional import multi_map
 
 from engine import types, consts
 
@@ -22,8 +23,7 @@ def without_trailing_whitespace(string):
     return '\n'.join(map(remove_trailing_whitespace, string.split('\n')))
 
 
-def print_struct(args):
-    new_, name, args = args
+def generate_template(new_, name, args):
     with open(os.path.join(template_dir, '%s.json' % (name,)), 'w') as f:
         f.write(
             without_trailing_whitespace(
@@ -37,7 +37,7 @@ def print_struct(args):
 def main():
     if not os.path.exists(template_dir):
         os.mkdir(template_dir)
-    map(print_struct, structs)
+    multi_map(generate_template, structs)
 
 if __name__ == '__main__':
     main()
