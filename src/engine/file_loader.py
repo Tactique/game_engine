@@ -1,7 +1,7 @@
 import os
 import json
 
-from lib import contract
+from lib import contract, functional
 
 data_dir = os.path.join(os.environ['PORTER'], 'data')
 
@@ -27,12 +27,12 @@ def read_and_parse_json(data_type):
 @contract.accepts(str)
 @contract.returns(dict)
 def load_enum(struct_name):
-    def create_enum_map(enum_map, args):
-        enumeration, enum_type = args
+    def create_enum_map(enum_map, enumeration, enum_type):
         enum_map[str(enum_type)] = enumeration
         return enum_map
 
-    return reduce(create_enum_map, enumerate(read_and_parse_json(struct_name)[0]), {})
+    return functional.multi_reduce(
+        create_enum_map, enumerate(read_and_parse_json(struct_name)[0]), {})
 
 
 @contract.accepts(str)
