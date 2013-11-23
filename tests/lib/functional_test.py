@@ -34,5 +34,11 @@ class FunctionalTest(unittest.TestCase):
 
         self.assertEqual(functional.multi_map(accepts_two, enumerate([10, 20, 30])), [10, 21, 32])
 
+    def testMultiReduce(self):
+        def adds_x_and_y(val, x, y):
+            return val + x + y
+
+        self.assertEqual(functional.multi_reduce(adds_x_and_y, [(1, 2), (3, 4)], 0), 10)
+
 if __name__ == '__main__':
     unittest.main()
