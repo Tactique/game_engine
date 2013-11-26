@@ -1,6 +1,7 @@
 import unittest
 import socket
 import time
+import json
 from threading import Thread
 
 from engine import network, world
@@ -40,9 +41,11 @@ class NetworkTest(unittest.TestCase):
 
     def testView(self):
         resp = network.respond(self.world, 'view')
-        expected_resp_piece = '[%s0]' % ('0, ' * 9)
-        expected_resp = '[%s%s]' % (
-            (expected_resp_piece + ', ') * 9, expected_resp_piece)
+        expected_terrain_piece = '[%s0]' % ('0, ' * 9)
+        expected_terrain = '[%s%s]' % (
+            (expected_terrain_piece + ', ') * 9, expected_terrain_piece)
+        expected_resp = json.dumps(
+            json.loads('{"Red": {}, "Blue": {}, "terrain": %s}' % expected_terrain))
         self.assertEqual(resp, expected_resp)
 
     def testMove(self):

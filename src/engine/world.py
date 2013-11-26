@@ -8,7 +8,7 @@ from . import unit, player, types, move, consts
 class World(object):
     @contract.self_accepts([int])
     def __init__(self, player_ids):
-        self.terrain = [[types.tiles['plain'] for i in range(10)] for i in range(10)]
+        self.terrain = [[types.tiles['plain'] for i in range(10)] for j in range(10)]
         self.players = {}
         self.current_unit_id = 0
         for team, player_id in zip(consts.TEAMS, player_ids):
@@ -33,7 +33,12 @@ class World(object):
     @contract.self_accepts()
     @contract.returns(str)
     def to_json(self):
-        return json.dumps(self.terrain)
+        return json.dumps(
+            {
+                'Red': self.players[consts.RED].serialize(True),
+                'Blue': self.players[consts.BLUE].serialize(True),
+                'terrain': self.terrain
+            })
 
     @contract.self_accepts(int, int, [(int,)])
     @contract.returns(bool)

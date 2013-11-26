@@ -1,4 +1,6 @@
 import unittest
+#TODO Remove jsoning here
+import json
 
 from engine import world, player, consts, types
 
@@ -32,9 +34,12 @@ class WorldTest(unittest.TestCase):
 
     def testWorldJson(self):
         test_world = world.World([13, 26])
-        expected_json_piece = '[%s0]' % ('0, ' * 9)
-        expected_json = '[%s%s]' % (
-            (expected_json_piece + ', ') * 9, expected_json_piece)
+        expected_terrain_piece = '[%s0]' % ('0, ' * 9)
+        expected_terrain = '[%s%s]' % (
+            (expected_terrain_piece + ', ') * 9, expected_terrain_piece)
+        #TODO Remove dump load
+        expected_json = json.dumps(
+            json.loads('{"Red": {}, "Blue": {}, "terrain": %s}' % expected_terrain))
         self.assertEqual(test_world.to_json(), expected_json)
 
     #TODO
