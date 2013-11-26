@@ -21,3 +21,7 @@ class Player(object):
             return self.units[unit_id]
         else:
             raise Exception("Player does not have that unit id")
+
+    @contract.self_accepts(bool)
+    def serialize(self, public):
+        return {key: val.serialize(public) for key, val in self.units}

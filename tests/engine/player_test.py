@@ -23,5 +23,9 @@ class PlayerTest(unittest.TestCase):
         self.assertEqual(returned_tank, tank)
         self.assertRaises(Exception, player_.get_unit, 2)
 
+    def testPlayerSerialize(self):
+        player_ = player.Player(1)
+        self.assertEqual(player_.serialize(True), {})
+
 if __name__ == '__main__':
     unittest.main()
