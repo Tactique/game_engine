@@ -14,6 +14,14 @@ class Unit(base.BaseClass):
         self.movement = movement_
         self.distance = distance_
 
+    #TODO flesh out all stats
+    @contract.self_accepts(bool)
+    def serialize(self, public):
+        return {
+            'name': self.name,
+            'health': self.health,
+        }
+
 
 def load_units(new_attack, new_armor, new_movement):
     @contract.accepts(str, consts.Team)

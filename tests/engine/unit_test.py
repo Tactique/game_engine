@@ -46,5 +46,9 @@ class UnitTest(unittest.TestCase):
         modified.armor[0] = 1000.0
         self.assertNotEqual(modified, types.new_unit('Tank', consts.RED))
 
+    def testSerializeTank(self):
+        tank = types.new_unit('Tank', consts.RED)
+        self.assertEqual(tank.serialize(True), {'name': 'Tank', 'health': 10})
+
 if __name__ == '__main__':
     unittest.main()
