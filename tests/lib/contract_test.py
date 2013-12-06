@@ -92,6 +92,13 @@ class AcceptsTest(unittest.TestCase):
 
         self.assertEqual(accepts_int_tuple((1, 2, 3)), (1, 2, 3))
 
+    def testAcceptsDict(self):
+        @contract.accepts({str: int})
+        def accepts_str_to_int_dict(str_to_int):
+            return str_to_int
+
+        self.assertEqual(accepts_str_to_int_dict({'hi': 0, 'bye': 1}), {'hi': 0, 'bye': 1})
+
 
 class ReturnTest(unittest.TestCase):
     def testReturnsAsPromised(self):

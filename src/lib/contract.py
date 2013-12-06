@@ -47,6 +47,11 @@ def _assert_is_type(arg, contract_type):
         for sub_arg in arg:
             _assert_is_type(sub_arg, contract_type[0])
         contract_type = type(contract_type)
+    if isinstance(contract_type, dict):
+        for key, val in arg.items():
+            _assert_is_type(key, contract_type.keys()[0])
+            _assert_is_type(val, contract_type.values()[0])
+        contract_type = type(contract_type)
     if not isinstance(arg, contract_type):
         raise ContractBrokenError(
             'Type %s does not match contract type %s' % (
