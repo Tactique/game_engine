@@ -1,0 +1,5 @@
+packet_delimiter = ':'
+new = 'new'
+view = 'view'
+exit = 'exit'
+move = 'move'
