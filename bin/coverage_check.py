@@ -4,7 +4,7 @@ import os
 
 from lib import functional
 
-from util import find_all
+import util
 import notify
 
 notifier = notify.Notifier('Coverage')
@@ -33,7 +33,7 @@ def coverage_test_package(package):
         return os.path.split(name)[1].split('.')[0]
 
     for module in functional.removed(
-            map(path_to_name, find_all(
+            map(path_to_name, util.find_all(
                 os.path.join('src', package), '.py')), '__init__'):
         command = coverage_module(package, module)
         notifier.success(command)

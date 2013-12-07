@@ -4,8 +4,8 @@ import os
 
 import pep8
 
-from util import find_all
 import notify
+import util
 
 notifier = notify.Notifier('Pep8')
 
@@ -18,7 +18,7 @@ def pep8_all():
             notifier.failure(str(file_))
         notifier.success(str(file_))
 
-    map(pep8_file, find_all(os.environ['PORTER'], '.py'))
+    map(pep8_file, util.find_all(os.environ['PORTER'], '.py'))
 
 if __name__ == '__main__':
     pep8_all()
