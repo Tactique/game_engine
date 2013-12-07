@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import os
-import subprocess
 
 from lib import functional
 
@@ -11,18 +10,14 @@ from util import find_all
 def coverage_module(package, module):
     command = (
         'coverage run --branch'
-        ' --source=%s.%s tests/%s/%s_test.py')
-    print subprocess.check_output(
-        command % (package, module, package, module),
-        stderr=subprocess.STDOUT,
-        shell=True)
-    print subprocess.check_output(
-        'coverage report --fail-under=100 -m',
-        stderr=subprocess.STDOUT,
-        shell=True)
-    subprocess.check_output(
-        'coverage erase',
-        shell=True)
+        ' --source=%s.%s tests/%s/%s_test.py') % (
+        package, module, package, module)
+    out, ret = util.check_call_output(command, stderr=util.STDOUT, shell=True)
+    print out
+    out, ret = util.check_call_output(
+        'coverage report --fail-under=100 -m', stderr=util.STDOUT, shell=True)
+    print out
+    util.check_call_output('coverage erase', shell=True)
 
 
 def coverage_test_package(package):

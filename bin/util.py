@@ -1,4 +1,7 @@
 import os
+import subprocess
+
+STDOUT = subprocess.STDOUT
 
 
 def find_all(directory, pattern):
@@ -12,3 +15,10 @@ def find_all(directory, pattern):
         elif os.path.isfile(file_) and file_.endswith(pattern):
             files.append(file_)
     return files
+
+
+def check_call_output(*popenargs, **kwargs):
+    process = subprocess.Popen(stdout=subprocess.PIPE, *popenargs, **kwargs)
+    output, unused_err = process.communicate()
+    retcode = process.poll()
+    return output, retcode
