@@ -5,6 +5,9 @@ import os
 from lib import functional
 
 from util import find_all
+import notify
+
+notifier = notify.Notifier('Coverage')
 
 
 def coverage_module(package, module):
@@ -13,11 +16,16 @@ def coverage_module(package, module):
         ' --source=%s.%s tests/%s/%s_test.py') % (
         package, module, package, module)
     out, ret = util.check_call_output(command, stderr=util.STDOUT, shell=True)
-    print out
+    if ret:
+        print '`%s`' % command
+        notifier.failure(out)
     out, ret = util.check_call_output(
         'coverage report --fail-under=100 -m', stderr=util.STDOUT, shell=True)
-    print out
+    if ret:
+        print '`%s`' % command
+        notifier.failure(out)
     util.check_call_output('coverage erase', shell=True)
+    return command
 
 
 def coverage_test_package(package):
@@ -27,8 +35,8 @@ def coverage_test_package(package):
     for module in functional.removed(
             map(path_to_name, find_all(
                 os.path.join('src', package), '.py')), '__init__'):
-        print package, module
-        coverage_module(package, module)
+        command = coverage_module(package, module)
+        notifier.success(command)
 
 
 def coverage_test_all():
