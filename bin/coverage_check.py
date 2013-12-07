@@ -14,7 +14,7 @@ def coverage_module(package, module):
     command = (
         'coverage run --branch'
         ' --source=%s.%s tests/%s/%s_test.py') % (
-        package, module, package, module)
+            package, module, package, module)
     out, ret = util.check_call_output(command, stderr=util.STDOUT, shell=True)
     if ret:
         print '`%s`' % command
