@@ -10,9 +10,8 @@ def main():
             os.path.realpath(__file__)))[0]
     export_project_path = 'export PORTER=%s' % (
         project_path,)
-    export_python_path = 'export PYTHONPATH=$PYTHONPATH:%s' % (
-        os.path.join(
-            project_path, 'src'),)
+    export_python_path = 'export PYTHONPATH=$PYTHONPATH:$PORTER/%s' % (
+        'src',)
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
