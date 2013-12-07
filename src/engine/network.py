@@ -1,64 +1,47 @@
 import socket
 import string
+import threading
 
 from lib import contract
 
-from . import world
+from . import respond_handler
+
+class Connection(threading.Thread):
+    def __init__(self, conn, addr, request_handler):
+        threading.Thread.__init__(self)
+        print 'received connection'
+        self.conn = conn
+        self.addr = addr
+        self.request_handler = request_handler
+
+    def read_loop(self):
+        while True:
+            #TODO handle more than 1024
+            request = self.conn.recv(1024)
+            if not request:
+                print 'client closed socket'
+                break
+            print 'received request %s' % (request,)
+            response = self.request_handler.process(request)
+            print 'responding :', response
+            self.conn.send(response)
+
+    def run(self):
+        self.read_loop()
 
 
-@contract.accepts(str, int, world.World)
+@contract.accepts(str, int)
 @contract.returns(None)
-def listen(host, port, world_):
+def listen(host, port):
     sock = socket.socket()
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     sock.bind((host, port))
     sock.listen(1)
 
-    running = True
-    while running:
+    while True:
+        print 'listening'
         conn, addr = sock.accept()
-        request = conn.recv(1024)
-        resp = respond(world_, request)
-        conn.send(resp)
-        conn.close()
-        if 'exit' in resp:
-            running = False
+        conn = Connection(conn, addr, respond_handler.GameRequestHandler())
+        conn.start()
 
     sock.close()
-
-
-@contract.accepts(world.World, str)
-@contract.returns(str)
-def respond(world_, request):
-    request_pieces = string.split(request, ' ', maxsplit=1)
-    command = request_pieces[0]
-    if len(request_pieces) > 1:
-        params = request_pieces[1]
-    else:
-        params = ''
-    return responses[command](world_, params)
-
-
-@contract.accepts(world.World, str)
-@contract.returns(str)
-def respond_view_world(world_, args):
-    return world_.to_json()
-
-
-#TODO
-@contract.accepts(world.World, str)
-@contract.returns(str)
-def respond_move(world_, args):
-    return 'unimplemented'
-
-
-@contract.accepts(world.World, str)
-@contract.returns(str)
-def respond_exit(world_, args):
-    return 'exit'
-
-responses = {
-    'view': respond_view_world,
-    'exit': respond_exit,
-    'move': respond_move,
-}
