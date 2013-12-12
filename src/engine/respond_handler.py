@@ -1,6 +1,7 @@
 import Queue
 
-from . import EBQP
+import EBQP
+
 from . import world
 
 
