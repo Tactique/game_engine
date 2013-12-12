@@ -4,30 +4,21 @@ import threading
 
 from lib import contract
 
-from . import respond_handler
+from . import request_handler
 
-class Connection(threading.Thread):
-    def __init__(self, conn, addr, request_handler):
-        threading.Thread.__init__(self)
-        print 'received connection'
-        self.conn = conn
-        self.addr = addr
-        self.request_handler = request_handler
 
-    def read_loop(self):
-        while True:
-            #TODO handle more than 1024
-            request = self.conn.recv(1024)
-            if not request:
-                print 'client closed socket'
-                break
-            print 'received request %s' % (request,)
-            response = self.request_handler.process(request)
-            print 'responding :', response
-            self.conn.send(response)
-
-    def run(self):
-        self.read_loop()
+def connect(conn, addr, request_handler):
+    print 'received connection'
+    while True:
+        #TODO handle more than 1024
+        request = conn.recv(1024)
+        if not request:
+            print 'client closed socket'
+            break
+        print 'received request \'%s\'' % request
+        response = request_handler.process(request)
+        print 'responding : \'%s\'' % response
+        conn.send(response)
 
 
 @contract.accepts(str, int)
@@ -41,7 +32,10 @@ def listen(host, port):
     while True:
         print 'listening'
         conn, addr = sock.accept()
-        conn = Connection(conn, addr, respond_handler.GameRequestHandler())
-        conn.start()
+        thread = threading.Thread(
+            target=connect,
+            args=(conn, addr, request_handler.GameRequestHandler()))
+        thread.daemon = True
+        thread.start()
 
-    sock.close()
+    #sock.close()

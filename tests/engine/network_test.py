@@ -4,13 +4,10 @@ import time
 import json
 from threading import Thread
 
-from engine import network, world
+from engine import network
 
 
 class NetworkTest(unittest.TestCase):
-    def setUp(self):
-        self.world = world.World([1, 2])
-
     def testSocket(self):
         self.host = '127.0.0.1'
         self.port = 8080
@@ -25,35 +22,13 @@ class NetworkTest(unittest.TestCase):
 
         thread = Thread(
             target=network.listen,
-            args=(self.host, self.port, self.world))
+            args=(self.host, self.port))
         thread.daemon = True
         thread.start()
 
         time.sleep(.1)
 
-        resp = send_message('view')
-        resp = send_message('exit')
-        self.assertEqual(resp, 'exit')
-
-    def testExit(self):
-        resp = network.respond(self.world, 'exit')
-        self.assertEqual(resp, 'exit')
-
-    def testView(self):
-        resp = network.respond(self.world, 'view')
-        expected_terrain_piece = '[%s0]' % ('0, ' * 9)
-        expected_terrain = '[%s%s]' % (
-            (expected_terrain_piece + ', ') * 9, expected_terrain_piece)
-        expected_resp = json.dumps(
-            json.loads('{"Red": {}, "Blue": {}, "terrain": %s}' % expected_terrain))
-        self.assertEqual(resp, expected_resp)
-
-    def testMove(self):
-        resp = network.respond(self.world, 'move')
-        self.assertEqual(resp, 'unimplemented')
-
-        resp = network.respond(self.world, 'move asdf')
-        self.assertEqual(resp, 'unimplemented')
+        resp = send_message('new:{"uid1": 0, "uid2": 1}')
 
 if __name__ == '__main__':
     unittest.main()
