@@ -1,1 +1,3 @@
 templates/
+*.pyc
+server.log
