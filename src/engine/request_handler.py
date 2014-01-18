@@ -4,6 +4,8 @@ import json
 import EBQP
 
 from . import world
+from . import types
+from . import consts
 
 
 class GameRequestHandler:
@@ -34,6 +36,7 @@ class GameRequestHandler:
         uid1 = args['uid1']
         uid2 = args['uid2']
         self.world = world.World([uid1, uid2])
+        self.world.add_unit(uid1, types.new_unit('Tank', consts.RED))
 
         self.responses = {
             EBQP.view: self.respond_view,
