@@ -33,12 +33,16 @@ class World(object):
     @contract.self_accepts()
     @contract.returns(str)
     def to_json(self):
-        return json.dumps(
-            {
-                'Red': self.players[consts.RED].serialize(True),
-                'Blue': self.players[consts.BLUE].serialize(True),
-                'terrain': self.terrain
-            })
+        ret_json = {
+            'terrain': self.terrain
+        }
+        for player in self.players.values():
+            ret_json.update(
+                {
+                    player.player_id: player.serialize(True)
+                }
+            )
+        return json.dumps(ret_json)
 
     @contract.self_accepts(int, int, [(int,)])
     @contract.returns(bool)

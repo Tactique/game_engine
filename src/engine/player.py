@@ -24,4 +24,4 @@ class Player(object):
 
     @contract.self_accepts(bool)
     def serialize(self, public):
-        return {key: val.serialize(public) for key, val in self.units}
+        return {key: val.serialize(public) for key, val in self.units.items()}

@@ -18,8 +18,13 @@ class Unit(base.BaseClass):
     @contract.self_accepts(bool)
     def serialize(self, public):
         return {
+            'team': self.team.serialize(public),
             'name': self.name,
             'health': self.health,
+            #'attacks': self.attacks.serialize(public),
+            #'armor': self.armor.serialize(public),
+            'movement': self.movement.serialize(public),
+            'distance': self.distance,
         }
 
 

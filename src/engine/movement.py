@@ -4,7 +4,10 @@ from . import file_loader, tile
 
 
 class Movement(base.BaseDictionary):
-    pass
+    @contract.self_accepts(bool)
+    @contract.returns(dict)
+    def serialize(self, public):
+        return self.dictionary
 
 
 @contract.accepts(tile.Tiles)
