@@ -30,12 +30,8 @@ class GameRequestHandler:
             return "process:failure:unsupported command"
 
     def respond_new(self, args):
-        if 'uid1' not in args or 'uid2' not in args:
-            return 'new:failure:missing uid'
-
-        uid1 = args['uid1']
-        uid2 = args['uid2']
-        self.world = world.World([uid1, uid2])
+        uids = args['uids']
+        self.world = world.World(uids)
         self.world.add_unit(uid1, types.new_unit('Tank', consts.RED))
 
         self.responses = {
