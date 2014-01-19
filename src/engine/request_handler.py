@@ -33,7 +33,8 @@ class GameRequestHandler:
     def respond_new(self, args):
         uids = args['uids']
         self.world = world.World(uids)
-        self.world.add_unit(uids[0], types.new_unit('Tank', consts.RED, loc.Loc(3, 3)))
+        if 'debug' in args:
+            self.world.add_unit(uids[0], types.new_unit('Tank', consts.RED, loc.Loc(3, 3)))
 
         self.responses = {
             EBQP.view: self.respond_view,
