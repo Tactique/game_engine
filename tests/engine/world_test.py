@@ -2,7 +2,7 @@ import unittest
 #TODO Remove jsoning here
 import json
 
-from engine import world, player, consts, types
+from engine import world, player, consts, types, loc
 
 
 #TODO Add more tests here
@@ -20,7 +20,7 @@ class WorldTest(unittest.TestCase):
 
     def testWorldAddUnit(self):
         world_ = world.World([13, 26])
-        tank = types.new_unit('Tank', consts.RED)
+        tank = types.new_unit('Tank', consts.RED, loc.Loc(1, 1))
         world_.add_unit(26, tank)
         self.assertEqual(world_.get_player(26).units[0], tank)
 
@@ -38,14 +38,14 @@ class WorldTest(unittest.TestCase):
         expected_terrain = '[%s%s]' % (
             (expected_terrain_piece + ', ') * 9, expected_terrain_piece)
         #TODO Remove dump load
-        expected_json = json.dumps(
-            json.loads('{"Red": {}, "Blue": {}, "terrain": %s}' % expected_terrain))
-        self.assertEqual(test_world.to_json(), expected_json)
+        expected_json = json.loads(
+            '{"13": {}, "26": {}, "terrain": %s}' % expected_terrain)
+        self.assertEqual(json.loads(test_world.to_json()), expected_json)
 
     #TODO
     def testWorldMove(self):
         world_ = world.World([13, 26])
-        world_.add_unit(13, types.new_unit('Tank', consts.RED))
+        world_.add_unit(13, types.new_unit('Tank', consts.RED, loc.Loc(1, 1)))
         self.assertEqual(world_.move_unit(13, 0, [(1, 1)]), True)
         self.assertEqual(world_.move_unit(13, 0, [(1, 1), (2, 2)]), False)
         self.assertEqual(

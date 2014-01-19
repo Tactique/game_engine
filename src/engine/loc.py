@@ -3,7 +3,7 @@ from lib import contract, base
 from . import file_loader
 
 
-class Loc:
+class Loc(base.BaseClass):
     def __init__(self, x, y):
         self.x = x
         self.y = y

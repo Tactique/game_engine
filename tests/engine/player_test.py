@@ -1,6 +1,6 @@
 import unittest
 
-from engine import player, consts, types
+from engine import player, consts, types, loc
 
 
 class PlayerTest(unittest.TestCase):
@@ -11,13 +11,13 @@ class PlayerTest(unittest.TestCase):
 
     def testPlayerAddUnit(self):
         player_ = player.Player(1)
-        tank = types.new_unit('Tank', consts.RED)
+        tank = types.new_unit('Tank', consts.RED, loc.Loc(1, 1))
         player_.add_unit(tank, 1)
         self.assertEqual(player_.units, {1: tank})
 
     def testPlayerGetUnit(self):
         player_ = player.Player(1)
-        tank = types.new_unit('Tank', consts.RED)
+        tank = types.new_unit('Tank', consts.RED, loc.Loc(1, 1))
         player_.add_unit(tank, 1)
         returned_tank = player_.get_unit(1)
         self.assertEqual(returned_tank, tank)

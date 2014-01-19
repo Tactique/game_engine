@@ -28,7 +28,7 @@ class NetworkTest(unittest.TestCase):
 
         time.sleep(.1)
 
-        resp = send_message('new:{"uid1": 0, "uid2": 1}')
+        resp = send_message('new:{"uids": [0, 1]}')
 
 if __name__ == '__main__':
     unittest.main()

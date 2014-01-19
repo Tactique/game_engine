@@ -56,5 +56,11 @@ class MovementTest(unittest.TestCase):
         }
         self.assertEqual(modified, types.new_movement('Tires'))
 
+    def testSerialze(self):
+        self.assertEqual(
+            types.new_movement('Tires').serialize(True),
+            {0: 1.5, 1: 1.0, 2: 2.0, 3: 0.0}
+        )
+
 if __name__ == '__main__':
     unittest.main()

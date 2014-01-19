@@ -31,6 +31,8 @@ class GameRequestHandler:
             return "process:failure:unsupported command"
 
     def respond_new(self, args):
+        if 'uids' not in args:
+            return 'new:failure:missing uid'
         uids = args['uids']
         self.world = world.World(uids)
         if 'debug' in args:

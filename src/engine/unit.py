@@ -4,7 +4,8 @@ from . import consts, attack, armor, movement, file_loader, loc
 
 
 class Unit(base.BaseClass):
-    @contract.self_accepts(consts.Team, str, [attack.Attack], armor.Armor, movement.Movement, int, loc.Loc)
+    @contract.self_accepts(
+        consts.Team, str, [attack.Attack], armor.Armor, movement.Movement, int, loc.Loc)
     def __init__(self, team_, name, attacks_, armor_, movement_, distance_, loc):
         self.team = team_
         self.name = name

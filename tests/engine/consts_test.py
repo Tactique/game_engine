@@ -16,5 +16,11 @@ class ConstsTest(unittest.TestCase):
             consts.TEAMS,
             [consts.RED, consts.BLUE, consts.GREEN, consts.YELLOW])
 
+    def testSerialize(self):
+        self.assertEqual(consts.RED.serialize(True), 0)
+        self.assertEqual(consts.BLUE.serialize(True), 1)
+        self.assertEqual(consts.GREEN.serialize(True), 2)
+        self.assertEqual(consts.YELLOW.serialize(True), 3)
+
 if __name__ == '__main__':
     unittest.main()
