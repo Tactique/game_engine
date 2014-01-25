@@ -63,16 +63,23 @@ class World(object):
         def get_tile_from_coord(location):
             return self.terrain[location.x][location.y]
 
-        print self.units.keys()
-        print move_list[0]
+        if len(move_list) < 2:
+            print 'move:must move 2'
+            return False
         if not (move_list[0].x, move_list[0].y) in self.units.keys():
             print 'not a valid starting point'
             return False
         unit_ = self.get_unit(move_list[0])
         tiles = map(get_tile_from_coord, move_list)
 
-        return move.valid_move(
-            unit_.distance,
-            unit_.movement,
-            tiles,
-            move_list)
+        if move.valid_move(
+                unit_.distance,
+                unit_.movement,
+                tiles,
+                move_list):
+            unit_ = self.units[(move_list[0].x, move_list[0].y)]
+            self.units[(move_list[-1].x, move_list[-1].y)] = unit_
+            del self.units[(move_list[0].x, move_list[0].y)]
+            return True
+        else:
+            return False

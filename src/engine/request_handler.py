@@ -59,8 +59,6 @@ class GameRequestHandler:
                 return loc.Loc(x, y)
 
             moves = args['move']
-            if len(moves) < 2:
-                return 'move:must move 2'
             move_list = map(convert_locs, moves)
         except KeyError:
             return 'move:malformed data'

@@ -17,7 +17,7 @@ class RequestHandler(unittest.TestCase):
     def test_request_move(self):
         self.assertEqual(
             self.handler.respond_move({"move": []}),
-            'move:must move 2')
+            'move:failure')
         self.assertEqual(
             self.handler.respond_move({"move": [{"x": 1, "y": 0}, {"x": 4, "y": 3}]}),
             'move:failure')
