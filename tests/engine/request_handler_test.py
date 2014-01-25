@@ -15,7 +15,20 @@ class RequestHandler(unittest.TestCase):
 
     #TODO support move
     def test_request_move(self):
-        self.assertEqual(self.handler.respond_move({}), 'move:failure:unimplemented')
+        self.assertEqual(
+            self.handler.respond_move({"move": []}),
+            'move:must move 2')
+        self.assertEqual(
+            self.handler.respond_move({"move": [{"x": 1, "y": 0}, {"x": 4, "y": 3}]}),
+            'move:failure')
+        self.assertEqual(
+            self.handler.respond_move({"move": [{"x": 1}, {"x": 4, "y": 3}]}),
+            'move:malformed data')
+        self.handler = request_handler.GameRequestHandler()
+        self.handler.process('new:{"uids": [0, 1], "debug": 1}')
+        self.assertEqual(
+            self.handler.respond_move({"move": [{"x": 3, "y": 3}, {"x": 3, "y": 2}]}),
+            'move:success')
 
     def test_request_view(self):
         self.assertEqual(self.handler.respond_view({}).split(':')[:2], ['view', 'success'])

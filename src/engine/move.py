@@ -27,4 +27,4 @@ def valid_move(moves, movement_type, tiles, move_list):
         return False
     for tile in tiles:
         moves -= movement_type[tile]
-    return moves > 0
+    return moves >= 0

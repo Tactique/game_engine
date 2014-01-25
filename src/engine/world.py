@@ -57,12 +57,17 @@ class World(object):
         ret_json.update({"units": units})
         return json.dumps({"world": ret_json})
 
-    @contract.self_accepts(int, int, [loc.Loc])
+    @contract.self_accepts([loc.Loc])
     @contract.returns(bool)
-    def move_unit(self, player_id, unit_id, move_list):
+    def move_unit(self, move_list):
         def get_tile_from_coord(location):
             return self.terrain[location.x][location.y]
 
+        print self.units.keys()
+        print move_list[0]
+        if not (move_list[0].x, move_list[0].y) in self.units.keys():
+            print 'not a valid starting point'
+            return False
         unit_ = self.get_unit(move_list[0])
         tiles = map(get_tile_from_coord, move_list)
 

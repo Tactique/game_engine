@@ -49,6 +49,23 @@ class GameRequestHandler:
     def respond_view(self, args):
         return 'view:success:%s' % self.world.to_json()
 
-    #TODO
     def respond_move(self, args):
-        return 'move:failure:unimplemented'
+        print args
+        try:
+            def convert_locs(x_and_y):
+                print x_and_y
+                x = x_and_y['x']
+                y = x_and_y['y']
+                return loc.Loc(x, y)
+
+            moves = args['move']
+            if len(moves) < 2:
+                return 'move:must move 2'
+            move_list = map(convert_locs, moves)
+        except KeyError:
+            return 'move:malformed data'
+
+        if self.world.move_unit(move_list):
+            return 'move:success'
+        else:
+            return 'move:failure'

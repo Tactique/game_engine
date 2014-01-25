@@ -67,10 +67,11 @@ class WorldTest(unittest.TestCase):
     def testWorldMove(self):
         world_ = world.World([13, 26])
         world_.add_unit(types.new_unit('Tank', consts.RED), loc.Loc(1, 1))
-        self.assertEqual(world_.move_unit(13, 0, [loc.Loc(1, 1)]), True)
-        self.assertEqual(world_.move_unit(13, 0, [loc.Loc(1, 1), loc.Loc(2, 2)]), False)
+        self.assertEqual(world_.move_unit([loc.Loc(1, 1)]), True)
+        self.assertEqual(world_.move_unit([loc.Loc(1, 1), loc.Loc(2, 2)]), False)
+        self.assertEqual(world_.move_unit([loc.Loc(1, 4), loc.Loc(2, 2)]), False)
         self.assertEqual(
-            world_.move_unit(13, 0, [loc.Loc(1, 1), loc.Loc(1, 2), loc.Loc(2, 2)]),
+            world_.move_unit([loc.Loc(1, 1), loc.Loc(1, 2), loc.Loc(2, 2)]),
             True)
 
 if __name__ == '__main__':
