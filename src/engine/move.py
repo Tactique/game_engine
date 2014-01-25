@@ -1,6 +1,6 @@
 from lib import contract
 
-from . import movement
+from . import movement, loc
 
 
 @contract.accepts(int, int)
@@ -9,18 +9,18 @@ def get_distance(first, second):
     return abs(first - second)
 
 
-@contract.accepts([(int,)])
+@contract.accepts([loc.Loc])
 @contract.returns(bool)
 def assert_all_tiles_touch(move_list):
-    old_x, old_y = move_list[0]
-    for x, y in move_list[1:]:
-        if (get_distance(x, old_x) + get_distance(y, old_y)) != 1:
+    old_loc = move_list[0]
+    for loc_ in move_list[1:]:
+        if (get_distance(loc_.x, old_loc.x) + get_distance(loc_.y, old_loc.y)) != 1:
             return False
-        old_x, old_y = x, y
+        old_loc = loc_
     return True
 
 
-@contract.accepts(int, movement.Movement, [int], [(int,)])
+@contract.accepts(int, movement.Movement, [int], [loc.Loc])
 @contract.returns(bool)
 def valid_move(moves, movement_type, tiles, move_list):
     if not assert_all_tiles_touch(move_list):
