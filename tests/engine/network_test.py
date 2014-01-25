@@ -26,9 +26,11 @@ class NetworkTest(unittest.TestCase):
         thread.daemon = True
         thread.start()
 
-        time.sleep(1)
+        time.sleep(.1)
 
         resp = send_message('new:{"uids": [0, 1]}')
+
+        time.sleep(.1)
 
 if __name__ == '__main__':
     unittest.main()
