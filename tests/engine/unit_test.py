@@ -58,7 +58,7 @@ class UnitTest(unittest.TestCase):
                 'health': 10,
                 #'attacks': self.attacks.serialize(public),
                 #'armor': self.armor.serialize(public),
-                'movement': {0: 1.0, 1: 1.0, 2: 1.0, 3: 0.0},
+                'movement': {'speeds': {0: 1.0, 1: 1.0, 2: 1.0, 3: 0.0}, 'name': 'Treads'},
                 'distance': 7,
                 'loc': {'x': 1, 'y': 1},
             }

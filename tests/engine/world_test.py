@@ -55,7 +55,8 @@ class WorldTest(unittest.TestCase):
         player2 = '{"player": {"player_id": 26, "nation": 1, "team": 1}}'
         unit = ('{ "unit": { "nation": 0, "name": "Tank", "health": 10,'
                 '"distance": 7, "loc": { "x": 1, "y": 1 },'
-                '"movement": { "0": 1.0, "1": 1.0, "2": 1.0, "3": 0.0 } } }')
+                '"movement": { "speeds": { "0": 1.0, "1": 1.0, "2": 1.0, "3": 0.0 },'
+                '"name": "Treads" } } }')
         expected_json = json.loads(
             '{ "world": {"players": [%s, %s], "terrain": %s, "units": [%s]}}' % (
                 player1, player2, expected_terrain, unit))
