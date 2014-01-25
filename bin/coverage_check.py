@@ -13,8 +13,7 @@ notifier = notify.Notifier('Coverage')
 def coverage_module(package, module):
     command = (
         'coverage run --branch'
-        ' --source=%s.%s tests/%s/%s_test.py') % (
-            package, module, package, module)
+        ' --source=%s.%s tests/%s/%s_test.py') % (package, module, package, module)
     out, ret = util.check_call_output(command, stderr=util.STDOUT, shell=True)
     if ret:
         print '`%s`' % command
@@ -33,8 +32,8 @@ def coverage_test_package(package):
         return os.path.split(name)[1].split('.')[0]
 
     for module in functional.removed(
-            map(path_to_name, util.find_all(
-                os.path.join('src', package), '.py')), '__init__'):
+            map(path_to_name, util.find_all(os.path.join('src', package), '.py')),
+            '__init__'):
         command = coverage_module(package, module)
         notifier.success(command)
 
