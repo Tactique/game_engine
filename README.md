@@ -8,16 +8,13 @@ Setup
 
 Run
 
-    ./bin/setup.py
+    export GOPATH=$(pwd)
 
-on Linux machines running bash you can run
-
-    ./bin/setup.py -e >> ~/.bashrc
-
+    go get
 
 Test
 ====
 
 Run
 
-    ./bin/check.py
+    go run engine.go
