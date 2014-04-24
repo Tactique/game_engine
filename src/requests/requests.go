@@ -42,7 +42,7 @@ type UnitStruct struct {
 }
 
 type MovementStruct struct {
-    Name string `json:"name"`
+    Type string `json:"type"`
     Speeds map[string]float64 `json:"speeds"`
 }
 

@@ -23,6 +23,6 @@ func (movement *movement) serialize() *requests.MovementStruct {
         costs[strconv.Itoa(int(terrain))] = float64(cost)
     }
     return &requests.MovementStruct{
-        Name: movement.name,
+        Type: movement.name,
         Speeds: costs}
 }
