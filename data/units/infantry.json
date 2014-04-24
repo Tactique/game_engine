@@ -1,9 +1,0 @@
-{
-    "name" : "Infantry",
-    "attacks" : [
-        "MachineGun"
-    ],
-    "armor" : "BodyArmor",
-    "movement" : "Feet",
-    "distance" : 3
-}

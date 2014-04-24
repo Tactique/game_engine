@@ -1,7 +1,0 @@
-{
-    "name" : "HeavyMetal",
-    "resists" : {
-        "bullet" : 0.25,
-        "cannon" : 1.0
-    }
-}

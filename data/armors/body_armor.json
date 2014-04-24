@@ -1,7 +1,0 @@
-{
-    "name" : "BodyArmor",
-    "resists" : {
-        "bullet" : 1.0,
-        "cannon" : 4.0
-    }
-}
