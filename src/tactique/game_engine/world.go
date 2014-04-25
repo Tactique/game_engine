@@ -41,8 +41,7 @@ func NewGame(playerIds []int, worldId int) (*Game, error) {
 }
 
 func (game *Game) verifyTurnOwner(playerId int) error {
-    fmt.Println(game.players[game.turnOwner].playerId)
-    if playerId == game.players[game.turnOwner].playerId {
+    if playerId != game.players[game.turnOwner].playerId {
         return errors.New("Not the turn owner")
     }
     return nil
@@ -142,5 +141,5 @@ func (game *Game) Serialize(playerId int) ([]byte, error) {
         Terrain: terrainInts,
         Units: units,
         Players: players,
-        TurnOwner: 0})
+        TurnOwner: game.players[game.turnOwner].playerId})
 }
