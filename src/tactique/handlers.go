@@ -30,8 +30,7 @@ func viewCommand(jsonRequest string, playerId int, game *game_engine.Game) (stri
     if err != nil {
         return "", err
     }
-    // TODO Check player owner
-    bytestring, err := game.Serialize()
+    bytestring, err := game.Serialize(playerId)
     if err != nil {
         return "", err
     }
@@ -44,7 +43,7 @@ func moveCommand(jsonRequest string, playerId int, game *game_engine.Game) (stri
     if err != nil {
         return "", err
     }
-    moveErr := game.MoveUnit(request.Move)
+    moveErr := game.MoveUnit(playerId, request.Move)
     if moveErr != nil {
         return "move:failure:" + moveErr.Error(), nil
     } else {
@@ -58,8 +57,7 @@ func endTurnCommand(jsonRequest string, playerId int, game *game_engine.Game) (s
     if err != nil {
         return "", err
     }
-    // TODO Check player owner
-    moveErr := game.EndTurn()
+    moveErr := game.EndTurn(playerId)
     if moveErr != nil {
         return "end:failure:" + moveErr.Error(), nil
     } else {

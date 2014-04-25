@@ -40,6 +40,14 @@ func NewGame(playerIds []int, worldId int) (*Game, error) {
     return ret_game, nil
 }
 
+func (game *Game) verifyTurnOwner(playerId int) error {
+    fmt.Println(game.players[game.turnOwner].playerId)
+    if playerId == game.players[game.turnOwner].playerId {
+        return errors.New("Not the turn owner")
+    }
+    return nil
+}
+
 func (game *Game) AddUnit(location location, unit *unit) error {
     fmt.Println("adding unit")
     _, ok := game.unitMap[location]; if !ok {
@@ -52,7 +60,11 @@ func (game *Game) AddUnit(location location, unit *unit) error {
     }
 }
 
-func (game *Game) EndTurn() error {
+func (game *Game) EndTurn(playerId int) error {
+    ownerError := game.verifyTurnOwner(playerId)
+    if ownerError != nil {
+        return ownerError
+    }
     nextOwner := game.turnOwner + 1
     if nextOwner >= game.numPlayers {
         game.turnOwner = 0
@@ -62,7 +74,11 @@ func (game *Game) EndTurn() error {
     return nil
 }
 
-func (game *Game) MoveUnit(rawLocations []requests.LocationStruct) error {
+func (game *Game) MoveUnit(playerId int, rawLocations []requests.LocationStruct) error {
+    ownerError := game.verifyTurnOwner(playerId)
+    if ownerError != nil {
+        return ownerError
+    }
     locations := make([]location, len(rawLocations))
     for i, location := range(rawLocations) {
         locations[i] = newLocation(location.X, location.Y)
@@ -103,7 +119,7 @@ func (game *Game) MoveUnit(rawLocations []requests.LocationStruct) error {
     }
 }
 
-func (game *Game) Serialize() ([]byte, error) {
+func (game *Game) Serialize(playerId int) ([]byte, error) {
     players := make([]*requests.PlayerStruct, len(game.players))
     for i, player := range(game.players) {
         players[i] = player.serialize()
