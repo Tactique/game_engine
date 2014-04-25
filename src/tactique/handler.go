@@ -54,5 +54,11 @@ func (handler *requestHandler) handleRequest(request string) (string, error) {
 
 func splitOnce(inputString string) (string, string) {
     pieces := strings.SplitN(inputString, ":", 2)
-    return pieces[0], pieces[1]
+    if len(pieces) == 1 {
+        return pieces[0], ""
+    } else if len(pieces) == 2 {
+        return pieces[0], pieces[1]
+    } else {
+        return "", ""
+    }
 }
