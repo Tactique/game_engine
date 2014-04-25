@@ -14,7 +14,7 @@ func newCommand(jsonRequest string) (string, *game_engine.Game, error) {
     var request requests.NewCommandRequest
     err := json.Unmarshal([]byte(jsonRequest), &request)
     if err != nil {
-        return "malformed new game", nil, err
+        return "", nil, err
     }
     game, err := game_engine.NewGame(request.Uids, 1)
     if err != nil {
