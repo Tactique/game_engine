@@ -1,9 +1,9 @@
-package tactique
+package engine
 
 import (
     "encoding/json"
     "requests"
-    "tactique/game_engine"
+    "engine/game_engine"
 )
 
 func handleCommand(jsonRequest string, request interface{}) (string, error) {

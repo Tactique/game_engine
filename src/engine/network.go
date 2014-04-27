@@ -1,4 +1,4 @@
-package tactique
+package engine
 
 import (
     "net"

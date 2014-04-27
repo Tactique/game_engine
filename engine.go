@@ -4,7 +4,7 @@ import (
     "fmt"
     "os"
     "strconv"
-    "tactique"
+    "engine"
 )
 
 func main() {
@@ -17,5 +17,5 @@ func main() {
         port = param_port
     }
     fmt.Printf("Starting Tactique on port %d!\n", port)
-    tactique.ListenForever(port)
+    engine.ListenForever(port)
 }

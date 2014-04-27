@@ -1,9 +1,9 @@
-package tactique
+package engine
 
 import (
     "strconv"
     "strings"
-    "tactique/game_engine"
+    "engine/game_engine"
 )
 
 type requestHandler struct {
