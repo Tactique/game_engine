@@ -4,7 +4,7 @@ import (
     "testing"
 )
 
-func TestNewWorld(t *testing.T) {
+func TestNewGame(t *testing.T) {
     world, err := NewGame([]int{26, 13}, 1)
     if err != nil {
         t.Fatalf("Problem building world %s", err)
