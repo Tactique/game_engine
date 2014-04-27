@@ -19,7 +19,8 @@ func assertAllTilesTouch(locations []location) error {
         if (getDistance(loc.x, oldLoc.x) + getDistance(loc.y, oldLoc.y)) != 1 {
             fmt.Println("Two units too far away: ")
             return errors.New(fmt.Sprintf(
-                "Two units too far away (%d, %d) (%d, %d)", loc.x, oldLoc.x, loc.y, oldLoc.y))
+                "Two units too far away (%d, %d) (%d, %d)",
+                loc.x, oldLoc.x, loc.y, oldLoc.y))
         }
         oldLoc = loc
     }
