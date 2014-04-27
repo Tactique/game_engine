@@ -36,7 +36,9 @@ func NewGame(playerIds []int, worldId int) (*Game, error) {
         players: players,
         numPlayers: numPlayers,
         turnOwner: 0}
-    ret_game.AddUnit(newLocation(0, 0), tank(red))
+    if worldId == 0 {
+        ret_game.AddUnit(newLocation(0, 0), tank(red))
+    }
     return ret_game, nil
 }
 
@@ -98,9 +100,7 @@ func (game *Game) MoveUnit(playerId int, rawLocations []requests.LocationStruct)
     unit, ok := game.unitMap[locations[0]]; if ok {
         moveErr := validMove(
             unit.movement.distance,
-            unit.movement,
-            tiles,
-            locations)
+            unit.movement, tiles, locations)
         if moveErr == nil {
             end := len(locations)
             unit = game.unitMap[newLocation(locations[0].x, locations[0].y)]
