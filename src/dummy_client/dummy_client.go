@@ -31,6 +31,13 @@ func (dummy Client) Move() (string, error) {
             requests.LocationStruct{X: 0, Y: 1}}})
 }
 
+func (dummy Client) Attack() (string, error) {
+    return dummy.send("attack:26", &requests.AttackCommandRequest{
+        Attacker: requests.LocationStruct{X: 0, Y: 0},
+        AttackIndex: 0,
+        Target: requests.LocationStruct{X: 0, Y: 1}})
+}
+
 func (dummy Client) Turn() (string, error) {
     return dummy.send("turn:26", &requests.EndTurnCommandRequest{PlayerId: 26})
 }

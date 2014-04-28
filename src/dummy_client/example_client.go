@@ -31,6 +31,16 @@ func ExampleTestRun() {
         panic(err)
     }
     fmt.Println(message)
+    message, err = proxy.Attack()
+    if err != nil {
+        panic(err)
+    }
+    fmt.Println(message)
+    message, err = proxy.View()
+    if err != nil {
+        panic(err)
+    }
+    fmt.Println(message)
     message, err = proxy.Turn()
     if err != nil {
         panic(err)
