@@ -132,15 +132,9 @@ func (game *Game) verifyValidMove(player *player, locations []location) error {
         if unit.nation == player.nation {
             return errors.New("Unit is not owned by the current player")
         }
-        moveErr := validMove(
+        return validMove(
             unit.movement.distance,
             unit.movement, tiles, locations)
-        if moveErr == nil {
-            return nil
-        } else {
-            fmt.Println(moveErr)
-            return moveErr
-        }
     } else {
         message := "Invalid starting location"
         fmt.Println(message)
