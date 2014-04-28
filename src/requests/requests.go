@@ -40,6 +40,7 @@ type UnitStruct struct {
     Movement *MovementStruct `json:"movement"`
     Position *LocationStruct `json:"position"`
     Distance int `json:"distance"`
+    CanMove bool `json:"canMove"`
 }
 
 type MovementStruct struct {

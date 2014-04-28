@@ -119,7 +119,7 @@ func (game *Game) verifyValidMove(player *player, locations []location) error {
         return ownerError
     }
     if len(locations) < 1 {
-        message := "must supply more than zero  locations"
+        message := "must supply more than zero locations"
         fmt.Println(message)
         return errors.New(message)
     }
@@ -150,15 +150,25 @@ func (game *Game) verifyValidMove(player *player, locations []location) error {
 func (game *Game) verifiedMoveUnit(locations []location) error {
     end := len(locations)
     unit := game.unitMap[newLocation(locations[0].x, locations[0].y)]
+    unit.canMove = false
     game.unitMap[newLocation(locations[end-1].x, locations[end-1].y)] = unit
     delete(game.unitMap, newLocation(locations[0].x, locations[0].y))
     return nil
 }
 
 func (game *Game) EndTurn(playerId int) error {
+    player, err := game.getPlayer(playerId)
+    if err != nil {
+        return err
+    }
     ownerError := game.verifyTurnOwner(playerId)
     if ownerError != nil {
         return ownerError
+    }
+    for _, unit := range(game.unitMap) {
+        if unit.nation == player.nation {
+            unit.canMove = true
+        }
     }
     nextOwner := game.turnOwner + 1
     if nextOwner >= game.numPlayers {

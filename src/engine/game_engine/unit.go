@@ -9,10 +9,11 @@ type unit struct {
     health int
     nation nation
     movement *movement
+    canMove bool
 }
 
 func newUnit(name string, nation nation, movement *movement) *unit {
-    return &unit{name: name, health: 10, nation: nation, movement: movement}
+    return &unit{name: name, health: 10, nation: nation, movement: movement, canMove: true}
 }
 
 func tank(nation nation) *unit {
@@ -33,5 +34,6 @@ func (unit *unit) serialize(loc location) *requests.UnitStruct {
         Nation: int(unit.nation),
         Movement: unit.movement.serialize(),
         Position: loc.serialize(),
-        Distance: unit.movement.distance}
+        Distance: unit.movement.distance,
+        CanMove: unit.canMove}
 }
