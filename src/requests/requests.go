@@ -12,6 +12,12 @@ type MoveCommandRequest struct {
     Move []LocationStruct `json:"move"`
 }
 
+type AttackCommandRequest struct {
+    Attacker LocationStruct `json:"unit"`
+    AttackIndex int `json:"attackIndex"`
+    Target LocationStruct `json:"unit"`
+}
+
 type EndTurnCommandRequest struct {
     PlayerId int `json:"playerId"`
 }
@@ -41,6 +47,14 @@ type UnitStruct struct {
     Position *LocationStruct `json:"position"`
     Distance int `json:"distance"`
     CanMove bool `json:"canMove"`
+    Attacks []*AttackStruct `json:"attacks"`
+    CanAttack bool `json:"canAttack"`
+}
+
+type AttackStruct struct {
+    Name string `json:"name"`
+    AttackType int `json:"attackType"`
+    Power int `json:"power"`
 }
 
 type MovementStruct struct {

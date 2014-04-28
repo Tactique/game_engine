@@ -10,10 +10,15 @@ type unit struct {
     nation nation
     movement *movement
     canMove bool
+    attacks []*attack
+    canAttack bool
 }
 
-func newUnit(name string, nation nation, movement *movement) *unit {
-    return &unit{name: name, health: 10, nation: nation, movement: movement, canMove: true}
+func newUnit(name string, nation nation, movement *movement, attacks []*attack) *unit {
+    return &unit{
+        name: name, health: 10, nation: nation,
+        movement: movement, canMove: true,
+        attacks: attacks, canAttack: true}
 }
 
 func tank(nation nation) *unit {
@@ -28,6 +33,10 @@ func tank(nation nation) *unit {
 }
 
 func (unit *unit) serialize(loc location) *requests.UnitStruct {
+    attacks := make([]*requests.AttackStruct, len(unit.attacks))
+    for i, attack := range(unit.attacks) {
+        attacks[i] = attack.serialize()
+    }
     return &requests.UnitStruct{
         Name: unit.name,
         Health: unit.health,
@@ -35,5 +44,12 @@ func (unit *unit) serialize(loc location) *requests.UnitStruct {
         Movement: unit.movement.serialize(),
         Position: loc.serialize(),
         Distance: unit.movement.distance,
-        CanMove: unit.canMove}
+        CanMove: unit.canMove,
+        CanAttack: unit.canAttack,
+        Attacks: attacks}
+}
+
+func (unit *unit) turnReset() {
+    unit.canMove = true
+    unit.canAttack = true
 }

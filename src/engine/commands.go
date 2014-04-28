@@ -51,6 +51,20 @@ func moveCommand(jsonRequest string, playerId int, game *game_engine.Game) (stri
     }
 }
 
+func attackCommand(jsonRequest string, playerId int, game *game_engine.Game) (string, error) {
+    var request requests.AttackCommandRequest
+    err := json.Unmarshal([]byte(jsonRequest), &request)
+    if err != nil {
+        return "", err
+    }
+    moveErr := game.Attack(playerId, request.Attacker, request.AttackIndex, request.Target)
+    if moveErr != nil {
+        return "attack:failure:" + moveErr.Error(), nil
+    } else {
+        return "attack:success", nil
+    }
+}
+
 func endTurnCommand(jsonRequest string, playerId int, game *game_engine.Game) (string, error) {
     var request requests.MoveCommandRequest
     err := json.Unmarshal([]byte(jsonRequest), &request)

@@ -21,6 +21,7 @@ func newRequestHandler() *requestHandler {
             "exit": exitCommand,
             "move": moveCommand,
             "turn": endTurnCommand,
+            "attack": attackCommand,
             "view": viewCommand}}
 }
 

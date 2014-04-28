@@ -37,7 +37,8 @@ func NewGame(playerIds []int, worldId int) (*Game, error) {
         numPlayers: numPlayers,
         turnOwner: 0}
     if worldId == 0 {
-        ret_game.AddUnit(newLocation(0, 0), tank(red))
+        ret_game.AddUnit(newLocation(0, 0), warrior(red))
+        ret_game.AddUnit(newLocation(0, 3), warrior(blue))
     }
     return ret_game, nil
 }
@@ -156,6 +157,12 @@ func (game *Game) verifiedMoveUnit(locations []location) error {
     return nil
 }
 
+func (game *Game) Attack(
+        playerId int, attacker requests.LocationStruct,
+        attackIndex int, target requests.LocationStruct) error {
+    return nil
+}
+
 func (game *Game) EndTurn(playerId int) error {
     player, err := game.getPlayer(playerId)
     if err != nil {
@@ -167,7 +174,7 @@ func (game *Game) EndTurn(playerId int) error {
     }
     for _, unit := range(game.unitMap) {
         if unit.nation == player.nation {
-            unit.canMove = true
+            unit.turnReset()
         }
     }
     nextOwner := game.turnOwner + 1
