@@ -16,7 +16,7 @@ func newCommand(jsonRequest string) (string, *game_engine.Game, error) {
     if err != nil {
         return "", nil, err
     }
-    game, err := game_engine.NewGame(request.Uids, 1)
+    game, err := game_engine.NewGame(request.Uids, request.Debug)
     if err != nil {
         return "new:failure:" + err.Error(), nil, nil
     } else {

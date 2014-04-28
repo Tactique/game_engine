@@ -2,6 +2,7 @@ package requests
 
 type NewCommandRequest struct {
     Uids []int `json:"uids"`
+    Debug int `json:"debug"`
 }
 
 type ViewCommandRequest struct {
