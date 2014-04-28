@@ -21,15 +21,18 @@ func newUnit(name string, nation nation, movement *movement, attacks []*attack) 
         attacks: attacks, canAttack: true}
 }
 
-func tank(nation nation) *unit {
+func warrior(nation nation) *unit {
+    legs := newMovement(
+        "Legs",
+        10,
+        map[terrain]multiplier{
+            plains: multiplier(1.0)})
+    sword := newAttack("Basic Sword", sword, 5)
     return newUnit(
-        "Tank",
+        "Warrior",
         nation,
-        newMovement(
-            "Treads",
-            10,
-            map[terrain]multiplier{
-                plains: multiplier(1.0)}))
+        legs,
+        []*attack{sword})
 }
 
 func (unit *unit) serialize(loc location) *requests.UnitStruct {
