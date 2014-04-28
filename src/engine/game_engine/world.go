@@ -128,6 +128,11 @@ func (game *Game) verifyValidMove(player *player, locations []location) error {
     for i, location := range(locations) {
         tiles[i] = game.terrain[location.x][location.y]
     }
+    for _, location := range(locations[1:]) {
+        if game.unitMap[location] != nil {
+            return errors.New("Cannot pass through units")
+        }
+    }
     unit, ok := game.unitMap[locations[0]]; if ok {
         if unit.nation == player.nation {
             return errors.New("Unit is not owned by the current player")
