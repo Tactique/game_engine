@@ -134,7 +134,7 @@ func (game *Game) verifyValidMove(player *player, locations []location) error {
         }
     }
     unit, ok := game.unitMap[locations[0]]; if ok {
-        if unit.nation == player.nation {
+        if unit.nation != player.nation {
             return errors.New("Unit is not owned by the current player")
         }
         return validMove(
