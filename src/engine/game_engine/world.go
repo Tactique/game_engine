@@ -42,6 +42,15 @@ func NewGame(playerIds []int, worldId int) (*Game, error) {
     return ret_game, nil
 }
 
+func (game *Game) getPlayer(playerId int) (*player, error) {
+    for _, player := range(game.players) {
+        if player.playerId == playerId {
+            return player, nil
+        }
+    }
+    return nil, errors.New("Player not playing")
+}
+
 func (game *Game) verifyTurnOwner(playerId int) error {
     if playerId != game.players[game.turnOwner].playerId {
         return errors.New("Not the turn owner")
@@ -88,13 +97,26 @@ func (game *Game) Serialize(playerId int) ([]byte, error) {
 }
 
 func (game *Game) MoveUnit(playerId int, rawLocations []requests.LocationStruct) error {
-    ownerError := game.verifyTurnOwner(playerId)
-    if ownerError != nil {
-        return ownerError
+    player, err := game.getPlayer(playerId)
+    if err != nil {
+        return err
     }
     locations := make([]location, len(rawLocations))
     for i, location := range(rawLocations) {
         locations[i] = newLocation(location.X, location.Y)
+    }
+    validError := game.verifyValidMove(player, locations)
+    if validError != nil {
+        return validError
+    }
+    game.verifiedMoveUnit(locations)
+    return nil
+}
+
+func (game *Game) verifyValidMove(player *player, locations []location) error {
+    ownerError := game.verifyTurnOwner(player.playerId)
+    if ownerError != nil {
+        return ownerError
     }
     if len(locations) < 1 {
         message := "must supply more than zero  locations"
@@ -106,18 +128,11 @@ func (game *Game) MoveUnit(playerId int, rawLocations []requests.LocationStruct)
     for i, location := range(locations) {
         tiles[i] = game.terrain[location.x][location.y]
     }
-    //fmt.Println(tiles)
-    //fmt.Println(game.unitMap)
-    //fmt.Println(locations)
     unit, ok := game.unitMap[locations[0]]; if ok {
         moveErr := validMove(
             unit.movement.distance,
             unit.movement, tiles, locations)
         if moveErr == nil {
-            end := len(locations)
-            unit = game.unitMap[newLocation(locations[0].x, locations[0].y)]
-            game.unitMap[newLocation(locations[end-1].x, locations[end-1].y)] = unit
-            delete(game.unitMap, newLocation(locations[0].x, locations[0].y))
             return nil
         } else {
             fmt.Println(moveErr)
@@ -128,6 +143,14 @@ func (game *Game) MoveUnit(playerId int, rawLocations []requests.LocationStruct)
         fmt.Println(message)
         return errors.New(message)
     }
+}
+
+func (game *Game) verifiedMoveUnit(locations []location) error {
+    end := len(locations)
+    unit := game.unitMap[newLocation(locations[0].x, locations[0].y)]
+    game.unitMap[newLocation(locations[end-1].x, locations[end-1].y)] = unit
+    delete(game.unitMap, newLocation(locations[0].x, locations[0].y))
+    return nil
 }
 
 func (game *Game) EndTurn(playerId int) error {
