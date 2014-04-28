@@ -129,6 +129,9 @@ func (game *Game) verifyValidMove(player *player, locations []location) error {
         tiles[i] = game.terrain[location.x][location.y]
     }
     unit, ok := game.unitMap[locations[0]]; if ok {
+        if unit.nation == player.nation {
+            return errors.New("Unit is not owned by the current player")
+        }
         moveErr := validMove(
             unit.movement.distance,
             unit.movement, tiles, locations)
