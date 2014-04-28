@@ -61,18 +61,30 @@ func (game *Game) AddUnit(location location, unit *unit) error {
     }
 }
 
-func (game *Game) EndTurn(playerId int) error {
-    ownerError := game.verifyTurnOwner(playerId)
-    if ownerError != nil {
-        return ownerError
+func (game *Game) Serialize(playerId int) ([]byte, error) {
+    players := make([]*requests.PlayerStruct, len(game.players))
+    for i, player := range(game.players) {
+        players[i] = player.serialize()
     }
-    nextOwner := game.turnOwner + 1
-    if nextOwner >= game.numPlayers {
-        game.turnOwner = 0
-    } else {
-        game.turnOwner = nextOwner
+    terrainInts := make([][]int, len(game.terrain))
+    for i, t := range(game.terrain) {
+        thoriz := make([]int, len(t))
+        for j, t_ := range(t) {
+            thoriz[j] = int(t_)
+        }
+        terrainInts[i] = thoriz
     }
-    return nil
+    units := make([]*requests.UnitStruct, len(game.unitMap))
+    i := 0
+    for location, unit := range(game.unitMap) {
+        units[i] = unit.serialize(location)
+        i += 1
+    }
+    return json.Marshal(requests.WorldStruct{
+        Terrain: terrainInts,
+        Units: units,
+        Players: players,
+        TurnOwner: game.players[game.turnOwner].playerId})
 }
 
 func (game *Game) MoveUnit(playerId int, rawLocations []requests.LocationStruct) error {
@@ -118,28 +130,16 @@ func (game *Game) MoveUnit(playerId int, rawLocations []requests.LocationStruct)
     }
 }
 
-func (game *Game) Serialize(playerId int) ([]byte, error) {
-    players := make([]*requests.PlayerStruct, len(game.players))
-    for i, player := range(game.players) {
-        players[i] = player.serialize()
+func (game *Game) EndTurn(playerId int) error {
+    ownerError := game.verifyTurnOwner(playerId)
+    if ownerError != nil {
+        return ownerError
     }
-    terrainInts := make([][]int, len(game.terrain))
-    for i, t := range(game.terrain) {
-        thoriz := make([]int, len(t))
-        for j, t_ := range(t) {
-            thoriz[j] = int(t_)
-        }
-        terrainInts[i] = thoriz
+    nextOwner := game.turnOwner + 1
+    if nextOwner >= game.numPlayers {
+        game.turnOwner = 0
+    } else {
+        game.turnOwner = nextOwner
     }
-    units := make([]*requests.UnitStruct, len(game.unitMap))
-    i := 0
-    for location, unit := range(game.unitMap) {
-        units[i] = unit.serialize(location)
-        i += 1
-    }
-    return json.Marshal(requests.WorldStruct{
-        Terrain: terrainInts,
-        Units: units,
-        Players: players,
-        TurnOwner: game.players[game.turnOwner].playerId})
+    return nil
 }
