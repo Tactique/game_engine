@@ -49,12 +49,19 @@ type UnitStruct struct {
     CanMove bool `json:"canMove"`
     Attacks []*AttackStruct `json:"attacks"`
     CanAttack bool `json:"canAttack"`
+    Armor *ArmorStruct
 }
 
 type AttackStruct struct {
     Name string `json:"name"`
     AttackType int `json:"attackType"`
     Power int `json:"power"`
+}
+
+type ArmorStruct struct {
+    Name string `json:"name"`
+    ArmorType int `json:"armorType"`
+    Strength int `json:"strength"`
 }
 
 type MovementStruct struct {
