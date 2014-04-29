@@ -13,9 +13,9 @@ type MoveCommandRequest struct {
 }
 
 type AttackCommandRequest struct {
-    Attacker LocationStruct `json:"unit"`
+    Attacker LocationStruct `json:"attacker"`
     AttackIndex int `json:"attackIndex"`
-    Target LocationStruct `json:"unit"`
+    Target LocationStruct `json:"target"`
 }
 
 type EndTurnCommandRequest struct {
