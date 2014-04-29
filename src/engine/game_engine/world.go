@@ -68,6 +68,33 @@ func (game *Game) getAndVerifyTurnOwner(playerId int) (*player, error) {
     return game.getPlayer(playerId)
 }
 
+func (game *Game) getUnit(location location) (*unit, error) {
+    unit, ok := game.unitMap[location]; if ok {
+        return unit, nil
+    } else {
+        message := fmt.Sprintf("No unit located at (%d, %d)", location.x, location.y)
+        fmt.Println(message)
+        return nil, errors.New(message)
+    }
+
+}
+
+func (game *Game) verifyOwnedUnit(player *player, unit *unit) error {
+    if unit.nation != player.nation {
+        return errors.New("Unit is not owned by the current player")
+    } else {
+        return nil
+    }
+}
+
+func (game *Game) getAndVerifyOwnedUnit(player *player, location location) (*unit, error) {
+    unit, err := game.getUnit(location)
+    if err != nil {
+        return nil, err
+    }
+    return unit, game.verifyOwnedUnit(player, unit)
+}
+
 func (game *Game) AddUnit(location location, unit *unit) error {
     fmt.Println("adding unit")
     _, ok := game.unitMap[location]; if !ok {
@@ -139,18 +166,11 @@ func (game *Game) verifyValidMove(player *player, locations []location) error {
             return errors.New("Cannot pass through units")
         }
     }
-    unit, ok := game.unitMap[locations[0]]; if ok {
-        if unit.nation != player.nation {
-            return errors.New("Unit is not owned by the current player")
-        }
-        return validMove(
-            unit.movement.distance,
-            unit.movement, tiles, locations)
-    } else {
-        message := "Invalid starting location"
-        fmt.Println(message)
-        return errors.New(message)
+    unit, err := game.getAndVerifyOwnedUnit(player, locations[0])
+    if err != nil {
+        return err
     }
+    return validMove(unit.movement.distance, unit.movement, tiles, locations)
 }
 
 func (game *Game) verifiedMoveUnit(locations []location) error {
