@@ -43,6 +43,7 @@ func NewGame(playerIds []int, worldId int) (*Game, error) {
     return ret_game, nil
 }
 
+
 func (game *Game) getPlayer(playerId int) (*player, error) {
     for _, player := range(game.players) {
         if player.playerId == playerId {
@@ -57,6 +58,14 @@ func (game *Game) verifyTurnOwner(playerId int) error {
         return errors.New("Not the turn owner")
     }
     return nil
+}
+
+func (game *Game) getAndVerifyTurnOwner(playerId int) (*player, error) {
+    err := game.verifyTurnOwner(playerId)
+    if err != nil {
+        return nil, err
+    }
+    return game.getPlayer(playerId)
 }
 
 func (game *Game) AddUnit(location location, unit *unit) error {
@@ -98,7 +107,7 @@ func (game *Game) Serialize(playerId int) ([]byte, error) {
 }
 
 func (game *Game) MoveUnit(playerId int, rawLocations []requests.LocationStruct) error {
-    player, err := game.getPlayer(playerId)
+    player, err := game.getAndVerifyTurnOwner(playerId)
     if err != nil {
         return err
     }
@@ -115,10 +124,6 @@ func (game *Game) MoveUnit(playerId int, rawLocations []requests.LocationStruct)
 }
 
 func (game *Game) verifyValidMove(player *player, locations []location) error {
-    ownerError := game.verifyTurnOwner(player.playerId)
-    if ownerError != nil {
-        return ownerError
-    }
     if len(locations) < 1 {
         message := "must supply more than zero locations"
         fmt.Println(message)
@@ -164,13 +169,9 @@ func (game *Game) Attack(
 }
 
 func (game *Game) EndTurn(playerId int) error {
-    player, err := game.getPlayer(playerId)
+    player, err := game.getAndVerifyTurnOwner(playerId)
     if err != nil {
         return err
-    }
-    ownerError := game.verifyTurnOwner(playerId)
-    if ownerError != nil {
-        return ownerError
     }
     for _, unit := range(game.unitMap) {
         if unit.nation == player.nation {
