@@ -33,9 +33,9 @@ func (dummy Client) Move() (string, error) {
 
 func (dummy Client) Attack() (string, error) {
     return dummy.send("attack:26", &requests.AttackCommandRequest{
-        Attacker: requests.LocationStruct{X: 0, Y: 0},
+        Attacker: requests.LocationStruct{X: 0, Y: 1},
         AttackIndex: 0,
-        Target: requests.LocationStruct{X: 0, Y: 1}})
+        Target: requests.LocationStruct{X: 0, Y: 3}})
 }
 
 func (dummy Client) Turn() (string, error) {
