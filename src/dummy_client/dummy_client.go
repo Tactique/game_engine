@@ -47,11 +47,13 @@ func (dummy Client) Exit() (string, error) {
 }
 
 func (dummy Client) send(command string, jsonStringMessage interface{}) (string, error) {
+    fmt.Printf("Sending %v\n", jsonStringMessage)
     jsonMessage, err := json.Marshal(jsonStringMessage)
     if err != nil {
         return "", err
     }
     message := fmt.Sprintf("%s:%s", command, jsonMessage)
+    fmt.Printf("Sending %s\n", message)
     err = dummy.conn.Write([]byte(message))
     if err != nil {
         return "", err
