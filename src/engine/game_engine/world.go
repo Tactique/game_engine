@@ -113,7 +113,7 @@ func (game *Game) MoveUnit(playerId int, rawLocations []requests.LocationStruct)
     }
     locations := make([]location, len(rawLocations))
     for i, location := range(rawLocations) {
-        locations[i] = newLocation(location.X, location.Y)
+        locations[i] = locationFromRequest(location)
     }
     validError := game.verifyValidMove(player, locations)
     if validError != nil {
