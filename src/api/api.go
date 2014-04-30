@@ -15,7 +15,7 @@ type ViewRequest struct {
 }
 
 type ViewResponse struct {
-	World WorldStruct
+	World WorldStruct `json:"world"`
 }
 
 type MoveRequest struct {
