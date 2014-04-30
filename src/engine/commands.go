@@ -57,11 +57,11 @@ func viewRequest(jsonRequest []byte, playerId int, game *game_engine.Game) []byt
     if err != nil {
         return respondMalformed(nil)
     }
-    worldStruct, err := game.Serialize(playerId)
+    response, err := game.Serialize(playerId)
     if err != nil {
         return respondBadRequest(err.Error())
     }
-    return respondSuccess(worldStruct)
+    return respondSuccess(response)
 }
 
 func moveRequest(jsonRequest []byte, playerId int, game *game_engine.Game) []byte {
@@ -70,11 +70,11 @@ func moveRequest(jsonRequest []byte, playerId int, game *game_engine.Game) []byt
     if err != nil {
         return respondMalformed(nil)
     }
-    moveErr := game.MoveUnit(playerId, request.Move)
-    if moveErr != nil {
-        return respondBadRequest(moveErr.Error())
+    response, err := game.MoveUnit(playerId, request.Move)
+    if err != nil {
+        return respondBadRequest(err.Error())
     }
-    return respondSuccess(nil)
+    return respondSuccess(response)
 }
 
 func attackRequest(jsonRequest []byte, playerId int, game *game_engine.Game) []byte {
@@ -83,11 +83,11 @@ func attackRequest(jsonRequest []byte, playerId int, game *game_engine.Game) []b
     if err != nil {
         return respondMalformed(nil)
     }
-    attackErr := game.Attack(playerId, request.Attacker, request.AttackIndex, request.Target)
-    if attackErr != nil {
-        return respondBadRequest(attackErr.Error())
+    response, err := game.Attack(playerId, request.Attacker, request.AttackIndex, request.Target)
+    if err != nil {
+        return respondBadRequest(err.Error())
     }
-    return respondSuccess(nil)
+    return respondSuccess(response)
 }
 
 func endTurnRequest(jsonRequest []byte, playerId int, game *game_engine.Game) []byte {
@@ -96,11 +96,11 @@ func endTurnRequest(jsonRequest []byte, playerId int, game *game_engine.Game) []
     if err != nil {
         return respondMalformed(nil)
     }
-    endErr := game.EndTurn(playerId)
-    if endErr != nil {
-        return respondBadRequest(endErr.Error())
+    response, err := game.EndTurn(playerId)
+    if err != nil {
+        return respondBadRequest(err.Error())
     }
-    return respondSuccess(nil)
+    return respondSuccess(response)
 }
 
 func exitRequest(jsonRequest []byte, playerId int, game *game_engine.Game) []byte {

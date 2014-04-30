@@ -106,7 +106,7 @@ func (game *Game) AddUnit(location location, unit *unit) error {
     }
 }
 
-func (game *Game) Serialize(playerId int) (api.WorldStruct, error) {
+func (game *Game) Serialize(playerId int) (*api.ViewResponse, error) {
     players := make([]*api.PlayerStruct, len(game.players))
     for i, player := range(game.players) {
         players[i] = player.serialize()
@@ -125,17 +125,18 @@ func (game *Game) Serialize(playerId int) (api.WorldStruct, error) {
         units[i] = unit.serialize(location)
         i += 1
     }
-    return api.WorldStruct{
-        Terrain: terrainInts,
-        Units: units,
-        Players: players,
-        TurnOwner: game.players[game.turnOwner].playerId}, nil
+    return &api.ViewResponse{
+        World: api.WorldStruct{
+            Terrain: terrainInts,
+            Units: units,
+            Players: players,
+            TurnOwner: game.players[game.turnOwner].playerId}}, nil
 }
 
-func (game *Game) MoveUnit(playerId int, rawLocations []api.LocationStruct) error {
+func (game *Game) MoveUnit(playerId int, rawLocations []api.LocationStruct) (*api.MoveResponse, error) {
     player, err := game.getAndVerifyTurnOwner(playerId)
     if err != nil {
-        return err
+        return nil, err
     }
     locations := make([]location, len(rawLocations))
     for i, location := range(rawLocations) {
@@ -143,10 +144,11 @@ func (game *Game) MoveUnit(playerId int, rawLocations []api.LocationStruct) erro
     }
     validError := game.verifyValidMove(player, locations)
     if validError != nil {
-        return validError
+        return nil, validError
     }
     game.verifiedMoveUnit(locations)
-    return nil
+    return &api.MoveResponse{
+        Move: rawLocations}, nil
 }
 
 func (game *Game) verifyValidMove(player *player, locations []location) error {
@@ -183,31 +185,33 @@ func (game *Game) verifiedMoveUnit(locations []location) error {
 
 func (game *Game) Attack(
         playerId int, attacker api.LocationStruct,
-        attackIndex int, target api.LocationStruct) error {
+        attackIndex int, target api.LocationStruct) (*api.AttackResponse, error) {
     player , err := game.getAndVerifyTurnOwner(playerId)
     if err != nil {
-        return err
+        return nil, err
     }
     attackingUnit, err := game.getAndVerifyOwnedUnit(player, locationFromRequest(attacker))
     if err != nil {
-        return err
+        return nil, err
     }
     defendingUnit, err := game.getUnit(locationFromRequest(target))
     if err != nil {
-        return err
+        return nil, err
     }
     alive, err := damageUnit(attackingUnit, attackIndex, defendingUnit)
     fmt.Println("unit is %s (alive)", alive)
     if err != nil {
-        return err
+        return nil, err
     }
-    return nil
+    return &api.AttackResponse{
+        Attacker: attacker, AttackIndex: attackIndex,
+        Target: target}, nil
 }
 
-func (game *Game) EndTurn(playerId int) error {
+func (game *Game) EndTurn(playerId int) (*api.EndTurnResponse, error) {
     player, err := game.getAndVerifyTurnOwner(playerId)
     if err != nil {
-        return err
+        return nil, err
     }
     for _, unit := range(game.unitMap) {
         if unit.nation == player.nation {
@@ -220,5 +224,5 @@ func (game *Game) EndTurn(playerId int) error {
     } else {
         game.turnOwner = nextOwner
     }
-    return nil
+    return &api.EndTurnResponse{}, nil
 }

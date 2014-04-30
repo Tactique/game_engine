@@ -3,12 +3,26 @@ package api
 type NewRequest struct {
     Uids []int `json:"uids"`
     Debug int `json:"debug"`
+    WorldId int `json:"worldId"`
+}
+
+type NewResponse struct {
+    Uids []int `json:"uids"`
+    Debug int `json:"debug"`
 }
 
 type ViewRequest struct {
 }
 
+type ViewResponse struct {
+    World WorldStruct
+}
+
 type MoveRequest struct {
+    Move []LocationStruct `json:"move"`
+}
+
+type MoveResponse struct {
     Move []LocationStruct `json:"move"`
 }
 
@@ -18,7 +32,16 @@ type AttackRequest struct {
     Target LocationStruct `json:"target"`
 }
 
+type AttackResponse struct {
+    Attacker LocationStruct `json:"attacker"`
+    AttackIndex int `json:"attackIndex"`
+    Target LocationStruct `json:"target"`
+}
+
 type EndTurnRequest struct {
+}
+
+type EndTurnResponse struct {
 }
 
 type ExitRequest struct {
