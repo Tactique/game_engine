@@ -8,30 +8,30 @@ import (
 )
 
 func respondSuccess(payload interface{}) []byte {
-    return generateResponse(payload, 0)
+    return generateResponse(payload, api.STATUS_OK)
 }
 
 func respondFailure(payload interface{}) []byte {
-    return generateResponse(payload, 1)
+    return generateResponse(payload, api.STATUS_FAILURE)
 }
 
 func respondMalformed(payload interface{}) []byte {
-    return generateResponse(payload, 2)
+    return generateResponse(payload, api.STATUS_MALFORMED_RESPONSE)
 }
 
 func respondBadRequest(payload interface{}) []byte {
-    return generateResponse(payload, 3)
+    return generateResponse(payload, api.STATUS_BAD_REQUEST)
 }
 
 func respondUnknownRequest(payload interface{}) []byte {
-    return generateResponse(payload, 4)
+    return generateResponse(payload, api.STATUS_UNKNOWN_REQUEST)
 }
 
 func generateResponse(payload interface{}, status int) []byte {
     response, err := json.Marshal(map[string]interface{}{"status": status, "payload": payload})
     if err != nil {
         fmt.Println(err.Error())
-        return []byte("{\"status\": 5, \"payload\": \"oops\"}")
+        return []byte(fmt.Sprintf("{\"status\": %d, \"payload\": \"oops\"}", api.STATUS_UNSERIALIZEABLE_RESPONSE))
     }
     return response
 }
