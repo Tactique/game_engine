@@ -17,33 +17,33 @@ func NewClient(conn net.Conn) *Client {
 }
 
 func (dummy Client) NewGame() (string, error) {
-    return dummy.send("new", &api.NewCommandRequest{Uids: []int{26, 13}})
+    return dummy.send("new", &api.NewRequest{Uids: []int{26, 13}})
 }
 
 func (dummy Client) View() (string, error) {
-    return dummy.send("view:26", &api.ViewCommandRequest{})
+    return dummy.send("view:26", &api.ViewRequest{})
 }
 
 func (dummy Client) Move() (string, error) {
-    return dummy.send("move:26", &api.MoveCommandRequest{
+    return dummy.send("move:26", &api.MoveRequest{
         Move: []api.LocationStruct{
             api.LocationStruct{X: 0, Y: 0},
             api.LocationStruct{X: 0, Y: 1}}})
 }
 
 func (dummy Client) Attack() (string, error) {
-    return dummy.send("attack:26", &api.AttackCommandRequest{
+    return dummy.send("attack:26", &api.AttackRequest{
         Attacker: api.LocationStruct{X: 0, Y: 1},
         AttackIndex: 0,
         Target: api.LocationStruct{X: 0, Y: 3}})
 }
 
 func (dummy Client) Turn() (string, error) {
-    return dummy.send("turn:26", &api.EndTurnCommandRequest{PlayerId: 26})
+    return dummy.send("turn:26", &api.EndTurnRequest{PlayerId: 26})
 }
 
 func (dummy Client) Exit() (string, error) {
-    return dummy.send("exit:26", &api.ExitCommandRequest{Reason: "gameover"})
+    return dummy.send("exit:26", &api.ExitRequest{Reason: "gameover"})
 }
 
 func (dummy Client) send(command string, jsonStringMessage interface{}) (string, error) {

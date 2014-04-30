@@ -19,11 +19,11 @@ func respondMalformed(payload interface{}) []byte {
     return generateResponse(payload, 2)
 }
 
-func respondBadCommand(payload interface{}) []byte {
+func respondBadRequest(payload interface{}) []byte {
     return generateResponse(payload, 3)
 }
 
-func respondUnknownCommand(payload interface{}) []byte {
+func respondUnknownRequest(payload interface{}) []byte {
     return generateResponse(payload, 4)
 }
 
@@ -36,75 +36,75 @@ func generateResponse(payload interface{}, status int) []byte {
     return response
 }
 
-func newCommand(jsonRequest []byte) ([]byte, *game_engine.Game) {
-    var request api.NewCommandRequest
+func newRequest(jsonRequest []byte) ([]byte, *game_engine.Game) {
+    var request api.NewRequest
     err := json.Unmarshal(jsonRequest, &request)
     if err != nil {
         return respondMalformed(nil), nil
     }
     game, err := game_engine.NewGame(request.Uids, request.Debug)
     if err != nil {
-        return respondBadCommand(err.Error()), nil
+        return respondBadRequest(err.Error()), nil
     } else {
         return respondSuccess(nil), game
     }
 }
 
 
-func viewCommand(jsonRequest []byte, playerId int, game *game_engine.Game) []byte {
-    var request api.ViewCommandRequest
+func viewRequest(jsonRequest []byte, playerId int, game *game_engine.Game) []byte {
+    var request api.ViewRequest
     err := json.Unmarshal(jsonRequest, &request)
     if err != nil {
         return respondMalformed(nil)
     }
     worldStruct, err := game.Serialize(playerId)
     if err != nil {
-        return respondBadCommand(err.Error())
+        return respondBadRequest(err.Error())
     }
     return respondSuccess(worldStruct)
 }
 
-func moveCommand(jsonRequest []byte, playerId int, game *game_engine.Game) []byte {
-    var request api.MoveCommandRequest
+func moveRequest(jsonRequest []byte, playerId int, game *game_engine.Game) []byte {
+    var request api.MoveRequest
     err := json.Unmarshal(jsonRequest, &request)
     if err != nil {
         return respondMalformed(nil)
     }
     moveErr := game.MoveUnit(playerId, request.Move)
     if moveErr != nil {
-        return respondBadCommand(moveErr.Error())
+        return respondBadRequest(moveErr.Error())
     }
     return respondSuccess(nil)
 }
 
-func attackCommand(jsonRequest []byte, playerId int, game *game_engine.Game) []byte {
-    var request api.AttackCommandRequest
+func attackRequest(jsonRequest []byte, playerId int, game *game_engine.Game) []byte {
+    var request api.AttackRequest
     err := json.Unmarshal(jsonRequest, &request)
     if err != nil {
         return respondMalformed(nil)
     }
     attackErr := game.Attack(playerId, request.Attacker, request.AttackIndex, request.Target)
     if attackErr != nil {
-        return respondBadCommand(attackErr.Error())
+        return respondBadRequest(attackErr.Error())
     }
     return respondSuccess(nil)
 }
 
-func endTurnCommand(jsonRequest []byte, playerId int, game *game_engine.Game) []byte {
-    var request api.MoveCommandRequest
+func endTurnRequest(jsonRequest []byte, playerId int, game *game_engine.Game) []byte {
+    var request api.MoveRequest
     err := json.Unmarshal(jsonRequest, &request)
     if err != nil {
         return respondMalformed(nil)
     }
     endErr := game.EndTurn(playerId)
     if endErr != nil {
-        return respondBadCommand(endErr.Error())
+        return respondBadRequest(endErr.Error())
     }
     return respondSuccess(nil)
 }
 
-func exitCommand(jsonRequest []byte, playerId int, game *game_engine.Game) []byte {
-    var request api.ExitCommandRequest
+func exitRequest(jsonRequest []byte, playerId int, game *game_engine.Game) []byte {
+    var request api.ExitRequest
     err := json.Unmarshal(jsonRequest, &request)
     if err != nil {
         return respondMalformed(nil)

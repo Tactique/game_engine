@@ -7,7 +7,7 @@ import (
 )
 
 func (dummy Client) BadNewGame() (string, error) {
-    return dummy.send("new", &api.NewCommandRequest{Uids: []int{}})
+    return dummy.send("new", &api.NewRequest{Uids: []int{}})
 }
 
 func BadTestRun() {

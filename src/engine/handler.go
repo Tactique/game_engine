@@ -8,32 +8,32 @@ import (
 
 type requestHandler struct {
     sessionGame *game_engine.Game
-    gameCommand map[string]func([]byte, int, *game_engine.Game) []byte
+    gameRequest map[string]func([]byte, int, *game_engine.Game) []byte
 }
 
 func newRequestHandler() *requestHandler {
     return &requestHandler{
         sessionGame: nil,
-        gameCommand: map[string]func([]byte, int, *game_engine.Game) []byte {
-            "exit": exitCommand,
-            "move": moveCommand,
-            "turn": endTurnCommand,
-            "attack": attackCommand,
-            "view": viewCommand}}
+        gameRequest: map[string]func([]byte, int, *game_engine.Game) []byte {
+            "exit": exitRequest,
+            "move": moveRequest,
+            "turn": endTurnRequest,
+            "attack": attackRequest,
+            "view": viewRequest}}
 }
 
 func (handler *requestHandler) handleRequest(request []byte) []byte {
     command, requestJson := splitOnce(request)
     if handler.sessionGame == nil {
         if string(command) == "new" {
-            response, game := newCommand(requestJson)
+            response, game := newRequest(requestJson)
             handler.sessionGame = game
             return buildResponse(command, response)
         } else {
-            return buildResponse(command, respondUnknownCommand("Need new game request"))
+            return buildResponse(command, respondUnknownRequest("Need new game request"))
         }
     } else {
-        fun, ok := handler.gameCommand[string(command)]; if ok {
+        fun, ok := handler.gameRequest[string(command)]; if ok {
             playerId, requestJsonNoPlayerId := splitOnce(requestJson)
             playerIdInt, err := strconv.Atoi(string(playerId))
             if err != nil {
@@ -42,7 +42,7 @@ func (handler *requestHandler) handleRequest(request []byte) []byte {
             response := fun(requestJsonNoPlayerId, playerIdInt, handler.sessionGame)
             return buildResponse(command, response)
         } else {
-            return buildResponse(command, respondUnknownCommand("Unknown command"))
+            return buildResponse(command, respondUnknownRequest("Unknown command"))
         }
     }
 }

@@ -1,28 +1,28 @@
 package api
 
-type NewCommandRequest struct {
+type NewRequest struct {
     Uids []int `json:"uids"`
     Debug int `json:"debug"`
 }
 
-type ViewCommandRequest struct {
+type ViewRequest struct {
 }
 
-type MoveCommandRequest struct {
+type MoveRequest struct {
     Move []LocationStruct `json:"move"`
 }
 
-type AttackCommandRequest struct {
+type AttackRequest struct {
     Attacker LocationStruct `json:"attacker"`
     AttackIndex int `json:"attackIndex"`
     Target LocationStruct `json:"target"`
 }
 
-type EndTurnCommandRequest struct {
+type EndTurnRequest struct {
     PlayerId int `json:"playerId"`
 }
 
-type ExitCommandRequest struct {
+type ExitRequest struct {
     Reason string `json:"reason"`
 }
 
