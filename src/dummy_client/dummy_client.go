@@ -39,7 +39,7 @@ func (dummy Client) Attack() (string, error) {
 }
 
 func (dummy Client) Turn() (string, error) {
-    return dummy.send("turn:26", &api.EndTurnRequest{PlayerId: 26})
+    return dummy.send("turn:26", &api.EndTurnRequest{})
 }
 
 func (dummy Client) Exit() (string, error) {

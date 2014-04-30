@@ -19,7 +19,6 @@ type AttackRequest struct {
 }
 
 type EndTurnRequest struct {
-    PlayerId int `json:"playerId"`
 }
 
 type ExitRequest struct {
