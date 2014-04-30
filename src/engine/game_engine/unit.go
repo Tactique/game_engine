@@ -32,7 +32,7 @@ func warrior(nation nation) *unit {
 		10,
 		map[terrain]multiplier{
 			plains: multiplier(1.0)})
-	sword := newAttack("Basic Sword", sword, 4)
+	sword := newAttack("Basic Sword", sword, 4, 1, 1)
 	chainMailArmor := newArmor("Chain Mail", chainMail, 2)
 	return newUnit(
 		"Warrior",
