@@ -184,6 +184,23 @@ func (game *Game) verifiedMoveUnit(locations []location) error {
 func (game *Game) Attack(
         playerId int, attacker requests.LocationStruct,
         attackIndex int, target requests.LocationStruct) error {
+    player , err := game.getAndVerifyTurnOwner(playerId)
+    if err != nil {
+        return err
+    }
+    attackingUnit, err := game.getAndVerifyOwnedUnit(player, locationFromRequest(attacker))
+    if err != nil {
+        return err
+    }
+    defendingUnit, err := game.getUnit(locationFromRequest(target))
+    if err != nil {
+        return err
+    }
+    alive, err := damageUnit(attackingUnit, attackIndex, defendingUnit)
+    fmt.Println("unit is %s (alive)", alive)
+    if err != nil {
+        return err
+    }
     return nil
 }
 

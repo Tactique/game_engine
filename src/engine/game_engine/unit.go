@@ -1,6 +1,7 @@
 package game_engine
 
 import (
+    "errors"
     "requests"
 )
 
@@ -61,4 +62,23 @@ func (unit *unit) serialize(loc location) *requests.UnitStruct {
 func (unit *unit) turnReset() {
     unit.canMove = true
     unit.canAttack = true
+}
+
+func (unit *unit) receiveDamage(delta int) (bool, error) {
+    if delta < 0 {
+        return true, errors.New("Cannot receive a negative amount of damage")
+    }
+    return unit.changeHealth(unit.health - delta), nil
+}
+
+func (unit *unit) changeHealth(newHealth int) bool {
+    unit.health = newHealth
+    if unit.health > unit.maxHealth {
+        unit.health = unit.maxHealth
+    }
+    if unit.health <= 0 {
+        unit.health = 0
+        return false
+    }
+    return true
 }
