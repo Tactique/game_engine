@@ -16,6 +16,6 @@ func newPlayer(playerId int, nation nation, team team) *player {
 
 func (player *player) serialize() *api.PlayerStruct {
 	return &api.PlayerStruct{
-		Nation:   int(player.nation),
-		Team:     int(player.team)}
+		Nation: int(player.nation),
+		Team:   int(player.team)}
 }
