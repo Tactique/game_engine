@@ -2,22 +2,19 @@ package engine
 
 import (
     "strconv"
-    "strings"
+    "bytes"
     "engine/game_engine"
 )
 
 type requestHandler struct {
     sessionGame *game_engine.Game
-    newGameCommand map[string]func(string) (string, *game_engine.Game)
-    gameCommand map[string]func(string, int, *game_engine.Game) string
+    gameCommand map[string]func([]byte, int, *game_engine.Game) []byte
 }
 
 func newRequestHandler() *requestHandler {
     return &requestHandler{
         sessionGame: nil,
-        newGameCommand: map[string]func(string) (string, *game_engine.Game){
-            "new": newCommand},
-        gameCommand: map[string]func(string, int, *game_engine.Game) string {
+        gameCommand: map[string]func([]byte, int, *game_engine.Game) []byte {
             "exit": exitCommand,
             "move": moveCommand,
             "turn": endTurnCommand,
@@ -25,38 +22,42 @@ func newRequestHandler() *requestHandler {
             "view": viewCommand}}
 }
 
-func (handler *requestHandler) handleRequest(request string) string {
+func (handler *requestHandler) handleRequest(request []byte) []byte {
     command, requestJson := splitOnce(request)
     if handler.sessionGame == nil {
-        fun, ok := handler.newGameCommand[command]; if ok {
-            response, game := fun(requestJson)
+        if string(command) == "new" {
+            response, game := newCommand(requestJson)
             handler.sessionGame = game
-            return command + ":" + response
+            return buildResponse(command, response)
         } else {
-            return command + ":" + respondUnknownCommand("Need new game request")
+            return buildResponse(command, respondUnknownCommand("Need new game request"))
         }
     } else {
-        fun, ok := handler.gameCommand[command]; if ok {
+        fun, ok := handler.gameCommand[string(command)]; if ok {
             playerId, requestJsonNoPlayerId := splitOnce(requestJson)
-            playerIdInt, err := strconv.Atoi(playerId)
+            playerIdInt, err := strconv.Atoi(string(playerId))
             if err != nil {
-                return respondMalformed("playerId not an int")
+                return buildResponse(command, respondMalformed("playerId not an int"))
             }
             response := fun(requestJsonNoPlayerId, playerIdInt, handler.sessionGame)
-            return command + ":" + response
+            return buildResponse(command, response)
         } else {
-            return command + ":" + respondUnknownCommand("Unknown command")
+            return buildResponse(command, respondUnknownCommand("Unknown command"))
         }
     }
 }
 
-func splitOnce(inputString string) (string, string) {
-    pieces := strings.SplitN(inputString, ":", 2)
+func buildResponse(command []byte, response []byte) []byte {
+    return append(append(command, []byte(":")...), response...)
+}
+
+func splitOnce(input []byte) ([]byte, []byte) {
+    pieces := bytes.SplitN(input, []byte(":"), 2)
     if len(pieces) == 1 {
-        return pieces[0], ""
+        return pieces[0], []byte{}
     } else if len(pieces) == 2 {
         return pieces[0], pieces[1]
     } else {
-        return "", ""
+        return []byte{}, []byte{}
     }
 }

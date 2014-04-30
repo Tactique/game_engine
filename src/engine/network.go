@@ -6,28 +6,6 @@ import (
     "github.com/DomoCo/connection"
 )
 
-type proxyConnection struct {
-    conn connection.Connection
-    handler *requestHandler
-}
-
-func newProxyConnection (conn net.Conn) *proxyConnection {
-    return &proxyConnection{conn: connection.NewSocketConn(conn), handler: newRequestHandler()}
-}
-
-func (tc *proxyConnection) Read() (string, error) {
-    byteslice, err := tc.conn.Read()
-    return string(byteslice), err
-}
-
-func (tc *proxyConnection) Write(response string) error {
-    return tc.conn.Write([]byte(response))
-}
-
-func (tc *proxyConnection) Close() error {
-    return tc.conn.Close()
-}
-
 func ListenForever(port int) error {
     ln, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", port))
     if err != nil {
@@ -44,7 +22,8 @@ func ListenForever(port int) error {
 }
 
 func handleConnection(netConn net.Conn) error {
-    conn := newProxyConnection(netConn)
+    conn := connection.NewSocketConn(netConn)
+    handler := newRequestHandler()
     for {
         fmt.Println("Handling a connection")
         request, err := conn.Read()
@@ -53,16 +32,9 @@ func handleConnection(netConn net.Conn) error {
             conn.Close()
             return err
         }
-        fmt.Println("Got request", request)
-        response := conn.handler.handleRequest(request)
-        /*
-        if err != nil {
-            fmt.Println(err)
-            conn.Close()
-            return err
-        }
-        */
-        fmt.Println("Sent response", response)
+        fmt.Println("Got request", string(request))
+        response := handler.handleRequest(request)
+        fmt.Println("Sent response", string(response))
         err = conn.Write(response)
         if err != nil {
             fmt.Println(err)

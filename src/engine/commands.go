@@ -7,38 +7,38 @@ import (
     "fmt"
 )
 
-func respondSuccess(payload interface{}) string {
+func respondSuccess(payload interface{}) []byte {
     return generateResponse(payload, 0)
 }
 
-func respondFailure(payload interface{}) string {
+func respondFailure(payload interface{}) []byte {
     return generateResponse(payload, 1)
 }
 
-func respondMalformed(payload interface{}) string {
+func respondMalformed(payload interface{}) []byte {
     return generateResponse(payload, 2)
 }
 
-func respondBadCommand(payload interface{}) string {
+func respondBadCommand(payload interface{}) []byte {
     return generateResponse(payload, 3)
 }
 
-func respondUnknownCommand(payload interface{}) string {
+func respondUnknownCommand(payload interface{}) []byte {
     return generateResponse(payload, 4)
 }
 
-func generateResponse(payload interface{}, status int) string {
+func generateResponse(payload interface{}, status int) []byte {
     response, err := json.Marshal(map[string]interface{}{"status": status, "payload": payload})
     if err != nil {
         fmt.Println(err.Error())
-        return "{\"status\": 5, \"payload\": \"oops\"}"
+        return []byte("{\"status\": 5, \"payload\": \"oops\"}")
     }
-    return string(response)
+    return response
 }
 
-func newCommand(jsonRequest string) (string, *game_engine.Game) {
+func newCommand(jsonRequest []byte) ([]byte, *game_engine.Game) {
     var request requests.NewCommandRequest
-    err := json.Unmarshal([]byte(jsonRequest), &request)
+    err := json.Unmarshal(jsonRequest, &request)
     if err != nil {
         return respondMalformed(nil), nil
     }
@@ -51,9 +51,9 @@ func newCommand(jsonRequest string) (string, *game_engine.Game) {
 }
 
 
-func viewCommand(jsonRequest string, playerId int, game *game_engine.Game) string {
+func viewCommand(jsonRequest []byte, playerId int, game *game_engine.Game) []byte {
     var request requests.ViewCommandRequest
-    err := json.Unmarshal([]byte(jsonRequest), &request)
+    err := json.Unmarshal(jsonRequest, &request)
     if err != nil {
         return respondMalformed(nil)
     }
@@ -64,9 +64,9 @@ func viewCommand(jsonRequest string, playerId int, game *game_engine.Game) strin
     return respondSuccess(worldStruct)
 }
 
-func moveCommand(jsonRequest string, playerId int, game *game_engine.Game) string {
+func moveCommand(jsonRequest []byte, playerId int, game *game_engine.Game) []byte {
     var request requests.MoveCommandRequest
-    err := json.Unmarshal([]byte(jsonRequest), &request)
+    err := json.Unmarshal(jsonRequest, &request)
     if err != nil {
         return respondMalformed(nil)
     }
@@ -77,9 +77,9 @@ func moveCommand(jsonRequest string, playerId int, game *game_engine.Game) strin
     return respondSuccess(nil)
 }
 
-func attackCommand(jsonRequest string, playerId int, game *game_engine.Game) string {
+func attackCommand(jsonRequest []byte, playerId int, game *game_engine.Game) []byte {
     var request requests.AttackCommandRequest
-    err := json.Unmarshal([]byte(jsonRequest), &request)
+    err := json.Unmarshal(jsonRequest, &request)
     if err != nil {
         return respondMalformed(nil)
     }
@@ -90,9 +90,9 @@ func attackCommand(jsonRequest string, playerId int, game *game_engine.Game) str
     return respondSuccess(nil)
 }
 
-func endTurnCommand(jsonRequest string, playerId int, game *game_engine.Game) string {
+func endTurnCommand(jsonRequest []byte, playerId int, game *game_engine.Game) []byte {
     var request requests.MoveCommandRequest
-    err := json.Unmarshal([]byte(jsonRequest), &request)
+    err := json.Unmarshal(jsonRequest, &request)
     if err != nil {
         return respondMalformed(nil)
     }
@@ -103,9 +103,9 @@ func endTurnCommand(jsonRequest string, playerId int, game *game_engine.Game) st
     return respondSuccess(nil)
 }
 
-func exitCommand(jsonRequest string, playerId int, game *game_engine.Game) string {
+func exitCommand(jsonRequest []byte, playerId int, game *game_engine.Game) []byte {
     var request requests.ExitCommandRequest
-    err := json.Unmarshal([]byte(jsonRequest), &request)
+    err := json.Unmarshal(jsonRequest, &request)
     if err != nil {
         return respondMalformed(nil)
     }
