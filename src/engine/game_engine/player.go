@@ -1,22 +1,22 @@
 package game_engine
 
 import (
-    "api"
+	"api"
 )
 
 type player struct {
-    playerId int
-    nation nation
-    team team
+	playerId int
+	nation   nation
+	team     team
 }
 
 func newPlayer(playerId int, nation nation, team team) *player {
-    return &player{playerId: playerId, nation: nation, team: team}
+	return &player{playerId: playerId, nation: nation, team: team}
 }
 
 func (player *player) serialize() *api.PlayerStruct {
-    return &api.PlayerStruct{
-        PlayerId: player.playerId,
-        Nation: int(player.nation),
-        Team: int(player.team)}
+	return &api.PlayerStruct{
+		PlayerId: player.playerId,
+		Nation:   int(player.nation),
+		Team:     int(player.team)}
 }

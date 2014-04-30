@@ -1,11 +1,11 @@
 package game_engine
 
 import (
-    "testing"
+	"testing"
 )
 
 func TestTerrainConsts(t *testing.T) {
-    if int(plains) != 0 {
-        t.Fatalf("Plains should be 0")
-    }
+	if int(plains) != 0 {
+		t.Fatalf("Plains should be 0")
+	}
 }

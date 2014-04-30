@@ -5,8 +5,8 @@ type team int
 type nation int
 
 const (
-    red nation = iota
-    blue
-    green
-    yellow
+	red nation = iota
+	blue
+	green
+	yellow
 )
