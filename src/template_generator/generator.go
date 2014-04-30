@@ -16,15 +16,15 @@ func GenerateAllTemplates() {
             &requests.UnitStruct{
                 Name: "Warrior", Health: 10, Nation: 0,
                 Movement: &requests.MovementStruct{
+                    Distance: 10,
                     Type: "Legs", Speeds: map[string]float64{
                         "0": 1}},
                 Position: &requests.LocationStruct{X: 0, Y: 0},
-                Distance: 10,
                 CanAttack: true,
                 CanMove: true,
                 Attacks: []*requests.AttackStruct{
                     &requests.AttackStruct{
-                        0, 5}}}},
+                        "Sword", 0, 5}}}},
         Players: []*requests.PlayerStruct{
             &requests.PlayerStruct{
                 PlayerId: 26, Nation: 0, Team: 0},
