@@ -108,9 +108,21 @@ func (game *Game) AddUnit(location location, unit *unit) error {
 }
 
 func (game *Game) Serialize(playerId int) (*api.ViewResponse, error) {
-	players := make([]*api.PlayerStruct, len(game.players))
-	for i, player := range game.players {
-		players[i] = player.serialize()
+	rawMe, err := game.getPlayer(playerId)
+	me := rawMe.serialize()
+	if err != nil {
+		return nil, err
+	}
+	teamMates := make([]*api.PlayerStruct, 0)
+	enemies := make([]*api.PlayerStruct, 0)
+	for _, player := range game.players {
+		if player.playerId != rawMe.playerId {
+			if player.team == rawMe.team {
+				teamMates = append(teamMates, player.serialize())
+			} else {
+				enemies = append(enemies, player.serialize())
+			}
+		}
 	}
 	terrainInts := make([][]int, len(game.terrain))
 	for i, t := range game.terrain {
@@ -130,8 +142,10 @@ func (game *Game) Serialize(playerId int) (*api.ViewResponse, error) {
 		World: api.WorldStruct{
 			Terrain:   terrainInts,
 			Units:     units,
-			Players:   players,
-			TurnOwner: game.players[game.turnOwner].playerId}}, nil
+			Me:        me,
+			TeamMates: teamMates,
+			Enemies:   enemies,
+			TurnOwner: int(game.players[game.turnOwner].nation)}}, nil
 }
 
 func (game *Game) MoveUnit(playerId int, rawLocations []api.LocationStruct) (*api.MoveResponse, error) {

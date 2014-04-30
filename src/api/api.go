@@ -51,12 +51,13 @@ type ExitRequest struct {
 type WorldStruct struct {
 	Terrain   [][]int         `json:"terrain"`
 	Units     []*UnitStruct   `json:"units"`
-	Players   []*PlayerStruct `json:"players"`
+	Me        *PlayerStruct   `json:"me"`
+	TeamMates []*PlayerStruct `json:"teamMates"`
+	Enemies   []*PlayerStruct `json:"enemies"`
 	TurnOwner int             `json:"turnOwner"`
 }
 
 type PlayerStruct struct {
-	PlayerId int `json:"playerId"`
 	Nation   int `json:"nation"`
 	Team     int `json:"team"`
 }
