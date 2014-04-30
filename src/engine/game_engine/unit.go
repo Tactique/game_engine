@@ -7,6 +7,7 @@ import (
 type unit struct {
     name string
     health int
+    maxHealth int
     nation nation
     movement *movement
     canMove bool
@@ -17,7 +18,8 @@ type unit struct {
 
 func newUnit(name string, nation nation, movement *movement, attacks []*attack, armor *armor) *unit {
     return &unit{
-        name: name, health: 10, nation: nation,
+        name: name, health: 10, maxHealth: 10,
+        nation: nation,
         movement: movement, canMove: true,
         attacks: attacks, canAttack: true,
         armor: armor}
