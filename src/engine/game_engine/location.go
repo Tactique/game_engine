@@ -1,7 +1,7 @@
 package game_engine
 
 import (
-    "requests"
+    "api"
 )
 
 type location struct {
@@ -13,12 +13,12 @@ func newLocation(x int, y int) location {
     return location{x: x, y: y}
 }
 
-func locationFromRequest(requestLocation requests.LocationStruct) location {
+func locationFromRequest(requestLocation api.LocationStruct) location {
     return newLocation(requestLocation.X, requestLocation.Y)
 }
 
-func (location location) serialize() *requests.LocationStruct {
-    return &requests.LocationStruct{
+func (location location) serialize() *api.LocationStruct {
+    return &api.LocationStruct{
         X: location.x,
         Y: location.y}
 }

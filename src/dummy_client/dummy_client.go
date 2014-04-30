@@ -4,7 +4,7 @@ import (
     "fmt"
     "net"
     "encoding/json"
-    "requests"
+    "api"
     "github.com/DomoCo/connection"
 )
 
@@ -17,33 +17,33 @@ func NewClient(conn net.Conn) *Client {
 }
 
 func (dummy Client) NewGame() (string, error) {
-    return dummy.send("new", &requests.NewCommandRequest{Uids: []int{26, 13}})
+    return dummy.send("new", &api.NewCommandRequest{Uids: []int{26, 13}})
 }
 
 func (dummy Client) View() (string, error) {
-    return dummy.send("view:26", &requests.ViewCommandRequest{})
+    return dummy.send("view:26", &api.ViewCommandRequest{})
 }
 
 func (dummy Client) Move() (string, error) {
-    return dummy.send("move:26", &requests.MoveCommandRequest{
-        Move: []requests.LocationStruct{
-            requests.LocationStruct{X: 0, Y: 0},
-            requests.LocationStruct{X: 0, Y: 1}}})
+    return dummy.send("move:26", &api.MoveCommandRequest{
+        Move: []api.LocationStruct{
+            api.LocationStruct{X: 0, Y: 0},
+            api.LocationStruct{X: 0, Y: 1}}})
 }
 
 func (dummy Client) Attack() (string, error) {
-    return dummy.send("attack:26", &requests.AttackCommandRequest{
-        Attacker: requests.LocationStruct{X: 0, Y: 1},
+    return dummy.send("attack:26", &api.AttackCommandRequest{
+        Attacker: api.LocationStruct{X: 0, Y: 1},
         AttackIndex: 0,
-        Target: requests.LocationStruct{X: 0, Y: 3}})
+        Target: api.LocationStruct{X: 0, Y: 3}})
 }
 
 func (dummy Client) Turn() (string, error) {
-    return dummy.send("turn:26", &requests.EndTurnCommandRequest{PlayerId: 26})
+    return dummy.send("turn:26", &api.EndTurnCommandRequest{PlayerId: 26})
 }
 
 func (dummy Client) Exit() (string, error) {
-    return dummy.send("exit:26", &requests.ExitCommandRequest{Reason: "gameover"})
+    return dummy.send("exit:26", &api.ExitCommandRequest{Reason: "gameover"})
 }
 
 func (dummy Client) send(command string, jsonStringMessage interface{}) (string, error) {

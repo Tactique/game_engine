@@ -2,7 +2,7 @@ package engine
 
 import (
     "encoding/json"
-    "requests"
+    "api"
     "engine/game_engine"
     "fmt"
 )
@@ -37,7 +37,7 @@ func generateResponse(payload interface{}, status int) []byte {
 }
 
 func newCommand(jsonRequest []byte) ([]byte, *game_engine.Game) {
-    var request requests.NewCommandRequest
+    var request api.NewCommandRequest
     err := json.Unmarshal(jsonRequest, &request)
     if err != nil {
         return respondMalformed(nil), nil
@@ -52,7 +52,7 @@ func newCommand(jsonRequest []byte) ([]byte, *game_engine.Game) {
 
 
 func viewCommand(jsonRequest []byte, playerId int, game *game_engine.Game) []byte {
-    var request requests.ViewCommandRequest
+    var request api.ViewCommandRequest
     err := json.Unmarshal(jsonRequest, &request)
     if err != nil {
         return respondMalformed(nil)
@@ -65,7 +65,7 @@ func viewCommand(jsonRequest []byte, playerId int, game *game_engine.Game) []byt
 }
 
 func moveCommand(jsonRequest []byte, playerId int, game *game_engine.Game) []byte {
-    var request requests.MoveCommandRequest
+    var request api.MoveCommandRequest
     err := json.Unmarshal(jsonRequest, &request)
     if err != nil {
         return respondMalformed(nil)
@@ -78,7 +78,7 @@ func moveCommand(jsonRequest []byte, playerId int, game *game_engine.Game) []byt
 }
 
 func attackCommand(jsonRequest []byte, playerId int, game *game_engine.Game) []byte {
-    var request requests.AttackCommandRequest
+    var request api.AttackCommandRequest
     err := json.Unmarshal(jsonRequest, &request)
     if err != nil {
         return respondMalformed(nil)
@@ -91,7 +91,7 @@ func attackCommand(jsonRequest []byte, playerId int, game *game_engine.Game) []b
 }
 
 func endTurnCommand(jsonRequest []byte, playerId int, game *game_engine.Game) []byte {
-    var request requests.MoveCommandRequest
+    var request api.MoveCommandRequest
     err := json.Unmarshal(jsonRequest, &request)
     if err != nil {
         return respondMalformed(nil)
@@ -104,7 +104,7 @@ func endTurnCommand(jsonRequest []byte, playerId int, game *game_engine.Game) []
 }
 
 func exitCommand(jsonRequest []byte, playerId int, game *game_engine.Game) []byte {
-    var request requests.ExitCommandRequest
+    var request api.ExitCommandRequest
     err := json.Unmarshal(jsonRequest, &request)
     if err != nil {
         return respondMalformed(nil)

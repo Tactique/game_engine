@@ -1,7 +1,7 @@
 package game_engine
 
 import (
-    "requests"
+    "api"
 )
 
 type attackType int
@@ -24,8 +24,8 @@ func newAttack(name string, attackType attackType, power int) *attack {
     return &attack{name: name, attackType: attackType, power: power}
 }
 
-func (attack *attack) serialize() *requests.AttackStruct {
-    return &requests.AttackStruct{
+func (attack *attack) serialize() *api.AttackStruct {
+    return &api.AttackStruct{
         Name: attack.name,
         AttackType: int(attack.attackType),
         Power: attack.power}

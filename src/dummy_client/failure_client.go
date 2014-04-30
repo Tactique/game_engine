@@ -3,11 +3,11 @@ package dummy_client
 import (
     "fmt"
     "net"
-    "requests"
+    "api"
 )
 
 func (dummy Client) BadNewGame() (string, error) {
-    return dummy.send("new", &requests.NewCommandRequest{Uids: []int{}})
+    return dummy.send("new", &api.NewCommandRequest{Uids: []int{}})
 }
 
 func BadTestRun() {

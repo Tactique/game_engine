@@ -3,7 +3,7 @@ package game_engine
 import (
     "fmt"
     "errors"
-    "requests"
+    "api"
 )
 
 type Game struct {
@@ -106,8 +106,8 @@ func (game *Game) AddUnit(location location, unit *unit) error {
     }
 }
 
-func (game *Game) Serialize(playerId int) (requests.WorldStruct, error) {
-    players := make([]*requests.PlayerStruct, len(game.players))
+func (game *Game) Serialize(playerId int) (api.WorldStruct, error) {
+    players := make([]*api.PlayerStruct, len(game.players))
     for i, player := range(game.players) {
         players[i] = player.serialize()
     }
@@ -119,20 +119,20 @@ func (game *Game) Serialize(playerId int) (requests.WorldStruct, error) {
         }
         terrainInts[i] = thoriz
     }
-    units := make([]*requests.UnitStruct, len(game.unitMap))
+    units := make([]*api.UnitStruct, len(game.unitMap))
     i := 0
     for location, unit := range(game.unitMap) {
         units[i] = unit.serialize(location)
         i += 1
     }
-    return requests.WorldStruct{
+    return api.WorldStruct{
         Terrain: terrainInts,
         Units: units,
         Players: players,
         TurnOwner: game.players[game.turnOwner].playerId}, nil
 }
 
-func (game *Game) MoveUnit(playerId int, rawLocations []requests.LocationStruct) error {
+func (game *Game) MoveUnit(playerId int, rawLocations []api.LocationStruct) error {
     player, err := game.getAndVerifyTurnOwner(playerId)
     if err != nil {
         return err
@@ -182,8 +182,8 @@ func (game *Game) verifiedMoveUnit(locations []location) error {
 }
 
 func (game *Game) Attack(
-        playerId int, attacker requests.LocationStruct,
-        attackIndex int, target requests.LocationStruct) error {
+        playerId int, attacker api.LocationStruct,
+        attackIndex int, target api.LocationStruct) error {
     player , err := game.getAndVerifyTurnOwner(playerId)
     if err != nil {
         return err

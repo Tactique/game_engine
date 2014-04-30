@@ -1,4 +1,4 @@
-package requests
+package api
 
 type NewCommandRequest struct {
     Uids []int `json:"uids"`

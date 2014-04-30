@@ -2,7 +2,7 @@ package game_engine
 
 import (
     "errors"
-    "requests"
+    "api"
 )
 
 type unit struct {
@@ -42,12 +42,12 @@ func warrior(nation nation) *unit {
         chainMailArmor)
 }
 
-func (unit *unit) serialize(loc location) *requests.UnitStruct {
-    attacks := make([]*requests.AttackStruct, len(unit.attacks))
+func (unit *unit) serialize(loc location) *api.UnitStruct {
+    attacks := make([]*api.AttackStruct, len(unit.attacks))
     for i, attack := range(unit.attacks) {
         attacks[i] = attack.serialize()
     }
-    return &requests.UnitStruct{
+    return &api.UnitStruct{
         Name: unit.name,
         Health: unit.health,
         Nation: int(unit.nation),
