@@ -50,7 +50,6 @@ func (unit *unit) serialize(loc location) *requests.UnitStruct {
         Nation: int(unit.nation),
         Movement: unit.movement.serialize(),
         Position: loc.serialize(),
-        Distance: unit.movement.distance,
         CanMove: unit.canMove,
         CanAttack: unit.canAttack,
         Attacks: attacks,

@@ -24,5 +24,6 @@ func (movement *movement) serialize() *requests.MovementStruct {
     }
     return &requests.MovementStruct{
         Type: movement.name,
-        Speeds: costs}
+        Speeds: costs,
+        Distance: movement.distance}
 }

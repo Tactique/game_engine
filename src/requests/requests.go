@@ -45,7 +45,6 @@ type UnitStruct struct {
     Nation int `json:"nation"`
     Movement *MovementStruct `json:"movement"`
     Position *LocationStruct `json:"position"`
-    Distance int `json:"distance"`
     CanMove bool `json:"canMove"`
     Attacks []*AttackStruct `json:"attacks"`
     CanAttack bool `json:"canAttack"`
@@ -67,6 +66,7 @@ type ArmorStruct struct {
 type MovementStruct struct {
     Type string `json:"type"`
     Speeds map[string]float64 `json:"speeds"`
+    Distance int `json:"distance"`
 }
 
 type LocationStruct struct {
