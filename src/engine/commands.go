@@ -31,7 +31,7 @@ func generateResponse(payload interface{}, status int) string {
     response, err := json.Marshal(map[string]interface{}{"status": status, "payload": payload})
     if err != nil {
         fmt.Println(err.Error())
-        return "{\"status\": 4, \"payload\": \"oops\"}"
+        return "{\"status\": 5, \"payload\": \"oops\"}"
     }
     return string(response)
 }
