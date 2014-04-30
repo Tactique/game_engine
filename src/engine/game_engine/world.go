@@ -2,7 +2,6 @@ package game_engine
 
 import (
     "fmt"
-    "encoding/json"
     "errors"
     "requests"
 )
@@ -107,7 +106,7 @@ func (game *Game) AddUnit(location location, unit *unit) error {
     }
 }
 
-func (game *Game) Serialize(playerId int) ([]byte, error) {
+func (game *Game) Serialize(playerId int) (requests.WorldStruct, error) {
     players := make([]*requests.PlayerStruct, len(game.players))
     for i, player := range(game.players) {
         players[i] = player.serialize()
@@ -126,11 +125,11 @@ func (game *Game) Serialize(playerId int) ([]byte, error) {
         units[i] = unit.serialize(location)
         i += 1
     }
-    return json.Marshal(requests.WorldStruct{
+    return requests.WorldStruct{
         Terrain: terrainInts,
         Units: units,
         Players: players,
-        TurnOwner: game.players[game.turnOwner].playerId})
+        TurnOwner: game.players[game.turnOwner].playerId}, nil
 }
 
 func (game *Game) MoveUnit(playerId int, rawLocations []requests.LocationStruct) error {

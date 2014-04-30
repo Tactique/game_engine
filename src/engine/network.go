@@ -54,12 +54,14 @@ func handleConnection(netConn net.Conn) error {
             return err
         }
         fmt.Println("Got request", request)
-        response, err := conn.handler.handleRequest(request)
+        response := conn.handler.handleRequest(request)
+        /*
         if err != nil {
             fmt.Println(err)
             conn.Close()
             return err
         }
+        */
         fmt.Println("Sent response", response)
         err = conn.Write(response)
         if err != nil {

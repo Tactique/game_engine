@@ -8,16 +8,16 @@ import (
 
 type requestHandler struct {
     sessionGame *game_engine.Game
-    newGameCommand map[string]func(string) (string, *game_engine.Game, error)
-    gameCommand map[string]func(string, int, *game_engine.Game) (string, error)
+    newGameCommand map[string]func(string) (string, *game_engine.Game)
+    gameCommand map[string]func(string, int, *game_engine.Game) string
 }
 
 func newRequestHandler() *requestHandler {
     return &requestHandler{
         sessionGame: nil,
-        newGameCommand: map[string]func(string) (string, *game_engine.Game, error){
+        newGameCommand: map[string]func(string) (string, *game_engine.Game){
             "new": newCommand},
-        gameCommand: map[string]func(string, int, *game_engine.Game) (string, error){
+        gameCommand: map[string]func(string, int, *game_engine.Game) string {
             "exit": exitCommand,
             "move": moveCommand,
             "turn": endTurnCommand,
@@ -25,30 +25,27 @@ func newRequestHandler() *requestHandler {
             "view": viewCommand}}
 }
 
-func (handler *requestHandler) handleRequest(request string) (string, error) {
+func (handler *requestHandler) handleRequest(request string) string {
     command, requestJson := splitOnce(request)
     if handler.sessionGame == nil {
         fun, ok := handler.newGameCommand[command]; if ok {
-            response, game, err := fun(requestJson)
-            if err != nil {
-                return response, err
-            } else {
-                handler.sessionGame = game
-                return response, err
-            }
+            response, game := fun(requestJson)
+            handler.sessionGame = game
+            return command + ":" + response
         } else {
-            return "Need new game request", nil
+            return command + ":" + respondUnknownCommand("Need new game request")
         }
     } else {
         fun, ok := handler.gameCommand[command]; if ok {
             playerId, requestJsonNoPlayerId := splitOnce(requestJson)
             playerIdInt, err := strconv.Atoi(playerId)
             if err != nil {
-                return "", err
+                return respondMalformed("playerId not an int")
             }
-            return fun(requestJsonNoPlayerId, playerIdInt, handler.sessionGame)
+            response := fun(requestJsonNoPlayerId, playerIdInt, handler.sessionGame)
+            return command + ":" + response
         } else {
-            return "Unknown command", nil
+            return command + ":" + respondUnknownCommand("Unknown command")
         }
     }
 }
