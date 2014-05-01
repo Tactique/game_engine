@@ -107,7 +107,51 @@ func (game *Game) AddUnit(location location, unit *unit) error {
 	}
 }
 
-func (game *Game) Serialize(playerId int) (*api.ViewResponse, error) {
+func (game *Game) ViewWorld(playerId int) (*api.ViewWorldResponse, error) {
+	terrain, err := game.ViewTerrain(playerId)
+	if err != nil {
+		return nil, err
+	}
+	players, err := game.ViewPlayers(playerId)
+	if err != nil {
+		return nil, err
+	}
+	units, err := game.ViewUnits(playerId)
+	if err != nil {
+		return nil, err
+	}
+	return &api.ViewWorldResponse{
+		TerrainResponse: *terrain,
+		UnitsResponse:   *units,
+		PlayersResponse: *players}, nil
+}
+
+func (game *Game) ViewTerrain(playerId int) (*api.ViewTerrainResponse, error) {
+	terrainInts := make([][]int, len(game.terrain))
+	for i, t := range game.terrain {
+		thoriz := make([]int, len(t))
+		for j, t_ := range t {
+			thoriz[j] = int(t_)
+		}
+		terrainInts[i] = thoriz
+	}
+	return &api.ViewTerrainResponse{
+		Terrain: terrainInts}, nil
+}
+
+func (game *Game) ViewUnits(playerid int) (*api.ViewUnitsResponse, error) {
+	units := make([]*api.UnitStruct, len(game.unitMap))
+	i := 0
+	for location, unit := range game.unitMap {
+		units[i] = unit.serialize(location)
+		i += 1
+	}
+	return &api.ViewUnitsResponse{
+		Units: units}, nil
+
+}
+
+func (game *Game) ViewPlayers(playerId int) (*api.ViewPlayersResponse, error) {
 	rawMe, err := game.getPlayer(playerId)
 	me := rawMe.serialize()
 	if err != nil {
@@ -124,28 +168,11 @@ func (game *Game) Serialize(playerId int) (*api.ViewResponse, error) {
 			}
 		}
 	}
-	terrainInts := make([][]int, len(game.terrain))
-	for i, t := range game.terrain {
-		thoriz := make([]int, len(t))
-		for j, t_ := range t {
-			thoriz[j] = int(t_)
-		}
-		terrainInts[i] = thoriz
-	}
-	units := make([]*api.UnitStruct, len(game.unitMap))
-	i := 0
-	for location, unit := range game.unitMap {
-		units[i] = unit.serialize(location)
-		i += 1
-	}
-	return &api.ViewResponse{
-		World: api.WorldStruct{
-			Terrain:   terrainInts,
-			Units:     units,
-			Me:        me,
-			TeamMates: teamMates,
-			Enemies:   enemies,
-			TurnOwner: int(game.players[game.turnOwner].nation)}}, nil
+	return &api.ViewPlayersResponse{
+		Me:        me,
+		TeamMates: teamMates,
+		Enemies:   enemies,
+		TurnOwner: int(game.players[game.turnOwner].nation)}, nil
 }
 
 func (game *Game) MoveUnit(playerId int, rawLocations []api.LocationStruct) (*api.MoveResponse, error) {

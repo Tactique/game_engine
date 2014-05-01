@@ -11,11 +11,37 @@ type NewResponse struct {
 	Debug int   `json:"debug"`
 }
 
-type ViewRequest struct {
+type ViewWorldRequest struct {
 }
 
-type ViewResponse struct {
-	World WorldStruct `json:"world"`
+type ViewWorldResponse struct {
+	TerrainResponse ViewTerrainResponse
+	UnitsResponse   ViewUnitsResponse
+	PlayersResponse ViewPlayersResponse
+}
+
+type ViewTerrainRequest struct {
+}
+
+type ViewTerrainResponse struct {
+	Terrain [][]int `json:"terrain"`
+}
+
+type ViewUnitsRequest struct {
+}
+
+type ViewUnitsResponse struct {
+	Units []*UnitStruct `json:"units"`
+}
+
+type ViewPlayersRequest struct {
+}
+
+type ViewPlayersResponse struct {
+	Me        *PlayerStruct   `json:"me"`
+	TeamMates []*PlayerStruct `json:"teamMates"`
+	Enemies   []*PlayerStruct `json:"enemies"`
+	TurnOwner int             `json:"turnOwner"`
 }
 
 type MoveRequest struct {
@@ -48,18 +74,9 @@ type ExitRequest struct {
 	Reason string `json:"reason"`
 }
 
-type WorldStruct struct {
-	Terrain   [][]int         `json:"terrain"`
-	Units     []*UnitStruct   `json:"units"`
-	Me        *PlayerStruct   `json:"me"`
-	TeamMates []*PlayerStruct `json:"teamMates"`
-	Enemies   []*PlayerStruct `json:"enemies"`
-	TurnOwner int             `json:"turnOwner"`
-}
-
 type PlayerStruct struct {
-	Nation   int `json:"nation"`
-	Team     int `json:"team"`
+	Nation int `json:"nation"`
+	Team   int `json:"team"`
 }
 
 type UnitStruct struct {

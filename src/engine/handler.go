@@ -15,11 +15,14 @@ func newRequestHandler() *requestHandler {
 	return &requestHandler{
 		sessionGame: nil,
 		gameRequest: map[string]func([]byte, int, *game_engine.Game) []byte{
-			"exit":   exitRequest,
-			"move":   moveRequest,
-			"turn":   endTurnRequest,
-			"attack": attackRequest,
-			"view":   viewRequest}}
+			"exit":        exitRequest,
+			"move":        moveRequest,
+			"turn":        endTurnRequest,
+			"attack":      attackRequest,
+			"viewWorld":   viewWorldRequest,
+			"viewTerrain": viewTerrainRequest,
+			"viewUnits":   viewUnitsRequest,
+			"viewPlayers": viewPlayersRequest}}
 }
 
 func (handler *requestHandler) handleRequest(request []byte) []byte {

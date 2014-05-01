@@ -16,7 +16,7 @@ func ExampleTestRun() {
 		panic(err)
 	}
 	fmt.Println(message)
-	message, err = proxy.View()
+	message, err = proxy.ViewWorld()
 	if err != nil {
 		panic(err)
 	}
@@ -26,7 +26,7 @@ func ExampleTestRun() {
 		panic(err)
 	}
 	fmt.Println(message)
-	message, err = proxy.View()
+	message, err = proxy.ViewWorld()
 	if err != nil {
 		panic(err)
 	}
@@ -36,7 +36,7 @@ func ExampleTestRun() {
 		panic(err)
 	}
 	fmt.Println(message)
-	message, err = proxy.View()
+	message, err = proxy.ViewWorld()
 	if err != nil {
 		panic(err)
 	}
@@ -46,7 +46,7 @@ func ExampleTestRun() {
 		panic(err)
 	}
 	fmt.Println(message)
-	message, err = proxy.View()
+	message, err = proxy.ViewWorld()
 	if err != nil {
 		panic(err)
 	}

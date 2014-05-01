@@ -20,8 +20,20 @@ func (dummy Client) NewGame() (string, error) {
 	return dummy.send("new", &api.NewRequest{Uids: []int{26, 13}})
 }
 
-func (dummy Client) View() (string, error) {
-	return dummy.send("view:26", &api.ViewRequest{})
+func (dummy Client) ViewWorld() (string, error) {
+	return dummy.send("viewWorld:26", &api.ViewWorldRequest{})
+}
+
+func (dummy Client) ViewTerrain() (string, error) {
+	return dummy.send("viewTerrain:26", &api.ViewTerrainRequest{})
+}
+
+func (dummy Client) ViewUnits() (string, error) {
+	return dummy.send("viewUnits:26", &api.ViewUnitsRequest{})
+}
+
+func (dummy Client) ViewPlayers() (string, error) {
+	return dummy.send("viewPlayers:26", &api.ViewPlayersRequest{})
 }
 
 func (dummy Client) Move() (string, error) {

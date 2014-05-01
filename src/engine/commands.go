@@ -50,13 +50,52 @@ func newRequest(jsonRequest []byte) ([]byte, *game_engine.Game) {
 	}
 }
 
-func viewRequest(jsonRequest []byte, playerId int, game *game_engine.Game) []byte {
-	var request api.ViewRequest
+func viewWorldRequest(jsonRequest []byte, playerId int, game *game_engine.Game) []byte {
+	var request api.ViewPlayersRequest
 	err := json.Unmarshal(jsonRequest, &request)
 	if err != nil {
 		return respondMalformed(nil)
 	}
-	response, err := game.Serialize(playerId)
+	response, err := game.ViewWorld(playerId)
+	if err != nil {
+		return respondBadRequest(err.Error())
+	}
+	return respondSuccess(response)
+}
+
+func viewPlayersRequest(jsonRequest []byte, playerId int, game *game_engine.Game) []byte {
+	var request api.ViewPlayersRequest
+	err := json.Unmarshal(jsonRequest, &request)
+	if err != nil {
+		return respondMalformed(nil)
+	}
+	response, err := game.ViewPlayers(playerId)
+	if err != nil {
+		return respondBadRequest(err.Error())
+	}
+	return respondSuccess(response)
+}
+
+func viewUnitsRequest(jsonRequest []byte, playerId int, game *game_engine.Game) []byte {
+	var request api.ViewUnitsRequest
+	err := json.Unmarshal(jsonRequest, &request)
+	if err != nil {
+		return respondMalformed(nil)
+	}
+	response, err := game.ViewUnits(playerId)
+	if err != nil {
+		return respondBadRequest(err.Error())
+	}
+	return respondSuccess(response)
+}
+
+func viewTerrainRequest(jsonRequest []byte, playerId int, game *game_engine.Game) []byte {
+	var request api.ViewTerrainRequest
+	err := json.Unmarshal(jsonRequest, &request)
+	if err != nil {
+		return respondMalformed(nil)
+	}
+	response, err := game.ViewTerrain(playerId)
 	if err != nil {
 		return respondBadRequest(err.Error())
 	}
