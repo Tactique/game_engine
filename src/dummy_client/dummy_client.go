@@ -59,7 +59,6 @@ func (dummy Client) Exit() ([]byte, error) {
 }
 
 func (dummy Client) send(command string, jsonStringMessage interface{}) ([]byte, error) {
-	fmt.Printf("Sending %v\n", jsonStringMessage)
 	jsonMessage, err := json.Marshal(jsonStringMessage)
 	if err != nil {
 		return []byte{}, err
