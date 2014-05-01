@@ -9,6 +9,7 @@ type NewRequest struct {
 type NewResponse struct {
 	Uids  []int `json:"uids"`
 	Debug int   `json:"debug"`
+	WorldId int   `json:"worldId"`
 }
 
 type ViewWorldRequest struct {
