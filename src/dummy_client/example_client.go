@@ -15,45 +15,45 @@ func ExampleTestRun() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(message)
+	fmt.Println(string(message))
 	message, err = proxy.ViewWorld()
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(message)
+	fmt.Println(string(message))
 	message, err = proxy.Move()
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(message)
+	fmt.Println(string(message))
 	message, err = proxy.ViewWorld()
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(message)
+	fmt.Println(string(message))
 	message, err = proxy.Attack()
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(message)
+	fmt.Println(string(message))
 	message, err = proxy.ViewWorld()
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(message)
+	fmt.Println(string(message))
 	message, err = proxy.Turn()
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(message)
+	fmt.Println(string(message))
 	message, err = proxy.ViewWorld()
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(message)
+	fmt.Println(string(message))
 	message, err = proxy.Exit()
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(message)
+	fmt.Println(string(message))
 }

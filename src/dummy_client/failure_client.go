@@ -6,7 +6,7 @@ import (
 	"net"
 )
 
-func (dummy Client) BadNewGame() (string, error) {
+func (dummy Client) BadNewGame() ([]byte, error) {
 	return dummy.send("new", &api.NewRequest{Uids: []int{}})
 }
 
@@ -20,5 +20,5 @@ func BadTestRun() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(message)
+	fmt.Println(string(message))
 }
