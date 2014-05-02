@@ -25,9 +25,9 @@ func loadTerrains(db *sql.DB) ([]terrain, error) {
 	defer rows.Close()
 	for rows.Next() {
 		var terrain terrain
-		scanErr := rows.Scan(&terrain)
-		if scanErr != nil {
-			return nil, scanErr
+		err := rows.Scan(&terrain)
+		if err != nil {
+			return nil, err
 		}
 		terrains = append(terrains, terrain)
 	}
