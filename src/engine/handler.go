@@ -1,6 +1,7 @@
 package engine
 
 import (
+	"api"
 	"bytes"
 	"engine/game_engine"
 	"strconv"
@@ -15,20 +16,20 @@ func newRequestHandler() *requestHandler {
 	return &requestHandler{
 		sessionGame: nil,
 		gameRequest: map[string]func([]byte, int, *game_engine.Game) []byte{
-			"exit":        exitRequest,
-			"move":        moveRequest,
-			"turn":        endTurnRequest,
-			"attack":      attackRequest,
-			"viewWorld":   viewWorldRequest,
-			"viewTerrain": viewTerrainRequest,
-			"viewUnits":   viewUnitsRequest,
-			"viewPlayers": viewPlayersRequest}}
+			api.COMMAND_EXIT:         exitRequest,
+			api.COMMAND_MOVE:         moveRequest,
+			api.COMMAND_TURN:         endTurnRequest,
+			api.COMMAND_ATTACK:       attackRequest,
+			api.COMMAND_VIEW_WORLD:   viewWorldRequest,
+			api.COMMAND_VIEW_TERRAIN: viewTerrainRequest,
+			api.COMMAND_VIEW_UNITS:   viewUnitsRequest,
+			api.COMMAND_VIEW_PLAYERS: viewPlayersRequest}}
 }
 
 func (handler *requestHandler) handleRequest(request []byte) []byte {
 	command, requestJson := splitOnce(request)
 	if handler.sessionGame == nil {
-		if string(command) == "new" {
+		if string(command) == api.COMMAND_NEW {
 			response, game := newRequest(requestJson)
 			handler.sessionGame = game
 			return buildResponse(command, response)
