@@ -6,14 +6,6 @@ import (
 
 type attackType int
 
-const (
-	sword attackType = iota
-	axe
-	mace
-	wand
-	staff
-)
-
 type attack struct {
 	name       string
 	attackType attackType

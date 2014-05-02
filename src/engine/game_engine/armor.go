@@ -6,13 +6,6 @@ import (
 
 type armorType int
 
-const (
-	cloth armorType = iota
-	leather
-	chainMail
-	plate
-)
-
 type armor struct {
 	name      string
 	armorType armorType
