@@ -18,11 +18,11 @@ type attack struct {
 	name       string
 	attackType attackType
 	power      int
-	minRange   uint
-	maxRange   uint
+	minRange   int
+	maxRange   int
 }
 
-func newAttack(name string, attackType attackType, power int, minRange uint, maxRange uint) *attack {
+func newAttack(name string, attackType attackType, power int, minRange int, maxRange int) *attack {
 	return &attack{
 		name:       name,
 		attackType: attackType,

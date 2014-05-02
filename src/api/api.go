@@ -96,8 +96,8 @@ type AttackStruct struct {
 	Name       string `json:"name"`
 	AttackType int    `json:"attackType"`
 	Power      int    `json:"power"`
-	MinRange   uint   `json:"minRange"`
-	MaxRange   uint   `json:"maxRange"`
+	MinRange   int    `json:"minRange"`
+	MaxRange   int    `json:"maxRange"`
 }
 
 type ArmorStruct struct {
