@@ -30,18 +30,27 @@ func NewGame(playerIds []int, worldId int) (*Game, error) {
 	if err != nil {
 		return nil, err
 	}
+	nations, err := loadNations(db)
+	if err != nil {
+		return nil, err
+	}
 	numPlayers := len(playerIds)
 	if numPlayers > 4 || numPlayers < 1 {
 		return nil, errors.New("must have between 1 and 4 players")
 	}
+	if len(nations) < numPlayers {
+		return nil, errors.New("Not enough nations were loaded, must have at least 2")
+	}
 	players := make([]*player, numPlayers)
 	for i, playerId := range playerIds {
-		players[i] = newPlayer(playerId, nation(i), team(i))
+		players[i] = newPlayer(playerId, nations[i], team(i))
 	}
+
 	if len(terrains) < 1 {
 		return nil, errors.New("No terrains were loadable")
 	}
 	plains := terrains[0]
+
 	ret_game := &Game{
 		terrain: [][]terrain{
 			[]terrain{plains, plains, plains, plains, plains, plains, plains, plains},
@@ -55,8 +64,10 @@ func NewGame(playerIds []int, worldId int) (*Game, error) {
 		numPlayers: numPlayers,
 		turnOwner:  0}
 	if worldId == 0 {
-		ret_game.AddUnit(newLocation(0, 0), newUnit(name, red, dbHealth, dbAttacks, dbArmor, dbMovement))
-		ret_game.AddUnit(newLocation(0, 3), newUnit(name, blue, dbHealth, dbAttacks, dbArmor, dbMovement))
+		ret_game.AddUnit(newLocation(0, 0), newUnit(name, nations[0], dbHealth, dbAttacks, dbArmor, dbMovement))
+		if numPlayers == 2 {
+			ret_game.AddUnit(newLocation(0, 3), newUnit(name, nations[1], dbHealth, dbAttacks, dbArmor, dbMovement))
+		}
 	}
 	return ret_game, nil
 }

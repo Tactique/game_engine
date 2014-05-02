@@ -35,6 +35,26 @@ func loadTerrains(db *sql.DB) ([]terrain, error) {
 	return terrains, nil
 }
 
+func loadNations(db *sql.DB) ([]nation, error) {
+	query := "select nationType from interface_team;"
+	nations := make([]nation , 0)
+	rows, err := db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var nation nation
+		err := rows.Scan(&nation)
+		if err != nil {
+			return nil, err
+		}
+		nations = append(nations, nation)
+	}
+	fmt.Println("Nations", nations)
+	return nations, nil
+}
+
 func loadUnit(db *sql.DB, name string) (int, []*attack, *armor, *movement, error) {
 	query := fmt.Sprintf("select health, attack_one_id, armor_id, movement_id from interface_unit where name = \"%s\";", name)
 	rows, err := db.Query(query)
