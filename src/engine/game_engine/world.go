@@ -1,9 +1,12 @@
 package game_engine
 
 import (
+	"database/sql"
 	"api"
 	"errors"
 	"fmt"
+	"os"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 type Game struct {
@@ -15,6 +18,29 @@ type Game struct {
 }
 
 func NewGame(playerIds []int, worldId int) (*Game, error) {
+	dbPath := os.Getenv("DOMOROOT") + "/domoweb/db.sqlite3"
+	db, err := sql.Open("sqlite3", dbPath)
+	if err != nil {
+		fmt.Println("db open", err)
+		return nil, err
+	}
+	defer db.Close()
+	sql := "select cType from interface_cell;"
+	terrains := make([]terrain, 0)
+	rows, err := db.Query(sql)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var terrain terrain
+		scanErr := rows.Scan(&terrain)
+		if scanErr != nil {
+			return nil, scanErr
+		}
+		terrains = append(terrains, terrain)
+	}
+	fmt.Println(terrains)
 	numPlayers := len(playerIds)
 	if numPlayers > 4 || numPlayers < 1 {
 		return nil, errors.New("must have between 1 and 4 players")
@@ -23,6 +49,7 @@ func NewGame(playerIds []int, worldId int) (*Game, error) {
 	for i, playerId := range playerIds {
 		players[i] = newPlayer(playerId, nation(i), team(i))
 	}
+	plains := terrains[0]
 	ret_game := &Game{
 		terrain: [][]terrain{
 			[]terrain{plains, plains, plains, plains, plains, plains, plains, plains},

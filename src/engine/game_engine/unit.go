@@ -31,7 +31,8 @@ func warrior(nation nation) *unit {
 		"Legs",
 		10,
 		map[terrain]multiplier{
-			plains: multiplier(1.0)})
+		// BIG TODO PULL THIS GUY INTO SQL
+			terrain(0): multiplier(1.0)})
 	sword := newAttack("Basic Sword", sword, 4, 1, 1)
 	chainMailArmor := newArmor("Chain Mail", chainMail, 2)
 	return newUnit(
