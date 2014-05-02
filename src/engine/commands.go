@@ -28,10 +28,16 @@ func respondUnknownRequest(payload interface{}) []byte {
 }
 
 func generateResponse(payload interface{}, status int) []byte {
-	response, err := json.Marshal(map[string]interface{}{"status": status, "payload": payload})
+	response, err := json.Marshal(api.ResponseType{Status: status, Payload: payload})
 	if err != nil {
 		fmt.Println(err.Error())
-		return []byte(fmt.Sprintf("{\"status\": %d, \"payload\": \"oops\"}", api.STATUS_UNSERIALIZEABLE_RESPONSE))
+		backupResponse, err := json.Marshal(api.ResponseType{
+			Status:  api.STATUS_UNSERIALIZEABLE_RESPONSE,
+			Payload: "problem"})
+		if err != nil {
+			return []byte("Really bad")
+		}
+		return backupResponse
 	}
 	return response
 }

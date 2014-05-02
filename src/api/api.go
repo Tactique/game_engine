@@ -1,5 +1,10 @@
 package api
 
+type ResponseType struct {
+	Status  int         `json:"status"`
+	Payload interface{} `json:"payload"`
+}
+
 type NewRequest struct {
 	Uids    []int `json:"uids"`
 	Debug   int   `json:"debug"`
