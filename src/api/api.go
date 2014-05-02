@@ -7,8 +7,8 @@ type NewRequest struct {
 }
 
 type NewResponse struct {
-	Uids  []int `json:"uids"`
-	Debug int   `json:"debug"`
+	Uids    []int `json:"uids"`
+	Debug   int   `json:"debug"`
 	WorldId int   `json:"worldId"`
 }
 
