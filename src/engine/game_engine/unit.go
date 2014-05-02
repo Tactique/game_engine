@@ -17,30 +17,13 @@ type unit struct {
 	canAttack bool
 }
 
-func newUnit(name string, nation nation, movement *movement, attacks []*attack, armor *armor) *unit {
+func newUnit(name string, nation nation, health int, attacks []*attack, armor *armor, movement *movement) *unit {
 	return &unit{
-		name: name, health: 10, maxHealth: 10,
+		name: name, health: health, maxHealth: health,
 		nation:   nation,
 		movement: movement, canMove: true,
 		attacks: attacks, canAttack: true,
 		armor: armor}
-}
-
-func warrior(nation nation) *unit {
-	legs := newMovement(
-		"Legs",
-		10,
-		map[terrain]multiplier{
-		// BIG TODO PULL THIS GUY INTO SQL
-			terrain(0): multiplier(1.0)})
-	sword := newAttack("Basic Sword", sword, 4, 1, 1)
-	chainMailArmor := newArmor("Chain Mail", chainMail, 2)
-	return newUnit(
-		"Warrior",
-		nation,
-		legs,
-		[]*attack{sword},
-		chainMailArmor)
 }
 
 func (unit *unit) serialize(loc location) *api.UnitStruct {
