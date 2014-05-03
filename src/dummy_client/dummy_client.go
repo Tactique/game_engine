@@ -4,7 +4,7 @@ import (
 	"api"
 	"encoding/json"
 	"fmt"
-	"github.com/DomoCo/connection"
+	"github.com/Tactique/golib/connection"
 	"net"
 )
 

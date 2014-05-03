@@ -2,7 +2,7 @@ package engine
 
 import (
 	"fmt"
-	"github.com/DomoCo/connection"
+	"github.com/Tactique/golib/connection"
 	"net"
 )
 
