@@ -11,7 +11,7 @@ import (
 )
 
 func newDatabase() (*sql.DB, error) {
-	dbPath := os.Getenv("DOMOROOT") + "/domoweb/db.sqlite3"
+	dbPath := os.Getenv("DOMOROOT") + "/webserver/db.sqlite3"
 	return sql.Open("sqlite3", dbPath)
 }
 
