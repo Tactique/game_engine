@@ -25,11 +25,6 @@ func NewGame(playerIds []int, worldId int) (*Game, error) {
 	if err != nil {
 		return nil, err
 	}
-	name := "warrior"
-	dbHealth, dbAttacks, dbArmor, dbMovement, err := loadUnit(db, name)
-	if err != nil {
-		return nil, err
-	}
 	nations, err := loadNations(db)
 	if err != nil {
 		return nil, err
@@ -64,7 +59,18 @@ func NewGame(playerIds []int, worldId int) (*Game, error) {
 		numPlayers: numPlayers,
 		turnOwner:  0}
 	if worldId == 0 {
+		name := "warrior"
+		dbHealth, dbAttacks, dbArmor, dbMovement, err := loadUnit(db, name)
+		if err != nil {
+			return nil, err
+		}
 		ret_game.AddUnit(newLocation(0, 0), newUnit(name, nations[0], dbHealth, dbAttacks, dbArmor, dbMovement))
+		name = "mage"
+		dbHealth, dbAttacks, dbArmor, dbMovement, err = loadUnit(db, name)
+		if err != nil {
+			return nil, err
+		}
+		ret_game.AddUnit(newLocation(3, 3), newUnit(name, nations[0], dbHealth, dbAttacks, dbArmor, dbMovement))
 		if numPlayers == 2 {
 			ret_game.AddUnit(newLocation(0, 3), newUnit(name, nations[1], dbHealth, dbAttacks, dbArmor, dbMovement))
 		}
