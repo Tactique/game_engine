@@ -11,12 +11,12 @@ import (
 )
 
 func newDatabase() (*sql.DB, error) {
-	dbPath := os.Getenv("DOMOROOT") + "/webserver/db.sqlite3"
+	dbPath := os.Getenv("DOMOROOT") + "/common/database/db.sqlite3"
 	return sql.Open("sqlite3", dbPath)
 }
 
 func loadTerrains(db *sql.DB) ([]terrain, error) {
-	query := "select cellType from interface_cell;"
+	query := "select cellType from cell;"
 	terrains := make([]terrain, 0)
 	rows, err := db.Query(query)
 	if err != nil {
@@ -36,7 +36,7 @@ func loadTerrains(db *sql.DB) ([]terrain, error) {
 }
 
 func loadNations(db *sql.DB) ([]nation, error) {
-	query := "select nationType from interface_team;"
+	query := "select nationType from team;"
 	nations := make([]nation , 0)
 	rows, err := db.Query(query)
 	if err != nil {
@@ -56,7 +56,7 @@ func loadNations(db *sql.DB) ([]nation, error) {
 }
 
 func loadUnit(db *sql.DB, name string) (int, []*attack, *armor, *movement, error) {
-	query := fmt.Sprintf("select health, attack_one_id, armor_id, movement_id from interface_unit where name = \"%s\";", name)
+	query := fmt.Sprintf("select health, attack_oneId, armorId, movementId from unit where name = \"%s\";", name)
 	rows, err := db.Query(query)
 	if err != nil {
 		return 0, []*attack{}, nil, nil, err
@@ -91,7 +91,7 @@ func loadUnit(db *sql.DB, name string) (int, []*attack, *armor, *movement, error
 }
 
 func loadAttack(db *sql.DB, attack_id int) (*attack, error) {
-	query := fmt.Sprintf("select weaponType_id, name, power, minRange, maxRange from interface_weapon where id = %d;", attack_id)
+	query := fmt.Sprintf("select weaponTypeId, name, power, minRange, maxRange from weapon where id = %d;", attack_id)
 	rows, err := db.Query(query)
 	if err != nil {
 		return nil, err
@@ -119,7 +119,7 @@ func loadAttack(db *sql.DB, attack_id int) (*attack, error) {
 }
 
 func loadAttackType(db *sql.DB, attackType_id int) (attackType, error) {
-	query := fmt.Sprintf("select weaponType from interface_weaponType where id = %d;", attackType_id)
+	query := fmt.Sprintf("select weaponType from weaponType where id = %d;", attackType_id)
 	rows, err := db.Query(query)
 	if err != nil {
 		return 0, err
@@ -139,7 +139,7 @@ func loadAttackType(db *sql.DB, attackType_id int) (attackType, error) {
 }
 
 func loadArmor(db *sql.DB, armor_id int) (*armor, error) {
-	query := fmt.Sprintf("select armorType_id, name, strength from interface_armor where id = %d;", armor_id)
+	query := fmt.Sprintf("select armorTypeId, name, strength from armor where id = %d;", armor_id)
 	rows, err := db.Query(query)
 	if err != nil {
 		return nil, err
@@ -165,7 +165,7 @@ func loadArmor(db *sql.DB, armor_id int) (*armor, error) {
 }
 
 func loadArmorType(db *sql.DB, armorType_id int) (armorType, error) {
-	query := fmt.Sprintf("select armorType from interface_armorType where id = %d;", armorType_id)
+	query := fmt.Sprintf("select armorType from armorType where id = %d;", armorType_id)
 	rows, err := db.Query(query)
 	if err != nil {
 		return 0, err
@@ -185,7 +185,7 @@ func loadArmorType(db *sql.DB, armorType_id int) (armorType, error) {
 }
 
 func loadMovement(db *sql.DB, movement_id int) (*movement, error) {
-	query := fmt.Sprintf("select speedMap_id, name, distance from interface_movement where id = %d;", movement_id)
+	query := fmt.Sprintf("select speedMapId, name, distance from movement where id = %d;", movement_id)
 	rows, err := db.Query(query)
 	if err != nil {
 		return nil, err
@@ -211,7 +211,7 @@ func loadMovement(db *sql.DB, movement_id int) (*movement, error) {
 }
 
 func loadSpeedMap(db *sql.DB, speedMap_id int) (map[terrain]multiplier, error) {
-	query := fmt.Sprintf("select speeds from interface_speedMap where id = %d;", speedMap_id)
+	query := fmt.Sprintf("select speeds from speedMap where id = %d;", speedMap_id)
 	rows, err := db.Query(query)
 	if err != nil {
 		return nil, err
