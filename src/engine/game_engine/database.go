@@ -11,7 +11,7 @@ import (
 )
 
 func newDatabase() (*sql.DB, error) {
-	dbPath := os.Getenv("DOMOROOT") + "/common/database/db.sqlite3"
+	dbPath := os.Getenv("ROOTIQUE") + "/common/database/db.sqlite3"
 	return sql.Open("sqlite3", dbPath)
 }
 
