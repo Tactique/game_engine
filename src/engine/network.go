@@ -23,7 +23,7 @@ func ListenForever(port int) error {
 
 func handleConnection(netConn net.Conn) error {
 	conn := connection.NewSocketConn(netConn)
-	handler := newRequestHandler()
+	handler := NewRequestHandler()
 	for {
 		fmt.Println("Handling a connection")
 		request, err := conn.Read()
@@ -33,7 +33,7 @@ func handleConnection(netConn net.Conn) error {
 			return err
 		}
 		fmt.Println("Got request", string(request))
-		response := handler.handleRequest(request)
+		response := handler.HandleRequest(request)
 		fmt.Println("Sent response", string(response))
 		err = conn.Write(response)
 		if err != nil {
