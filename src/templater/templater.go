@@ -6,40 +6,34 @@ import (
 	"io/ioutil"
 	"bytes"
 	"encoding/json"
-	"fmt"
-	"os"
+	"path"
 )
 
-func GenerateTemplates() {
-	err := os.Mkdir("templates/", 0777)
-	if err != nil {
-		fmt.Println("Couldn't make templates/ :", err)
-	}
-
+func GenerateTemplates(filepath string) {
 	handler := engine.NewRequestHandler()
 
 	message := handler.HandleRequest(dummy_client.BuiltNewRequest)
-	writeJson(message)
+	writeJson(filepath, message)
 	message = handler.HandleRequest(dummy_client.BuiltViewWorldRequest)
-	writeJson(message)
+	writeJson(filepath, message)
 	message = handler.HandleRequest(dummy_client.BuiltViewTerrainRequest)
-	writeJson(message)
+	writeJson(filepath, message)
 	message = handler.HandleRequest(dummy_client.BuiltViewUnitsRequest)
-	writeJson(message)
+	writeJson(filepath, message)
 	message = handler.HandleRequest(dummy_client.BuiltViewPlayersRequest)
-	writeJson(message)
+	writeJson(filepath, message)
 	message = handler.HandleRequest(dummy_client.BuiltMoveRequest)
-	writeJson(message)
+	writeJson(filepath, message)
 	message = handler.HandleRequest(dummy_client.BuiltAttackRequest)
-	writeJson(message)
+	writeJson(filepath, message)
 	message = handler.HandleRequest(dummy_client.BuiltEndTurnRequest)
-	writeJson(message)
+	writeJson(filepath, message)
 }
 
-func writeJson(message []byte) {
+func writeJson(filepath string, message []byte) {
 	name, contents := splitOnce(message)
 	writableContents := transformResponse(name, contents)
-	err := ioutil.WriteFile("templates/"+string(name)+".json", writableContents, 0644)
+	err := ioutil.WriteFile(path.Join(filepath, string(name)+".json"), writableContents, 0644)
 	if err != nil {
 		panic(err)
 	}
