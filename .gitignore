@@ -1,3 +1,4 @@
 src/github.com/
-templates/
 pkg/
+engine
+tactique_engine
