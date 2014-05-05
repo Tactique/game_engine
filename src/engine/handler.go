@@ -53,7 +53,7 @@ func (handler *requestHandler) handleRequest(request []byte) []byte {
 }
 
 func buildResponse(command []byte, response []byte) []byte {
-	return append(append(command, []byte(":")...), response...)
+	return append(append(command, byte(':')), response...)
 }
 
 func splitOnce(input []byte) ([]byte, []byte) {
