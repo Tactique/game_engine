@@ -7,7 +7,7 @@ import (
 )
 
 func (dummy Client) BadNewGame() ([]byte, error) {
-	return dummy.send("new", &api.NewRequest{Uids: []int{}})
+	return dummy.send(PanicSerialize("new", &api.NewRequest{Uids: []int{}}))
 }
 
 func BadTestRun() {
