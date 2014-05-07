@@ -54,7 +54,7 @@ func (unit *unit) receiveDamage(delta int) (bool, error) {
 	logger.Debug("%s taking damage", unit.name)
 	if delta < 0 {
 		message := "Cannot receive a negative amount of damage"
-		logger.Infof(message + " (got %d)", delta)
+		logger.Infof(message+" (got %d)", delta)
 		return true, errors.New(message)
 	}
 	return unit.changeHealth(unit.health - delta), nil

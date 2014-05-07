@@ -2,9 +2,9 @@ package engine
 
 import (
 	"fmt"
-	"net"
 	"github.com/Tactique/golib/connection"
 	"github.com/Tactique/golib/logger"
+	"net"
 )
 
 func listenForever(port int) error {

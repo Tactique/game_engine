@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	_ "github.com/mattn/go-sqlite3"
 	"github.com/Tactique/golib/logger"
+	_ "github.com/mattn/go-sqlite3"
 	"os"
 	"strconv"
 )
@@ -38,7 +38,7 @@ func loadTerrains(db *sql.DB) ([]terrain, error) {
 
 func loadNations(db *sql.DB) ([]nation, error) {
 	query := "select nationType from team;"
-	nations := make([]nation , 0)
+	nations := make([]nation, 0)
 	rows, err := db.Query(query)
 	if err != nil {
 		return nil, err

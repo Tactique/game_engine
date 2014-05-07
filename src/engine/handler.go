@@ -3,9 +3,9 @@ package engine
 import (
 	"api"
 	"bytes"
-	"strconv"
 	"engine/game_engine"
 	"github.com/Tactique/golib/logger"
+	"strconv"
 )
 
 type requestHandler struct {

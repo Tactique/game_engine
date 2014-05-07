@@ -32,7 +32,7 @@ func assertAllTilesTouch(locations []location) error {
 func validMove(moves int, movementType *movement, tiles []terrain, locations []location) error {
 	if len(locations) < 2 {
 		message := "Need at least two tiles, a start and an end"
-		logger.Infof(message + " (got %d)", len(locations))
+		logger.Infof(message+" (got %d)", len(locations))
 		return errors.New(message)
 	}
 	err := assertAllTilesTouch(locations)

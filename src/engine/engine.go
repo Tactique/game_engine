@@ -2,8 +2,8 @@ package engine
 
 import (
 	"flag"
-	"os"
 	"github.com/Tactique/golib/logger"
+	"os"
 )
 
 func Main() {
