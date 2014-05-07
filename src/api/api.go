@@ -88,6 +88,7 @@ type PlayerStruct struct {
 type UnitStruct struct {
 	Name      string          `json:"name"`
 	Health    int             `json:"health"`
+	MaxHealth int             `json:"maxHealth"`
 	Nation    int             `json:"nation"`
 	Movement  *MovementStruct `json:"movement"`
 	Position  *LocationStruct `json:"position"`

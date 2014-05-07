@@ -35,6 +35,7 @@ func (unit *unit) serialize(loc location) *api.UnitStruct {
 	return &api.UnitStruct{
 		Name:      unit.name,
 		Health:    unit.health,
+		MaxHealth: unit.maxHealth,
 		Nation:    int(unit.nation),
 		Movement:  unit.movement.serialize(),
 		Position:  loc.serialize(),
