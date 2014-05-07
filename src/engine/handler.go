@@ -13,7 +13,7 @@ type requestHandler struct {
 	gameRequest map[string]func([]byte, int, *game_engine.Game) []byte
 }
 
-func NewRequestHandler() *requestHandler {
+func newRequestHandler() *requestHandler {
 	return &requestHandler{
 		sessionGame: nil,
 		gameRequest: map[string]func([]byte, int, *game_engine.Game) []byte{
@@ -27,7 +27,7 @@ func NewRequestHandler() *requestHandler {
 			api.COMMAND_VIEW_PLAYERS: viewPlayersRequest}}
 }
 
-func (handler *requestHandler) HandleRequest(request []byte) []byte {
+func (handler *requestHandler) handleRequest(request []byte) []byte {
 	command, requestJson := splitOnce(request)
 	logger.Infof("Got command %s and request json %s", string(command), string(requestJson))
 	if handler.sessionGame == nil {

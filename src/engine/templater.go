@@ -8,23 +8,23 @@ import (
 )
 
 func generateTemplates(filepath string) {
-	handler := NewRequestHandler()
+	handler := newRequestHandler()
 
-	message := handler.HandleRequest(dummy_client.BuiltNewRequest)
+	message := handler.handleRequest(dummy_client.BuiltNewRequest)
 	writeJson(filepath, message)
-	message = handler.HandleRequest(dummy_client.BuiltViewWorldRequest)
+	message = handler.handleRequest(dummy_client.BuiltViewWorldRequest)
 	writeJson(filepath, message)
-	message = handler.HandleRequest(dummy_client.BuiltViewTerrainRequest)
+	message = handler.handleRequest(dummy_client.BuiltViewTerrainRequest)
 	writeJson(filepath, message)
-	message = handler.HandleRequest(dummy_client.BuiltViewUnitsRequest)
+	message = handler.handleRequest(dummy_client.BuiltViewUnitsRequest)
 	writeJson(filepath, message)
-	message = handler.HandleRequest(dummy_client.BuiltViewPlayersRequest)
+	message = handler.handleRequest(dummy_client.BuiltViewPlayersRequest)
 	writeJson(filepath, message)
-	message = handler.HandleRequest(dummy_client.BuiltMoveRequest)
+	message = handler.handleRequest(dummy_client.BuiltMoveRequest)
 	writeJson(filepath, message)
-	message = handler.HandleRequest(dummy_client.BuiltAttackRequest)
+	message = handler.handleRequest(dummy_client.BuiltAttackRequest)
 	writeJson(filepath, message)
-	message = handler.HandleRequest(dummy_client.BuiltEndTurnRequest)
+	message = handler.handleRequest(dummy_client.BuiltEndTurnRequest)
 	writeJson(filepath, message)
 }
 

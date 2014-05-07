@@ -19,6 +19,6 @@ func Main() {
 		os.Exit(0)
 	} else {
 		logger.Infof("Starting Tactique on port %d!", *port)
-		ListenForever(*port)
+		panic(listenForever(*port))
 	}
 }

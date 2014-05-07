@@ -7,7 +7,7 @@ import (
 	"github.com/Tactique/golib/logger"
 )
 
-func ListenForever(port int) error {
+func listenForever(port int) error {
 	ln, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", port))
 	if err != nil {
 		panic(err)
@@ -24,7 +24,7 @@ func ListenForever(port int) error {
 
 func handleConnection(netConn net.Conn) error {
 	conn := connection.NewSocketConn(netConn)
-	handler := NewRequestHandler()
+	handler := newRequestHandler()
 	for {
 		logger.Infof("Handling a connection")
 		request, err := conn.Read()
@@ -34,7 +34,7 @@ func handleConnection(netConn net.Conn) error {
 			return err
 		}
 		logger.Debugf("Got request %s", string(request))
-		response := handler.HandleRequest(request)
+		response := handler.handleRequest(request)
 		logger.Debugf("Sent response %s", string(response))
 		err = conn.Write(response)
 		if err != nil {
