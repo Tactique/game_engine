@@ -1,16 +1,14 @@
-package templater
+package engine
 
 import (
 	"dummy_client"
-	"engine"
 	"io/ioutil"
-	"bytes"
 	"encoding/json"
 	"path"
 )
 
-func GenerateTemplates(filepath string) {
-	handler := engine.NewRequestHandler()
+func generateTemplates(filepath string) {
+	handler := NewRequestHandler()
 
 	message := handler.HandleRequest(dummy_client.BuiltNewRequest)
 	writeJson(filepath, message)
@@ -51,15 +49,4 @@ func transformResponse(name []byte, message []byte) []byte {
 		panic(err)
 	}
 	return writableResponse
-}
-
-func splitOnce(input []byte) ([]byte, []byte) {
-	pieces := bytes.SplitN(input, []byte(":"), 2)
-	if len(pieces) == 1 {
-		return pieces[0], []byte{}
-	} else if len(pieces) == 2 {
-		return pieces[0], pieces[1]
-	} else {
-		return []byte{}, []byte{}
-	}
 }
