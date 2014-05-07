@@ -4,6 +4,7 @@ import (
 	"api"
 	"errors"
 	"fmt"
+	"github.com/Tactique/golib/logger"
 )
 
 type Game struct {
@@ -17,7 +18,7 @@ type Game struct {
 func NewGame(playerIds []int, worldId int) (*Game, error) {
 	db, err := newDatabase()
 	if err != nil {
-		fmt.Println("db open", err)
+		logger.Errorf("DB is open and cannot be used (%s)", err.Error())
 		return nil, err
 	}
 	defer db.Close()
@@ -31,9 +32,11 @@ func NewGame(playerIds []int, worldId int) (*Game, error) {
 	}
 	numPlayers := len(playerIds)
 	if numPlayers > 4 || numPlayers < 1 {
+		logger.Warnf("Must have between 1 and 4 players, got %d", numPlayers)
 		return nil, errors.New("must have between 1 and 4 players")
 	}
 	if len(nations) < numPlayers {
+		logger.Errorf("Not enough nations were loaded, must have at least 2, got %s", nations)
 		return nil, errors.New("Not enough nations were loaded, must have at least 2")
 	}
 	players := make([]*player, numPlayers)
@@ -108,7 +111,7 @@ func (game *Game) getUnit(location location) (*unit, error) {
 		return unit, nil
 	} else {
 		message := fmt.Sprintf("No unit located at (%d, %d)", location.x, location.y)
-		fmt.Println(message)
+		logger.Warn(message)
 		return nil, errors.New(message)
 	}
 
@@ -116,6 +119,7 @@ func (game *Game) getUnit(location location) (*unit, error) {
 
 func (game *Game) verifyOwnedUnit(player *player, unit *unit) error {
 	if unit.nation != player.nation {
+		logger.Warnf("Unit owned by %d is not owned by the current player (%d)", unit.nation, player.nation)
 		return errors.New("Unit is not owned by the current player")
 	} else {
 		return nil
@@ -131,14 +135,14 @@ func (game *Game) getAndVerifyOwnedUnit(player *player, location location) (*uni
 }
 
 func (game *Game) AddUnit(location location, unit *unit) error {
-	fmt.Println("adding unit")
+	logger.Infof("Adding unit at (x: %d, y: %d)", location.x, location.y)
 	_, ok := game.unitMap[location]
 	if !ok {
 		game.unitMap[location] = unit
-		fmt.Println("added unit")
+		logger.Infof("Added unit at (x: %d, y: %d)", location.x, location.y)
 		return nil
 	} else {
-		fmt.Println("failed to add unit")
+		logger.Warnf("Failed to add unit at (x: %d, y: %d)", location.x, location.y)
 		return errors.New("location already occupied")
 	}
 }
@@ -232,7 +236,7 @@ func (game *Game) MoveUnit(playerId int, rawLocations []api.LocationStruct) (*ap
 func (game *Game) verifyValidMove(player *player, locations []location) error {
 	if len(locations) < 1 {
 		message := "must supply more than zero locations"
-		fmt.Println(message)
+		logger.Warnf(message)
 		return errors.New(message)
 	}
 
@@ -277,7 +281,8 @@ func (game *Game) Attack(
 		return nil, err
 	}
 	alive, err := damageUnit(attackingUnit, attackIndex, defendingUnit)
-	fmt.Println("unit is %s (alive)", alive)
+	// TODO When a unit is dead mark is as such
+	logger.Errorf("unit is %s (alive)", alive)
 	if err != nil {
 		return nil, err
 	}

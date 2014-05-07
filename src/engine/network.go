@@ -2,8 +2,9 @@ package engine
 
 import (
 	"fmt"
-	"github.com/Tactique/golib/connection"
 	"net"
+	"github.com/Tactique/golib/connection"
+	"github.com/Tactique/golib/logger"
 )
 
 func ListenForever(port int) error {
@@ -14,7 +15,7 @@ func ListenForever(port int) error {
 	for {
 		conn, err := ln.Accept()
 		if err != nil {
-			fmt.Println("Error accepting connection")
+			logger.Warnf("Error accepting connection (%s)", err.Error())
 			continue
 		}
 		go handleConnection(conn)
@@ -25,19 +26,19 @@ func handleConnection(netConn net.Conn) error {
 	conn := connection.NewSocketConn(netConn)
 	handler := NewRequestHandler()
 	for {
-		fmt.Println("Handling a connection")
+		logger.Infof("Handling a connection")
 		request, err := conn.Read()
 		if err != nil {
-			fmt.Println(err)
+			logger.Warnf("Error reading request (%s)", err.Error())
 			conn.Close()
 			return err
 		}
-		fmt.Println("Got request", string(request))
+		logger.Debugf("Got request %s", string(request))
 		response := handler.HandleRequest(request)
-		fmt.Println("Sent response", string(response))
+		logger.Debugf("Sent response %s", string(response))
 		err = conn.Write(response)
 		if err != nil {
-			fmt.Println(err)
+			logger.Warnf("Error writing response (%s)", err.Error())
 			conn.Close()
 			return err
 		}

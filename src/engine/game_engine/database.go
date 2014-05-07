@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/Tactique/golib/logger"
 	"os"
 	"strconv"
 )
@@ -31,7 +32,7 @@ func loadTerrains(db *sql.DB) ([]terrain, error) {
 		}
 		terrains = append(terrains, terrain)
 	}
-	fmt.Println("Terrain", terrains)
+	logger.Infof("Terrain %s", terrains)
 	return terrains, nil
 }
 
@@ -51,7 +52,7 @@ func loadNations(db *sql.DB) ([]nation, error) {
 		}
 		nations = append(nations, nation)
 	}
-	fmt.Println("Nations", nations)
+	logger.Infof("Nations %s", nations)
 	return nations, nil
 }
 
@@ -228,9 +229,10 @@ func loadSpeedMap(db *sql.DB, speedMap_id int) (map[terrain]multiplier, error) {
 	}
 	rows.Close()
 	var stringSpeedMap map[string]int
-	fmt.Println("--------JSON-----------")
-	fmt.Println(json.Unmarshal([]byte(dbSpeedMap), &stringSpeedMap))
-	fmt.Println(stringSpeedMap)
+	err = json.Unmarshal([]byte(dbSpeedMap), &stringSpeedMap)
+	if err != nil {
+		return nil, err
+	}
 	speedMap := make(map[terrain]multiplier, len(stringSpeedMap))
 	for cellType, cost := range stringSpeedMap {
 		intCell, err := strconv.Atoi(cellType)
@@ -239,6 +241,5 @@ func loadSpeedMap(db *sql.DB, speedMap_id int) (map[terrain]multiplier, error) {
 		}
 		speedMap[terrain(intCell)] = multiplier(cost)
 	}
-	fmt.Println("--------JSON-----------")
 	return speedMap, nil
 }

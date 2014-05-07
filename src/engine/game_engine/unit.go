@@ -3,6 +3,7 @@ package game_engine
 import (
 	"api"
 	"errors"
+	"github.com/Tactique/golib/logger"
 )
 
 type unit struct {
@@ -49,20 +50,27 @@ func (unit *unit) turnReset() {
 }
 
 func (unit *unit) receiveDamage(delta int) (bool, error) {
+	logger.Debug("%s taking damage", unit.name)
 	if delta < 0 {
-		return true, errors.New("Cannot receive a negative amount of damage")
+		message := "Cannot receive a negative amount of damage"
+		logger.Infof(message + " (got %d)", delta)
+		return true, errors.New(message)
 	}
 	return unit.changeHealth(unit.health - delta), nil
 }
 
 func (unit *unit) changeHealth(newHealth int) bool {
+	logger.Infof("Unit %s is being attacked with %d health", unit.name, unit.health)
 	unit.health = newHealth
 	if unit.health > unit.maxHealth {
+		logger.Infof("Unit %s cannot go above max health, capping from %d", unit.name, unit.health)
 		unit.health = unit.maxHealth
 	}
 	if unit.health <= 0 {
+		logger.Infof("Unit %s cannot go below 0 health, raising from from %d (unit is dead)", unit.name, unit.health)
 		unit.health = 0
 		return false
 	}
+	logger.Infof("Unit %s is now at %d health", unit.name, unit.health)
 	return true
 }

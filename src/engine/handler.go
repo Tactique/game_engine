@@ -3,8 +3,9 @@ package engine
 import (
 	"api"
 	"bytes"
-	"engine/game_engine"
 	"strconv"
+	"engine/game_engine"
+	"github.com/Tactique/golib/logger"
 )
 
 type requestHandler struct {
@@ -28,10 +29,12 @@ func NewRequestHandler() *requestHandler {
 
 func (handler *requestHandler) HandleRequest(request []byte) []byte {
 	command, requestJson := splitOnce(request)
+	logger.Infof("Got command %s and request json %s", string(command), string(requestJson))
 	if handler.sessionGame == nil {
 		if string(command) == api.COMMAND_NEW {
 			response, game := newRequest(requestJson)
 			handler.sessionGame = game
+			logger.Infof("After new game request, game is now %t nil", (handler.sessionGame == nil))
 			return buildResponse(command, response)
 		} else {
 			return buildResponse(command, respondUnknownRequest("Need new game request"))
@@ -42,11 +45,14 @@ func (handler *requestHandler) HandleRequest(request []byte) []byte {
 			playerId, requestJsonNoPlayerId := splitOnce(requestJson)
 			playerIdInt, err := strconv.Atoi(string(playerId))
 			if err != nil {
+				logger.Warnf("Not a playerId %s (%s)", playerId, err.Error())
 				return buildResponse(command, respondMalformed("playerId not an int"))
 			}
+			logger.Infof("request for playerId %d", playerIdInt)
 			response := fun(requestJsonNoPlayerId, playerIdInt, handler.sessionGame)
 			return buildResponse(command, response)
 		} else {
+			logger.Warnf("Unknown Command %s", string(command))
 			return buildResponse(command, respondUnknownRequest("Unknown command"))
 		}
 	}

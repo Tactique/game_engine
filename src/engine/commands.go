@@ -4,7 +4,7 @@ import (
 	"api"
 	"encoding/json"
 	"engine/game_engine"
-	"fmt"
+	"github.com/Tactique/golib/logger"
 )
 
 func respondSuccess(payload interface{}) []byte {
@@ -30,15 +30,19 @@ func respondUnknownRequest(payload interface{}) []byte {
 func generateResponse(payload interface{}, status int) []byte {
 	response, err := json.Marshal(api.ResponseType{Status: status, Payload: payload})
 	if err != nil {
-		fmt.Println(err.Error())
+		logger.Warnf("Could not generate response: %s", err.Error())
 		backupResponse, err := json.Marshal(api.ResponseType{
 			Status:  api.STATUS_UNSERIALIZEABLE_RESPONSE,
 			Payload: "problem"})
 		if err != nil {
 			return []byte("Really bad")
 		}
+		logger.Infof("Generating response with status %d", status)
+		logger.Debugf("Full message %s", string(response))
 		return backupResponse
 	}
+	logger.Infof("Generating response with status %d", status)
+	logger.Debugf("Full message %s", string(response))
 	return response
 }
 
