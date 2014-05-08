@@ -44,10 +44,8 @@ type ViewPlayersRequest struct {
 }
 
 type ViewPlayersResponse struct {
-	Me        *PlayerStruct   `json:"me"`
-	TeamMates []*PlayerStruct `json:"teamMates"`
-	Enemies   []*PlayerStruct `json:"enemies"`
-	TurnOwner int             `json:"turnOwner"`
+	Players   map[string]*PlayerStruct `json:"players"`
+	TurnOwner int                      `json:"turnOwner"`
 }
 
 type MoveRequest struct {

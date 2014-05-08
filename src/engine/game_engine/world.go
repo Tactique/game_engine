@@ -192,26 +192,12 @@ func (game *Game) ViewUnits(playerid int) (*api.ViewUnitsResponse, error) {
 }
 
 func (game *Game) ViewPlayers(playerId int) (*api.ViewPlayersResponse, error) {
-	rawMe, err := game.getPlayer(playerId)
-	me := rawMe.serialize()
-	if err != nil {
-		return nil, err
-	}
-	teamMates := make([]*api.PlayerStruct, 0)
-	enemies := make([]*api.PlayerStruct, 0)
+	players := make(map[string]*api.PlayerStruct, game.numPlayers)
 	for _, player := range game.players {
-		if player.playerId != rawMe.playerId {
-			if player.team == rawMe.team {
-				teamMates = append(teamMates, player.serialize())
-			} else {
-				enemies = append(enemies, player.serialize())
-			}
-		}
+		players[fmt.Sprintf("%d", player.playerId)] = player.serialize()
 	}
 	return &api.ViewPlayersResponse{
-		Me:        me,
-		TeamMates: teamMates,
-		Enemies:   enemies,
+		Players:        players,
 		TurnOwner: int(game.players[game.turnOwner].nation)}, nil
 }
 
