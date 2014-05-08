@@ -293,5 +293,6 @@ func (game *Game) EndTurn(playerId int) (*api.EndTurnResponse, error) {
 	} else {
 		game.turnOwner = nextOwner
 	}
-	return &api.EndTurnResponse{}, nil
+	return &api.EndTurnResponse{
+		PlayerId: playerId}, nil
 }
