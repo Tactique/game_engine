@@ -19,14 +19,14 @@ var BuiltViewUnitsRequest []byte = PanicSerialize("viewUnits:26", &api.ViewUnits
 var BuiltViewPlayersRequest []byte = PanicSerialize("viewPlayers:26", &api.ViewPlayersRequest{})
 
 var BuiltMoveRequest []byte = PanicSerialize("move:26", &api.MoveRequest{
-		Move: []api.LocationStruct{
-			api.LocationStruct{X: 0, Y: 0},
-			api.LocationStruct{X: 0, Y: 1}}})
+	Move: []api.LocationStruct{
+		api.LocationStruct{X: 0, Y: 0},
+		api.LocationStruct{X: 0, Y: 1}}})
 
 var BuiltAttackRequest []byte = PanicSerialize("attack:26", &api.AttackRequest{
-		Attacker:    api.LocationStruct{X: 0, Y: 1},
-		AttackIndex: 0,
-		Target:      api.LocationStruct{X: 0, Y: 3}})
+	Attacker:    api.LocationStruct{X: 0, Y: 1},
+	AttackIndex: 0,
+	Target:      api.LocationStruct{X: 0, Y: 3}})
 
 var BuiltEndTurnRequest []byte = PanicSerialize("turn:26", &api.EndTurnRequest{})
 
@@ -81,13 +81,12 @@ func buildRequest(command string, response []byte) []byte {
 }
 
 func PanicSerialize(command string, jsonStringMessage interface{}) []byte {
-	response, err := Serialize(command , jsonStringMessage)
+	response, err := Serialize(command, jsonStringMessage)
 	if err != nil {
 		panic(err)
 	}
 	return response
 }
-
 
 func Serialize(command string, jsonStringMessage interface{}) ([]byte, error) {
 	jsonMessage, err := json.Marshal(jsonStringMessage)
@@ -96,7 +95,6 @@ func Serialize(command string, jsonStringMessage interface{}) ([]byte, error) {
 	}
 	return buildRequest(command, jsonMessage), nil
 }
-
 
 func (dummy Client) send(message []byte) ([]byte, error) {
 	fmt.Printf("Sending %s\n", message)
