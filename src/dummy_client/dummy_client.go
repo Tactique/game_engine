@@ -19,14 +19,14 @@ var BuiltViewUnitsRequest []byte = PanicSerialize("viewUnits:26", &api.ViewUnits
 var BuiltViewPlayersRequest []byte = PanicSerialize("viewPlayers:26", &api.ViewPlayersRequest{})
 
 var BuiltMoveRequest []byte = PanicSerialize("move:26", &api.MoveRequest{
-	Move: []api.LocationStruct{
-		api.LocationStruct{X: 0, Y: 0},
-		api.LocationStruct{X: 0, Y: 1}}})
+	Move: []*api.LocationStruct{
+		&api.LocationStruct{X: 0, Y: 0},
+		&api.LocationStruct{X: 0, Y: 1}}})
 
 var BuiltAttackRequest []byte = PanicSerialize("attack:26", &api.AttackRequest{
-	Attacker:    api.LocationStruct{X: 0, Y: 1},
+	Attacker:    &api.LocationStruct{X: 0, Y: 1},
 	AttackIndex: 0,
-	Target:      api.LocationStruct{X: 0, Y: 3}})
+	Target:      &api.LocationStruct{X: 0, Y: 3}})
 
 var BuiltEndTurnRequest []byte = PanicSerialize("turn:26", &api.EndTurnRequest{})
 

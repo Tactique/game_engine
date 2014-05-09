@@ -167,9 +167,9 @@ func (game *Game) ViewWorld(playerId int) (*api.ViewWorldResponse, error) {
 		return nil, err
 	}
 	return &api.ViewWorldResponse{
-		TerrainResponse: *terrain,
-		UnitsResponse:   *units,
-		PlayersResponse: *players}, nil
+		TerrainResponse: terrain,
+		UnitsResponse:   units,
+		PlayersResponse: players}, nil
 }
 
 func (game *Game) ViewTerrain(playerId int) (*api.ViewTerrainResponse, error) {
@@ -205,7 +205,7 @@ func (game *Game) ViewPlayers(playerId int) (*api.ViewPlayersResponse, error) {
 		TurnOwner: int(game.players[game.turnOwner].nation)}, nil
 }
 
-func (game *Game) MoveUnit(playerId int, rawLocations []api.LocationStruct) (*api.MoveResponse, error) {
+func (game *Game) MoveUnit(playerId int, rawLocations []*api.LocationStruct) (*api.MoveResponse, error) {
 	player, err := game.getAndVerifyTurnOwner(playerId)
 	if err != nil {
 		return nil, err
@@ -256,8 +256,8 @@ func (game *Game) verifiedMoveUnit(locations []location) error {
 }
 
 func (game *Game) Attack(
-	playerId int, attacker api.LocationStruct,
-	attackIndex int, target api.LocationStruct) (*api.AttackResponse, error) {
+	playerId int, attacker *api.LocationStruct,
+	attackIndex int, target *api.LocationStruct) (*api.AttackResponse, error) {
 	player, err := game.getAndVerifyTurnOwner(playerId)
 	if err != nil {
 		return nil, err

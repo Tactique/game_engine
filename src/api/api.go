@@ -21,9 +21,9 @@ type ViewWorldRequest struct {
 }
 
 type ViewWorldResponse struct {
-	TerrainResponse ViewTerrainResponse
-	UnitsResponse   ViewUnitsResponse
-	PlayersResponse ViewPlayersResponse
+	TerrainResponse *ViewTerrainResponse
+	UnitsResponse   *ViewUnitsResponse
+	PlayersResponse *ViewPlayersResponse
 }
 
 type ViewTerrainRequest struct {
@@ -49,23 +49,23 @@ type ViewPlayersResponse struct {
 }
 
 type MoveRequest struct {
-	Move []LocationStruct `json:"move"`
+	Move []*LocationStruct `json:"move"`
 }
 
 type MoveResponse struct {
-	Move []LocationStruct `json:"move"`
+	Move []*LocationStruct `json:"move"`
 }
 
 type AttackRequest struct {
-	Attacker    LocationStruct `json:"attacker"`
-	AttackIndex int            `json:"attackIndex"`
-	Target      LocationStruct `json:"target"`
+	Attacker    *LocationStruct `json:"attacker"`
+	AttackIndex int             `json:"attackIndex"`
+	Target      *LocationStruct `json:"target"`
 }
 
 type AttackResponse struct {
-	Attacker    LocationStruct `json:"attacker"`
-	AttackIndex int            `json:"attackIndex"`
-	Target      LocationStruct `json:"target"`
+	Attacker    *LocationStruct `json:"attacker"`
+	AttackIndex int             `json:"attackIndex"`
+	Target      *LocationStruct `json:"target"`
 }
 
 type EndTurnRequest struct {

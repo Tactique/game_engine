@@ -13,7 +13,7 @@ func newLocation(x int, y int) location {
 	return location{x: x, y: y}
 }
 
-func locationFromRequest(requestLocation api.LocationStruct) location {
+func locationFromRequest(requestLocation *api.LocationStruct) location {
 	return newLocation(requestLocation.X, requestLocation.Y)
 }
 
