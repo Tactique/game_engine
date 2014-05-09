@@ -8,6 +8,7 @@ import (
 
 type unit struct {
 	name      string
+	id        int
 	health    int
 	maxHealth int
 	nation    nation
@@ -18,9 +19,9 @@ type unit struct {
 	canAttack bool
 }
 
-func newUnit(name string, nation nation, health int, attacks []*attack, armor *armor, movement *movement) *unit {
+func newUnit(name string, id int, nation nation, health int, attacks []*attack, armor *armor, movement *movement) *unit {
 	return &unit{
-		name: name, health: health, maxHealth: health,
+		name: name, id: id, health: health, maxHealth: health,
 		nation:   nation,
 		movement: movement, canMove: true,
 		attacks: attacks, canAttack: true,

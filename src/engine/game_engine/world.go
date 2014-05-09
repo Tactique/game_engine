@@ -13,6 +13,7 @@ type Game struct {
 	players    []*player
 	numPlayers int
 	turnOwner  int
+	nextUnitId int
 }
 
 func NewGame(playerIds []int, worldId int) (*Game, error) {
@@ -60,22 +61,23 @@ func NewGame(playerIds []int, worldId int) (*Game, error) {
 		unitMap:    make(map[location]*unit),
 		players:    players,
 		numPlayers: numPlayers,
-		turnOwner:  0}
+		turnOwner:  0,
+		nextUnitId: 0}
 	if worldId == 0 {
 		name := "warrior"
 		dbHealth, dbAttacks, dbArmor, dbMovement, err := loadUnit(db, name)
 		if err != nil {
 			return nil, err
 		}
-		ret_game.AddUnit(newLocation(0, 0), newUnit(name, nations[0], dbHealth, dbAttacks, dbArmor, dbMovement))
+		ret_game.AddUnit(newLocation(0, 0), name, nations[0], dbHealth, dbAttacks, dbArmor, dbMovement)
 		name = "mage"
 		dbHealth, dbAttacks, dbArmor, dbMovement, err = loadUnit(db, name)
 		if err != nil {
 			return nil, err
 		}
-		ret_game.AddUnit(newLocation(3, 3), newUnit(name, nations[0], dbHealth, dbAttacks, dbArmor, dbMovement))
+		ret_game.AddUnit(newLocation(3, 3), name, nations[0], dbHealth, dbAttacks, dbArmor, dbMovement)
 		if numPlayers == 2 {
-			ret_game.AddUnit(newLocation(0, 3), newUnit(name, nations[1], dbHealth, dbAttacks, dbArmor, dbMovement))
+			ret_game.AddUnit(newLocation(0, 3), name, nations[1], dbHealth, dbAttacks, dbArmor, dbMovement)
 		}
 	}
 	return ret_game, nil
@@ -134,11 +136,15 @@ func (game *Game) getAndVerifyOwnedUnit(player *player, location location) (*uni
 	return unit, game.verifyOwnedUnit(player, unit)
 }
 
-func (game *Game) AddUnit(location location, unit *unit) error {
+func (game *Game) AddUnit(
+	location location, name string, nation nation,
+	health int, attacks []*attack, armor *armor, movement *movement) error {
 	logger.Infof("Adding unit at (x: %d, y: %d)", location.x, location.y)
 	_, ok := game.unitMap[location]
 	if !ok {
-		game.unitMap[location] = unit
+		game.unitMap[location] = newUnit(
+			name, game.nextUnitId, nation, health, attacks, armor, movement)
+		game.nextUnitId += 1
 		logger.Infof("Added unit at (x: %d, y: %d)", location.x, location.y)
 		return nil
 	} else {
@@ -180,11 +186,9 @@ func (game *Game) ViewTerrain(playerId int) (*api.ViewTerrainResponse, error) {
 }
 
 func (game *Game) ViewUnits(playerid int) (*api.ViewUnitsResponse, error) {
-	units := make([]*api.UnitStruct, len(game.unitMap))
-	i := 0
-	for location, unit := range game.unitMap {
-		units[i] = unit.serialize(location)
-		i += 1
+	units := make(map[string]*api.UnitStruct, 0)
+	for loc, unit := range game.unitMap {
+		units[fmt.Sprintf("%d", unit.id)] = unit.serialize(loc)
 	}
 	return &api.ViewUnitsResponse{
 		Units: units}, nil
@@ -289,10 +293,10 @@ func (game *Game) EndTurn(playerId int) (*api.EndTurnResponse, error) {
 		game.turnOwner = nextOwner
 	}
 	currentOwner := game.players[game.turnOwner]
-	units := make([]*api.UnitStruct, 0)
+	units := make(map[string]*api.UnitStruct, 0)
 	for loc, unit := range game.unitMap {
 		if unit.nation == currentOwner.nation {
-			units = append(units, unit.serialize(loc))
+			units[fmt.Sprintf("%d", unit.id)] = unit.serialize(loc)
 			unit.turnReset()
 		}
 	}

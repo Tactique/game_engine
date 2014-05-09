@@ -37,7 +37,7 @@ type ViewUnitsRequest struct {
 }
 
 type ViewUnitsResponse struct {
-	Units []*UnitStruct `json:"units"`
+	Units map[string]*UnitStruct `json:"units"`
 }
 
 type ViewPlayersRequest struct {
@@ -72,8 +72,8 @@ type EndTurnRequest struct {
 }
 
 type EndTurnResponse struct {
-	PlayerId     int           `json:"playerId"`
-	ChangedUnits []*UnitStruct `json:"changedUnits"`
+	PlayerId     int                    `json:"playerId"`
+	ChangedUnits map[string]*UnitStruct `json:"changedUnits"`
 }
 
 type ExitRequest struct {
