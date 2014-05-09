@@ -72,7 +72,8 @@ type EndTurnRequest struct {
 }
 
 type EndTurnResponse struct {
-	PlayerId int `json:"playerId"`
+	PlayerId     int           `json:"playerId"`
+	ChangedUnits []*UnitStruct `json:"changedUnits"`
 }
 
 type ExitRequest struct {

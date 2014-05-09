@@ -197,7 +197,7 @@ func (game *Game) ViewPlayers(playerId int) (*api.ViewPlayersResponse, error) {
 		players[fmt.Sprintf("%d", player.playerId)] = player.serialize()
 	}
 	return &api.ViewPlayersResponse{
-		Players:        players,
+		Players:   players,
 		TurnOwner: int(game.players[game.turnOwner].nation)}, nil
 }
 
@@ -278,14 +278,9 @@ func (game *Game) Attack(
 }
 
 func (game *Game) EndTurn(playerId int) (*api.EndTurnResponse, error) {
-	player, err := game.getAndVerifyTurnOwner(playerId)
+	err := game.verifyTurnOwner(playerId)
 	if err != nil {
 		return nil, err
-	}
-	for _, unit := range game.unitMap {
-		if unit.nation == player.nation {
-			unit.turnReset()
-		}
 	}
 	nextOwner := game.turnOwner + 1
 	if nextOwner >= game.numPlayers {
@@ -293,6 +288,15 @@ func (game *Game) EndTurn(playerId int) (*api.EndTurnResponse, error) {
 	} else {
 		game.turnOwner = nextOwner
 	}
+	currentOwner := game.players[game.turnOwner]
+	units := make([]*api.UnitStruct, 0)
+	for loc, unit := range game.unitMap {
+		if unit.nation == currentOwner.nation {
+			units = append(units, unit.serialize(loc))
+			unit.turnReset()
+		}
+	}
 	return &api.EndTurnResponse{
-		PlayerId: playerId}, nil
+		PlayerId:     playerId,
+		ChangedUnits: units}, nil
 }
