@@ -296,8 +296,8 @@ func (game *Game) EndTurn(playerId int) (*api.EndTurnResponse, error) {
 	units := make(map[string]*api.UnitStruct, 0)
 	for loc, unit := range game.unitMap {
 		if unit.nation == currentOwner.nation {
-			units[fmt.Sprintf("%d", unit.id)] = unit.serialize(loc)
 			unit.turnReset()
+			units[fmt.Sprintf("%d", unit.id)] = unit.serialize(loc)
 		}
 	}
 	return &api.EndTurnResponse{
