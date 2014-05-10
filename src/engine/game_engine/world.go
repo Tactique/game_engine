@@ -45,18 +45,19 @@ func NewGame(playerIds []int, worldId int) (*Game, error) {
 		players[i] = newPlayer(playerId, nations[i], team(i))
 	}
 
-	if len(terrains) < 1 {
+	if len(terrains) < 2 {
 		return nil, errors.New("No terrains were loadable")
 	}
 	plains := terrains[0]
+	roads:= terrains[1]
 
 	ret_game := &Game{
 		terrain: [][]terrain{
-			[]terrain{plains, plains, plains, plains, plains, plains, plains, plains},
-			[]terrain{plains, plains, plains, plains, plains, plains, plains, plains},
-			[]terrain{plains, plains, plains, plains, plains, plains, plains, plains},
-			[]terrain{plains, plains, plains, plains, plains, plains, plains, plains},
-			[]terrain{plains, plains, plains, plains, plains, plains, plains, plains},
+			[]terrain{plains, roads,  plains, plains, plains, plains, plains, plains},
+			[]terrain{plains, roads,  plains, plains, plains, plains, plains, plains},
+			[]terrain{roads,  roads,  roads,  plains, plains, plains, plains, plains},
+			[]terrain{plains, plains, roads,  plains, plains, plains, plains, plains},
+			[]terrain{plains, plains, roads,  plains, plains, plains, plains, plains},
 			[]terrain{plains, plains, plains, plains, plains, plains, plains, plains}},
 		unitMap:    make(map[location]*unit),
 		players:    players,
