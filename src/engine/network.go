@@ -1,6 +1,7 @@
 package engine
 
 import (
+	"engine/request_handler"
 	"fmt"
 	"github.com/Tactique/golib/connection"
 	"github.com/Tactique/golib/logger"
@@ -24,7 +25,7 @@ func listenForever(port int) error {
 
 func handleConnection(netConn net.Conn) error {
 	conn := connection.NewSocketConn(netConn)
-	handler := newRequestHandler()
+	handler := request_handler.NewRequestHandler()
 	for {
 		logger.Infof("Handling a connection")
 		request, err := conn.Read()
@@ -34,7 +35,7 @@ func handleConnection(netConn net.Conn) error {
 			return err
 		}
 		logger.Debugf("Got request %s", string(request))
-		response := handler.handleRequest(request)
+		response := handler.HandleRequest(request)
 		logger.Debugf("Sent response %s", string(response))
 		err = conn.Write(response)
 		if err != nil {

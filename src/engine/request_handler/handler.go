@@ -1,4 +1,4 @@
-package engine
+package request_handler
 
 import (
 	"api"
@@ -8,13 +8,13 @@ import (
 	"strconv"
 )
 
-type requestHandler struct {
+type RequestHandler struct {
 	sessionGame *game_engine.Game
 	gameRequest map[string]func([]byte, int, *game_engine.Game) []byte
 }
 
-func newRequestHandler() *requestHandler {
-	return &requestHandler{
+func NewRequestHandler() *RequestHandler {
+	return &RequestHandler{
 		sessionGame: nil,
 		gameRequest: map[string]func([]byte, int, *game_engine.Game) []byte{
 			api.COMMAND_EXIT:         exitRequest,
@@ -27,7 +27,7 @@ func newRequestHandler() *requestHandler {
 			api.COMMAND_VIEW_PLAYERS: viewPlayersRequest}}
 }
 
-func (handler *requestHandler) handleRequest(request []byte) []byte {
+func (handler *RequestHandler) HandleRequest(request []byte) []byte {
 	command, requestJson := splitOnce(request)
 	logger.Infof("Got command %s and request json %s", string(command), string(requestJson))
 	if handler.sessionGame == nil {
