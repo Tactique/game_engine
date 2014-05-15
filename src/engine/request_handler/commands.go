@@ -46,13 +46,13 @@ func generateResponse(payload interface{}, status int) []byte {
 	return response
 }
 
-func newRequest(jsonRequest []byte) ([]byte, *game_engine.Game) {
+func newRequest(jsonRequest []byte) ([]byte, *game_engine.World) {
 	var request api.NewRequest
 	err := json.Unmarshal(jsonRequest, &request)
 	if err != nil {
 		return respondMalformed(nil), nil
 	}
-	game, err := game_engine.NewGame(request.Uids, request.Debug)
+	game, err := game_engine.NewWorld(request.Uids, request.Debug)
 	if err != nil {
 		return respondBadRequest(err.Error()), nil
 	} else {
@@ -60,7 +60,7 @@ func newRequest(jsonRequest []byte) ([]byte, *game_engine.Game) {
 	}
 }
 
-func viewWorldRequest(jsonRequest []byte, playerId int, game *game_engine.Game) []byte {
+func viewWorldRequest(jsonRequest []byte, playerId int, game *game_engine.World) []byte {
 	var request api.ViewPlayersRequest
 	err := json.Unmarshal(jsonRequest, &request)
 	if err != nil {
@@ -73,7 +73,7 @@ func viewWorldRequest(jsonRequest []byte, playerId int, game *game_engine.Game) 
 	return respondSuccess(response)
 }
 
-func viewPlayersRequest(jsonRequest []byte, playerId int, game *game_engine.Game) []byte {
+func viewPlayersRequest(jsonRequest []byte, playerId int, game *game_engine.World) []byte {
 	var request api.ViewPlayersRequest
 	err := json.Unmarshal(jsonRequest, &request)
 	if err != nil {
@@ -86,7 +86,7 @@ func viewPlayersRequest(jsonRequest []byte, playerId int, game *game_engine.Game
 	return respondSuccess(response)
 }
 
-func viewUnitsRequest(jsonRequest []byte, playerId int, game *game_engine.Game) []byte {
+func viewUnitsRequest(jsonRequest []byte, playerId int, game *game_engine.World) []byte {
 	var request api.ViewUnitsRequest
 	err := json.Unmarshal(jsonRequest, &request)
 	if err != nil {
@@ -99,7 +99,7 @@ func viewUnitsRequest(jsonRequest []byte, playerId int, game *game_engine.Game) 
 	return respondSuccess(response)
 }
 
-func viewTerrainRequest(jsonRequest []byte, playerId int, game *game_engine.Game) []byte {
+func viewTerrainRequest(jsonRequest []byte, playerId int, game *game_engine.World) []byte {
 	var request api.ViewTerrainRequest
 	err := json.Unmarshal(jsonRequest, &request)
 	if err != nil {
@@ -112,7 +112,7 @@ func viewTerrainRequest(jsonRequest []byte, playerId int, game *game_engine.Game
 	return respondSuccess(response)
 }
 
-func moveRequest(jsonRequest []byte, playerId int, game *game_engine.Game) []byte {
+func moveRequest(jsonRequest []byte, playerId int, game *game_engine.World) []byte {
 	var request api.MoveRequest
 	err := json.Unmarshal(jsonRequest, &request)
 	if err != nil {
@@ -125,7 +125,7 @@ func moveRequest(jsonRequest []byte, playerId int, game *game_engine.Game) []byt
 	return respondSuccess(response)
 }
 
-func attackRequest(jsonRequest []byte, playerId int, game *game_engine.Game) []byte {
+func attackRequest(jsonRequest []byte, playerId int, game *game_engine.World) []byte {
 	var request api.AttackRequest
 	err := json.Unmarshal(jsonRequest, &request)
 	if err != nil {
@@ -138,7 +138,7 @@ func attackRequest(jsonRequest []byte, playerId int, game *game_engine.Game) []b
 	return respondSuccess(response)
 }
 
-func endTurnRequest(jsonRequest []byte, playerId int, game *game_engine.Game) []byte {
+func endTurnRequest(jsonRequest []byte, playerId int, game *game_engine.World) []byte {
 	var request api.MoveRequest
 	err := json.Unmarshal(jsonRequest, &request)
 	if err != nil {
@@ -151,7 +151,7 @@ func endTurnRequest(jsonRequest []byte, playerId int, game *game_engine.Game) []
 	return respondSuccess(response)
 }
 
-func exitRequest(jsonRequest []byte, playerId int, game *game_engine.Game) []byte {
+func exitRequest(jsonRequest []byte, playerId int, game *game_engine.World) []byte {
 	var request api.ExitRequest
 	err := json.Unmarshal(jsonRequest, &request)
 	if err != nil {

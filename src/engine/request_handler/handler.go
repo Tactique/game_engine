@@ -9,14 +9,14 @@ import (
 )
 
 type RequestHandler struct {
-	sessionGame *game_engine.Game
-	gameRequest map[string]func([]byte, int, *game_engine.Game) []byte
+	sessionGame *game_engine.World
+	gameRequest map[string]func([]byte, int, *game_engine.World) []byte
 }
 
 func NewRequestHandler() *RequestHandler {
 	return &RequestHandler{
 		sessionGame: nil,
-		gameRequest: map[string]func([]byte, int, *game_engine.Game) []byte{
+		gameRequest: map[string]func([]byte, int, *game_engine.World) []byte{
 			api.COMMAND_EXIT:         exitRequest,
 			api.COMMAND_MOVE:         moveRequest,
 			api.COMMAND_TURN:         endTurnRequest,

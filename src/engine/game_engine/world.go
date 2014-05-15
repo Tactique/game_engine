@@ -7,7 +7,7 @@ import (
 	"github.com/Tactique/golib/logger"
 )
 
-type Game struct {
+type World struct {
 	terrain    [][]terrain
 	unitMap    map[location]*unit
 	players    []*player
@@ -16,7 +16,7 @@ type Game struct {
 	nextUnitId int
 }
 
-func NewGame(playerIds []int, worldId int) (*Game, error) {
+func NewWorld(playerIds []int, worldId int) (*World, error) {
 	db, err := newDatabase()
 	if err != nil {
 		logger.Errorf("DB is open and cannot be used (%s)", err.Error())
@@ -51,7 +51,7 @@ func NewGame(playerIds []int, worldId int) (*Game, error) {
 	plains := terrains[0]
 	roads := terrains[1]
 
-	ret_game := &Game{
+	ret_world := &World{
 		terrain: [][]terrain{
 			[]terrain{plains, roads, plains, plains, plains, plains, plains, plains},
 			[]terrain{plains, roads, plains, plains, plains, plains, plains, plains},
@@ -70,22 +70,22 @@ func NewGame(playerIds []int, worldId int) (*Game, error) {
 		if err != nil {
 			return nil, err
 		}
-		ret_game.AddUnit(newLocation(0, 0), name, nations[0], dbHealth, dbAttacks, dbArmor, dbMovement)
+		ret_world.AddUnit(newLocation(0, 0), name, nations[0], dbHealth, dbAttacks, dbArmor, dbMovement)
 		name = "mage"
 		dbHealth, dbAttacks, dbArmor, dbMovement, err = loadUnit(db, name)
 		if err != nil {
 			return nil, err
 		}
-		ret_game.AddUnit(newLocation(3, 3), name, nations[0], dbHealth, dbAttacks, dbArmor, dbMovement)
+		ret_world.AddUnit(newLocation(3, 3), name, nations[0], dbHealth, dbAttacks, dbArmor, dbMovement)
 		if numPlayers == 2 {
-			ret_game.AddUnit(newLocation(0, 3), name, nations[1], dbHealth, dbAttacks, dbArmor, dbMovement)
+			ret_world.AddUnit(newLocation(0, 3), name, nations[1], dbHealth, dbAttacks, dbArmor, dbMovement)
 		}
 	}
-	return ret_game, nil
+	return ret_world, nil
 }
 
-func (game *Game) getPlayer(playerId int) (*player, error) {
-	for _, player := range game.players {
+func (world *World) getPlayer(playerId int) (*player, error) {
+	for _, player := range world.players {
 		if player.playerId == playerId {
 			return player, nil
 		}
@@ -93,23 +93,23 @@ func (game *Game) getPlayer(playerId int) (*player, error) {
 	return nil, errors.New("Player not playing")
 }
 
-func (game *Game) verifyTurnOwner(playerId int) error {
-	if playerId != game.players[game.turnOwner].playerId {
+func (world *World) verifyTurnOwner(playerId int) error {
+	if playerId != world.players[world.turnOwner].playerId {
 		return errors.New("Not the turn owner")
 	}
 	return nil
 }
 
-func (game *Game) getAndVerifyTurnOwner(playerId int) (*player, error) {
-	err := game.verifyTurnOwner(playerId)
+func (world *World) getAndVerifyTurnOwner(playerId int) (*player, error) {
+	err := world.verifyTurnOwner(playerId)
 	if err != nil {
 		return nil, err
 	}
-	return game.getPlayer(playerId)
+	return world.getPlayer(playerId)
 }
 
-func (game *Game) getUnit(location location) (*unit, error) {
-	unit, ok := game.unitMap[location]
+func (world *World) getUnit(location location) (*unit, error) {
+	unit, ok := world.unitMap[location]
 	if ok {
 		return unit, nil
 	} else {
@@ -120,7 +120,7 @@ func (game *Game) getUnit(location location) (*unit, error) {
 
 }
 
-func (game *Game) verifyOwnedUnit(player *player, unit *unit) error {
+func (world *World) verifyOwnedUnit(player *player, unit *unit) error {
 	if unit.nation != player.nation {
 		logger.Warnf("Unit owned by %d is not owned by the current player (%d)", unit.nation, player.nation)
 		return errors.New("Unit is not owned by the current player")
@@ -129,23 +129,23 @@ func (game *Game) verifyOwnedUnit(player *player, unit *unit) error {
 	}
 }
 
-func (game *Game) getAndVerifyOwnedUnit(player *player, location location) (*unit, error) {
-	unit, err := game.getUnit(location)
+func (world *World) getAndVerifyOwnedUnit(player *player, location location) (*unit, error) {
+	unit, err := world.getUnit(location)
 	if err != nil {
 		return nil, err
 	}
-	return unit, game.verifyOwnedUnit(player, unit)
+	return unit, world.verifyOwnedUnit(player, unit)
 }
 
-func (game *Game) AddUnit(
+func (world *World) AddUnit(
 	location location, name string, nation nation,
 	health int, attacks []*attack, armor *armor, movement *movement) error {
 	logger.Infof("Adding unit at (x: %d, y: %d)", location.x, location.y)
-	_, ok := game.unitMap[location]
+	_, ok := world.unitMap[location]
 	if !ok {
-		game.unitMap[location] = newUnit(
-			name, game.nextUnitId, nation, health, attacks, armor, movement)
-		game.nextUnitId += 1
+		world.unitMap[location] = newUnit(
+			name, world.nextUnitId, nation, health, attacks, armor, movement)
+		world.nextUnitId += 1
 		logger.Infof("Added unit at (x: %d, y: %d)", location.x, location.y)
 		return nil
 	} else {
@@ -154,16 +154,16 @@ func (game *Game) AddUnit(
 	}
 }
 
-func (game *Game) ViewWorld(playerId int) (*api.ViewWorldResponse, error) {
-	terrain, err := game.ViewTerrain(playerId)
+func (world *World) ViewWorld(playerId int) (*api.ViewWorldResponse, error) {
+	terrain, err := world.ViewTerrain(playerId)
 	if err != nil {
 		return nil, err
 	}
-	players, err := game.ViewPlayers(playerId)
+	players, err := world.ViewPlayers(playerId)
 	if err != nil {
 		return nil, err
 	}
-	units, err := game.ViewUnits(playerId)
+	units, err := world.ViewUnits(playerId)
 	if err != nil {
 		return nil, err
 	}
@@ -173,9 +173,9 @@ func (game *Game) ViewWorld(playerId int) (*api.ViewWorldResponse, error) {
 		PlayersResponse: players}, nil
 }
 
-func (game *Game) ViewTerrain(playerId int) (*api.ViewTerrainResponse, error) {
-	terrainInts := make([][]int, len(game.terrain))
-	for i, t := range game.terrain {
+func (world *World) ViewTerrain(playerId int) (*api.ViewTerrainResponse, error) {
+	terrainInts := make([][]int, len(world.terrain))
+	for i, t := range world.terrain {
 		thoriz := make([]int, len(t))
 		for j, t_ := range t {
 			thoriz[j] = int(t_)
@@ -186,9 +186,9 @@ func (game *Game) ViewTerrain(playerId int) (*api.ViewTerrainResponse, error) {
 		Terrain: terrainInts}, nil
 }
 
-func (game *Game) ViewUnits(playerid int) (*api.ViewUnitsResponse, error) {
+func (world *World) ViewUnits(playerid int) (*api.ViewUnitsResponse, error) {
 	units := make(map[string]*api.UnitStruct, 0)
-	for loc, unit := range game.unitMap {
+	for loc, unit := range world.unitMap {
 		units[fmt.Sprintf("%d", unit.id)] = unit.serialize(loc)
 	}
 	return &api.ViewUnitsResponse{
@@ -196,18 +196,18 @@ func (game *Game) ViewUnits(playerid int) (*api.ViewUnitsResponse, error) {
 
 }
 
-func (game *Game) ViewPlayers(playerId int) (*api.ViewPlayersResponse, error) {
-	players := make(map[string]*api.PlayerStruct, game.numPlayers)
-	for _, player := range game.players {
+func (world *World) ViewPlayers(playerId int) (*api.ViewPlayersResponse, error) {
+	players := make(map[string]*api.PlayerStruct, world.numPlayers)
+	for _, player := range world.players {
 		players[fmt.Sprintf("%d", player.playerId)] = player.serialize()
 	}
 	return &api.ViewPlayersResponse{
 		Players:   players,
-		TurnOwner: int(game.players[game.turnOwner].nation)}, nil
+		TurnOwner: int(world.players[world.turnOwner].nation)}, nil
 }
 
-func (game *Game) MoveUnit(playerId int, rawLocations []*api.LocationStruct) (*api.MoveResponse, error) {
-	player, err := game.getAndVerifyTurnOwner(playerId)
+func (world *World) MoveUnit(playerId int, rawLocations []*api.LocationStruct) (*api.MoveResponse, error) {
+	player, err := world.getAndVerifyTurnOwner(playerId)
 	if err != nil {
 		return nil, err
 	}
@@ -215,16 +215,16 @@ func (game *Game) MoveUnit(playerId int, rawLocations []*api.LocationStruct) (*a
 	for i, location := range rawLocations {
 		locations[i] = locationFromRequest(location)
 	}
-	validError := game.verifyValidMove(player, locations)
+	validError := world.verifyValidMove(player, locations)
 	if validError != nil {
 		return nil, validError
 	}
-	game.verifiedMoveUnit(locations)
+	world.verifiedMoveUnit(locations)
 	return &api.MoveResponse{
 		Move: rawLocations}, nil
 }
 
-func (game *Game) verifyValidMove(player *player, locations []location) error {
+func (world *World) verifyValidMove(player *player, locations []location) error {
 	if len(locations) < 1 {
 		message := "must supply more than zero locations"
 		logger.Warnf(message)
@@ -233,41 +233,41 @@ func (game *Game) verifyValidMove(player *player, locations []location) error {
 
 	tiles := make([]terrain, len(locations))
 	for i, location := range locations {
-		tiles[i] = game.terrain[location.x][location.y]
+		tiles[i] = world.terrain[location.x][location.y]
 	}
 	for _, location := range locations[1:] {
-		if game.unitMap[location] != nil {
+		if world.unitMap[location] != nil {
 			return errors.New("Cannot pass through units")
 		}
 	}
-	unit, err := game.getAndVerifyOwnedUnit(player, locations[0])
+	unit, err := world.getAndVerifyOwnedUnit(player, locations[0])
 	if err != nil {
 		return err
 	}
 	return validMove(unit.movement.distance, unit.movement, tiles, locations)
 }
 
-func (game *Game) verifiedMoveUnit(locations []location) error {
+func (world *World) verifiedMoveUnit(locations []location) error {
 	end := len(locations)
-	unit := game.unitMap[newLocation(locations[0].x, locations[0].y)]
+	unit := world.unitMap[newLocation(locations[0].x, locations[0].y)]
 	unit.canMove = false
-	game.unitMap[newLocation(locations[end-1].x, locations[end-1].y)] = unit
-	delete(game.unitMap, newLocation(locations[0].x, locations[0].y))
+	world.unitMap[newLocation(locations[end-1].x, locations[end-1].y)] = unit
+	delete(world.unitMap, newLocation(locations[0].x, locations[0].y))
 	return nil
 }
 
-func (game *Game) Attack(
+func (world *World) Attack(
 	playerId int, attacker *api.LocationStruct,
 	attackIndex int, target *api.LocationStruct) (*api.AttackResponse, error) {
-	player, err := game.getAndVerifyTurnOwner(playerId)
+	player, err := world.getAndVerifyTurnOwner(playerId)
 	if err != nil {
 		return nil, err
 	}
-	attackingUnit, err := game.getAndVerifyOwnedUnit(player, locationFromRequest(attacker))
+	attackingUnit, err := world.getAndVerifyOwnedUnit(player, locationFromRequest(attacker))
 	if err != nil {
 		return nil, err
 	}
-	defendingUnit, err := game.getUnit(locationFromRequest(target))
+	defendingUnit, err := world.getUnit(locationFromRequest(target))
 	if err != nil {
 		return nil, err
 	}
@@ -282,20 +282,20 @@ func (game *Game) Attack(
 		Target: target}, nil
 }
 
-func (game *Game) EndTurn(playerId int) (*api.EndTurnResponse, error) {
-	err := game.verifyTurnOwner(playerId)
+func (world *World) EndTurn(playerId int) (*api.EndTurnResponse, error) {
+	err := world.verifyTurnOwner(playerId)
 	if err != nil {
 		return nil, err
 	}
-	nextOwner := game.turnOwner + 1
-	if nextOwner >= game.numPlayers {
-		game.turnOwner = 0
+	nextOwner := world.turnOwner + 1
+	if nextOwner >= world.numPlayers {
+		world.turnOwner = 0
 	} else {
-		game.turnOwner = nextOwner
+		world.turnOwner = nextOwner
 	}
-	currentOwner := game.players[game.turnOwner]
+	currentOwner := world.players[world.turnOwner]
 	units := make(map[string]*api.UnitStruct, 0)
-	for loc, unit := range game.unitMap {
+	for loc, unit := range world.unitMap {
 		if unit.nation == currentOwner.nation {
 			unit.turnReset()
 			units[fmt.Sprintf("%d", unit.id)] = unit.serialize(loc)
