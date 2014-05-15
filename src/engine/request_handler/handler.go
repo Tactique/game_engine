@@ -3,20 +3,19 @@ package request_handler
 import (
 	"api"
 	"bytes"
-	"engine/game_engine"
 	"github.com/Tactique/golib/logger"
 	"strconv"
 )
 
 type RequestHandler struct {
-	sessionGame *game_engine.World
-	gameRequest map[string]func([]byte, int, *game_engine.World) []byte
+	sessionGame *Game
+	gameRequest map[string]func([]byte, int, *Game) []byte
 }
 
 func NewRequestHandler() *RequestHandler {
 	return &RequestHandler{
 		sessionGame: nil,
-		gameRequest: map[string]func([]byte, int, *game_engine.World) []byte{
+		gameRequest: map[string]func([]byte, int, *Game) []byte{
 			api.COMMAND_EXIT:         exitRequest,
 			api.COMMAND_MOVE:         moveRequest,
 			api.COMMAND_TURN:         endTurnRequest,

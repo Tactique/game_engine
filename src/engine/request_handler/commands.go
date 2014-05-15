@@ -3,7 +3,6 @@ package request_handler
 import (
 	"api"
 	"encoding/json"
-	"engine/game_engine"
 	"github.com/Tactique/golib/logger"
 )
 
@@ -46,13 +45,13 @@ func generateResponse(payload interface{}, status int) []byte {
 	return response
 }
 
-func newRequest(jsonRequest []byte) ([]byte, *game_engine.World) {
+func newRequest(jsonRequest []byte) ([]byte, *Game) {
 	var request api.NewRequest
 	err := json.Unmarshal(jsonRequest, &request)
 	if err != nil {
 		return respondMalformed(nil), nil
 	}
-	game, err := game_engine.NewWorld(request.Uids, request.Debug)
+	game, err := NewGame(request)
 	if err != nil {
 		return respondBadRequest(err.Error()), nil
 	} else {
@@ -60,98 +59,98 @@ func newRequest(jsonRequest []byte) ([]byte, *game_engine.World) {
 	}
 }
 
-func viewWorldRequest(jsonRequest []byte, playerId int, game *game_engine.World) []byte {
-	var request api.ViewPlayersRequest
+func viewWorldRequest(jsonRequest []byte, playerId int, game *Game) []byte {
+	var request api.ViewWorldRequest
 	err := json.Unmarshal(jsonRequest, &request)
 	if err != nil {
 		return respondMalformed(nil)
 	}
-	response, err := game.ViewWorld(playerId)
+	response, err := game.ViewWorld(playerId, request)
 	if err != nil {
 		return respondBadRequest(err.Error())
 	}
 	return respondSuccess(response)
 }
 
-func viewPlayersRequest(jsonRequest []byte, playerId int, game *game_engine.World) []byte {
+func viewPlayersRequest(jsonRequest []byte, playerId int, game *Game) []byte {
 	var request api.ViewPlayersRequest
 	err := json.Unmarshal(jsonRequest, &request)
 	if err != nil {
 		return respondMalformed(nil)
 	}
-	response, err := game.ViewPlayers(playerId)
+	response, err := game.ViewPlayers(playerId, request)
 	if err != nil {
 		return respondBadRequest(err.Error())
 	}
 	return respondSuccess(response)
 }
 
-func viewUnitsRequest(jsonRequest []byte, playerId int, game *game_engine.World) []byte {
+func viewUnitsRequest(jsonRequest []byte, playerId int, game *Game) []byte {
 	var request api.ViewUnitsRequest
 	err := json.Unmarshal(jsonRequest, &request)
 	if err != nil {
 		return respondMalformed(nil)
 	}
-	response, err := game.ViewUnits(playerId)
+	response, err := game.ViewUnits(playerId, request)
 	if err != nil {
 		return respondBadRequest(err.Error())
 	}
 	return respondSuccess(response)
 }
 
-func viewTerrainRequest(jsonRequest []byte, playerId int, game *game_engine.World) []byte {
+func viewTerrainRequest(jsonRequest []byte, playerId int, game *Game) []byte {
 	var request api.ViewTerrainRequest
 	err := json.Unmarshal(jsonRequest, &request)
 	if err != nil {
 		return respondMalformed(nil)
 	}
-	response, err := game.ViewTerrain(playerId)
+	response, err := game.ViewTerrain(playerId, request)
 	if err != nil {
 		return respondBadRequest(err.Error())
 	}
 	return respondSuccess(response)
 }
 
-func moveRequest(jsonRequest []byte, playerId int, game *game_engine.World) []byte {
+func moveRequest(jsonRequest []byte, playerId int, game *Game) []byte {
 	var request api.MoveRequest
 	err := json.Unmarshal(jsonRequest, &request)
 	if err != nil {
 		return respondMalformed(nil)
 	}
-	response, err := game.MoveUnit(playerId, request.Move)
+	response, err := game.MoveUnit(playerId, request)
 	if err != nil {
 		return respondBadRequest(err.Error())
 	}
 	return respondSuccess(response)
 }
 
-func attackRequest(jsonRequest []byte, playerId int, game *game_engine.World) []byte {
+func attackRequest(jsonRequest []byte, playerId int, game *Game) []byte {
 	var request api.AttackRequest
 	err := json.Unmarshal(jsonRequest, &request)
 	if err != nil {
 		return respondMalformed(nil)
 	}
-	response, err := game.Attack(playerId, request.Attacker, request.AttackIndex, request.Target)
+	response, err := game.Attack(playerId, request)
 	if err != nil {
 		return respondBadRequest(err.Error())
 	}
 	return respondSuccess(response)
 }
 
-func endTurnRequest(jsonRequest []byte, playerId int, game *game_engine.World) []byte {
-	var request api.MoveRequest
+func endTurnRequest(jsonRequest []byte, playerId int, game *Game) []byte {
+	var request api.EndTurnRequest
 	err := json.Unmarshal(jsonRequest, &request)
 	if err != nil {
 		return respondMalformed(nil)
 	}
-	response, err := game.EndTurn(playerId)
+	response, err := game.EndTurn(playerId, request)
 	if err != nil {
 		return respondBadRequest(err.Error())
 	}
 	return respondSuccess(response)
 }
 
-func exitRequest(jsonRequest []byte, playerId int, game *game_engine.World) []byte {
+func exitRequest(jsonRequest []byte, playerId int, game *Game) []byte {
 	var request api.ExitRequest
 	err := json.Unmarshal(jsonRequest, &request)
 	if err != nil {
