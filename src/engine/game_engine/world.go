@@ -154,56 +154,32 @@ func (world *World) AddUnit(
 	}
 }
 
-func (world *World) ViewWorld(playerId int) (*api.ViewWorldResponse, error) {
-	terrain, err := world.ViewTerrain(playerId)
-	if err != nil {
-		return nil, err
-	}
-	players, err := world.ViewPlayers(playerId)
-	if err != nil {
-		return nil, err
-	}
-	units, err := world.ViewUnits(playerId)
-	if err != nil {
-		return nil, err
-	}
-	return &api.ViewWorldResponse{
-		TerrainResponse: terrain,
-		UnitsResponse:   units,
-		PlayersResponse: players}, nil
-}
-
-func (world *World) ViewTerrain(playerId int) (*api.ViewTerrainResponse, error) {
-	terrainInts := make([][]int, len(world.terrain))
-	for i, t := range world.terrain {
-		thoriz := make([]int, len(t))
-		for j, t_ := range t {
-			thoriz[j] = int(t_)
-		}
-		terrainInts[i] = thoriz
-	}
-	return &api.ViewTerrainResponse{
-		Terrain: terrainInts}, nil
-}
-
-func (world *World) ViewUnits(playerid int) (*api.ViewUnitsResponse, error) {
-	units := make(map[string]*api.UnitStruct, 0)
+func (world *World) GetUnits() map[location]unit {
+	copiedUnitMap := make(map[location]unit, len(world.unitMap))
 	for loc, unit := range world.unitMap {
-		units[fmt.Sprintf("%d", unit.id)] = unit.serialize(loc)
+		copiedUnitMap[loc] = *unit
 	}
-	return &api.ViewUnitsResponse{
-		Units: units}, nil
-
+	return copiedUnitMap
 }
 
-func (world *World) ViewPlayers(playerId int) (*api.ViewPlayersResponse, error) {
-	players := make(map[string]*api.PlayerStruct, world.numPlayers)
-	for _, player := range world.players {
-		players[fmt.Sprintf("%d", player.playerId)] = player.serialize()
+func (world *World) GetTerrain() [][]terrain {
+	return world.terrain
+}
+
+func (world *World) GetPlayers() []player {
+	players := make([]player, world.numPlayers)
+	for i, player := range world.players {
+		players[i] = *player
 	}
-	return &api.ViewPlayersResponse{
-		Players:   players,
-		TurnOwner: int(world.players[world.turnOwner].nation)}, nil
+	return players
+}
+
+func (world *World) GetNumPlayers() int {
+	return world.numPlayers
+}
+
+func (world *World) GetTurnOwner() *player {
+	return world.players[world.turnOwner]
 }
 
 func (world *World) MoveUnit(playerId int, rawLocations []*api.LocationStruct) (*api.MoveResponse, error) {
@@ -298,7 +274,7 @@ func (world *World) EndTurn(playerId int) (*api.EndTurnResponse, error) {
 	for loc, unit := range world.unitMap {
 		if unit.nation == currentOwner.nation {
 			unit.turnReset()
-			units[fmt.Sprintf("%d", unit.id)] = unit.serialize(loc)
+			units[fmt.Sprintf("%d", unit.id)] = unit.Serialize(loc)
 		}
 	}
 	return &api.EndTurnResponse{

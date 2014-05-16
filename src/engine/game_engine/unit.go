@@ -28,7 +28,7 @@ func newUnit(name string, id int, nation nation, health int, attacks []*attack, 
 		armor: armor}
 }
 
-func (unit *unit) serialize(loc location) *api.UnitStruct {
+func (unit *unit) Serialize(loc location) *api.UnitStruct {
 	attacks := make([]*api.AttackStruct, len(unit.attacks))
 	for i, attack := range unit.attacks {
 		attacks[i] = attack.serialize()
@@ -44,6 +44,10 @@ func (unit *unit) serialize(loc location) *api.UnitStruct {
 		CanAttack: unit.canAttack,
 		Attacks:   attacks,
 		Armor:     unit.armor.serialize()}
+}
+
+func (unit *unit) GetId() int {
+	return unit.id
 }
 
 func (unit *unit) turnReset() {

@@ -2,6 +2,7 @@ package request_handler
 
 import (
 	"api"
+	"fmt"
 	"engine/game_engine"
 	//"github.com/Tactique/golib/logger"
 )
@@ -16,19 +17,55 @@ func NewGame(request api.NewRequest) (*Game, error) {
 }
 
 func (game *Game) ViewWorld(playerId int, request api.ViewWorldRequest) (*api.ViewWorldResponse, error) {
-	return game.world.ViewWorld(playerId)
+	terrain, err := game.ViewTerrain(playerId, api.ViewTerrainRequest{})
+	if err != nil {
+		return nil, err
+	}
+	players, err := game.ViewPlayers(playerId, api.ViewPlayersRequest{})
+	if err != nil {
+		return nil, err
+	}
+	units, err := game.ViewUnits(playerId, api.ViewUnitsRequest{})
+	if err != nil {
+		return nil, err
+	}
+	return &api.ViewWorldResponse{
+		TerrainResponse: terrain,
+		UnitsResponse:   units,
+		PlayersResponse: players}, nil
 }
 
 func (game *Game) ViewTerrain(playerId int, request api.ViewTerrainRequest) (*api.ViewTerrainResponse, error) {
-	return game.world.ViewTerrain(playerId)
+	terrain := game.world.GetTerrain()
+	terrainInts := make([][]int, len(terrain))
+	for i, t := range terrain {
+		thoriz := make([]int, len(t))
+		for j, t_ := range t {
+			thoriz[j] = int(t_)
+		}
+		terrainInts[i] = thoriz
+	}
+	return &api.ViewTerrainResponse{
+		Terrain: terrainInts}, nil
 }
 
 func (game *Game) ViewPlayers(playerId int, request api.ViewPlayersRequest) (*api.ViewPlayersResponse, error) {
-	return game.world.ViewPlayers(playerId)
+	players := make(map[string]*api.PlayerStruct, game.world.GetNumPlayers())
+	for _, player := range game.world.GetPlayers() {
+		players[fmt.Sprintf("%d", player.GetPlayerId)] = player.Serialize()
+	}
+	return &api.ViewPlayersResponse{
+		Players:   players,
+		TurnOwner: int(game.world.GetTurnOwner().GetNation())}, nil
 }
 
 func (game *Game) ViewUnits(playerId int, request api.ViewUnitsRequest) (*api.ViewUnitsResponse, error) {
-	return game.world.ViewUnits(playerId)
+	units := make(map[string]*api.UnitStruct, 0)
+	for loc, unit := range game.world.GetUnits() {
+		units[fmt.Sprintf("%d", unit.GetId())] = unit.Serialize(loc)
+	}
+	return &api.ViewUnitsResponse{
+		Units: units}, nil
 }
 
 func (game *Game) MoveUnit(playerId int, request api.MoveRequest) (*api.MoveResponse, error) {
