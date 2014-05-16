@@ -52,7 +52,7 @@ func (game *Game) ViewTerrain(playerId int, request api.ViewTerrainRequest) (*ap
 func (game *Game) ViewPlayers(playerId int, request api.ViewPlayersRequest) (*api.ViewPlayersResponse, error) {
 	players := make(map[string]*api.PlayerStruct, game.world.GetNumPlayers())
 	for _, player := range game.world.GetPlayers() {
-		players[fmt.Sprintf("%d", player.GetPlayerId)] = player.Serialize()
+		players[fmt.Sprintf("%d", player.GetPlayerId())] = player.Serialize()
 	}
 	return &api.ViewPlayersResponse{
 		Players:   players,
