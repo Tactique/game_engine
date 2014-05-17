@@ -8,14 +8,14 @@ import (
 )
 
 type RequestHandler struct {
-	sessionGame *Game
-	gameRequest map[string]func([]byte, int, *Game) []byte
+	sessionGameWrapper *GameWrapper
+	gameRequest map[string]func([]byte, int, *GameWrapper) []byte
 }
 
 func NewRequestHandler() *RequestHandler {
 	return &RequestHandler{
-		sessionGame: nil,
-		gameRequest: map[string]func([]byte, int, *Game) []byte{
+		sessionGameWrapper: nil,
+		gameRequest: map[string]func([]byte, int, *GameWrapper) []byte{
 			api.COMMAND_EXIT:         exitRequest,
 			api.COMMAND_MOVE:         moveRequest,
 			api.COMMAND_TURN:         endTurnRequest,
@@ -29,11 +29,11 @@ func NewRequestHandler() *RequestHandler {
 func (handler *RequestHandler) HandleRequest(request []byte) []byte {
 	command, requestJson := splitOnce(request)
 	logger.Infof("Got command %s and request json %s", string(command), string(requestJson))
-	if handler.sessionGame == nil {
+	if handler.sessionGameWrapper == nil {
 		if string(command) == api.COMMAND_NEW {
 			response, game := newRequest(requestJson)
-			handler.sessionGame = game
-			logger.Infof("After new game request, game is now %t nil", (handler.sessionGame == nil))
+			handler.sessionGameWrapper = game
+			logger.Infof("After new game request, game is now %t nil", (handler.sessionGameWrapper == nil))
 			return buildResponse(command, response)
 		} else {
 			return buildResponse(command, respondUnknownRequest("Need new game request"))
@@ -48,7 +48,7 @@ func (handler *RequestHandler) HandleRequest(request []byte) []byte {
 				return buildResponse(command, respondMalformed("playerId not an int"))
 			}
 			logger.Infof("request for playerId %d", playerIdInt)
-			response := fun(requestJsonNoPlayerId, playerIdInt, handler.sessionGame)
+			response := fun(requestJsonNoPlayerId, playerIdInt, handler.sessionGameWrapper)
 			return buildResponse(command, response)
 		} else {
 			logger.Warnf("Unknown Command %s", string(command))

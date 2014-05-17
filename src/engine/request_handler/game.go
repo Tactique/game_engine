@@ -4,28 +4,29 @@ import (
 	"api"
 	"fmt"
 	"engine/game"
-	//"github.com/Tactique/golib/logger"
+	"errors"
+	"github.com/Tactique/golib/logger"
 )
 
-type Game struct {
+type GameWrapper struct {
 	world *game.World
 }
 
-func NewGame(request api.NewRequest) (*Game, error) {
+func NewGameWrapper(request api.NewRequest) (*GameWrapper, error) {
 	world, err := game.NewWorld(request.Uids, request.Debug)
-	return &Game{world: world}, err
+	return &GameWrapper{world: world}, err
 }
 
-func (game *Game) ViewWorld(playerId int, request api.ViewWorldRequest) (*api.ViewWorldResponse, error) {
-	terrain, err := game.ViewTerrain(playerId, api.ViewTerrainRequest{})
+func (gameWrapper *GameWrapper) ViewWorld(playerId int, request api.ViewWorldRequest) (*api.ViewWorldResponse, error) {
+	terrain, err := gameWrapper.ViewTerrain(playerId, api.ViewTerrainRequest{})
 	if err != nil {
 		return nil, err
 	}
-	players, err := game.ViewPlayers(playerId, api.ViewPlayersRequest{})
+	players, err := gameWrapper.ViewPlayers(playerId, api.ViewPlayersRequest{})
 	if err != nil {
 		return nil, err
 	}
-	units, err := game.ViewUnits(playerId, api.ViewUnitsRequest{})
+	units, err := gameWrapper.ViewUnits(playerId, api.ViewUnitsRequest{})
 	if err != nil {
 		return nil, err
 	}
@@ -35,8 +36,8 @@ func (game *Game) ViewWorld(playerId int, request api.ViewWorldRequest) (*api.Vi
 		PlayersResponse: players}, nil
 }
 
-func (game *Game) ViewTerrain(playerId int, request api.ViewTerrainRequest) (*api.ViewTerrainResponse, error) {
-	terrain := game.world.GetTerrain()
+func (gameWrapper *GameWrapper) ViewTerrain(playerId int, request api.ViewTerrainRequest) (*api.ViewTerrainResponse, error) {
+	terrain := gameWrapper.world.GetTerrain()
 	terrainInts := make([][]int, len(terrain))
 	for i, t := range terrain {
 		thoriz := make([]int, len(t))
@@ -49,33 +50,82 @@ func (game *Game) ViewTerrain(playerId int, request api.ViewTerrainRequest) (*ap
 		Terrain: terrainInts}, nil
 }
 
-func (game *Game) ViewPlayers(playerId int, request api.ViewPlayersRequest) (*api.ViewPlayersResponse, error) {
-	players := make(map[string]*api.PlayerStruct, game.world.GetNumPlayers())
-	for _, player := range game.world.GetPlayers() {
+func (gameWrapper *GameWrapper) ViewPlayers(playerId int, request api.ViewPlayersRequest) (*api.ViewPlayersResponse, error) {
+	players := make(map[string]*api.PlayerStruct, gameWrapper.world.GetNumPlayers())
+	for _, player := range gameWrapper.world.GetPlayers() {
 		players[fmt.Sprintf("%d", player.GetPlayerId())] = player.Serialize()
 	}
 	return &api.ViewPlayersResponse{
 		Players:   players,
-		TurnOwner: int(game.world.GetTurnOwner().GetNation())}, nil
+		TurnOwner: int(gameWrapper.world.GetTurnOwner().GetNation())}, nil
 }
 
-func (game *Game) ViewUnits(playerId int, request api.ViewUnitsRequest) (*api.ViewUnitsResponse, error) {
+func (gameWrapper *GameWrapper) ViewUnits(playerId int, request api.ViewUnitsRequest) (*api.ViewUnitsResponse, error) {
 	units := make(map[string]*api.UnitStruct, 0)
-	for loc, unit := range game.world.GetUnits() {
+	for loc, unit := range gameWrapper.world.GetUnits() {
 		units[fmt.Sprintf("%d", unit.GetId())] = unit.Serialize(loc)
 	}
 	return &api.ViewUnitsResponse{
 		Units: units}, nil
 }
 
-func (game *Game) MoveUnit(playerId int, request api.MoveRequest) (*api.MoveResponse, error) {
-	return game.world.MoveUnit(playerId, request.Move)
+func (gameWrapper *GameWrapper) MoveUnit(playerId int, request api.MoveRequest) (*api.MoveResponse, error) {
+	player, err := gameWrapper.world.GetAndVerifyTurnOwner(playerId)
+	if err != nil {
+		return nil, err
+	}
+	locations := make([]game.Location, len(request.Move))
+	for i, location := range request.Move {
+		locations[i] = game.LocationFromRequest(location)
+	}
+	validError := gameWrapper.verifyValidMove(request.UnitId, player, locations)
+	if validError != nil {
+		return nil, validError
+	}
+	end := len(locations)
+	err = gameWrapper.verifiedMoveUnit(request.UnitId, locations[0], locations[end-1])
+	if err != nil {
+		return nil, err
+	}
+	return &api.MoveResponse{
+		Move: request.Move,
+		UnitId: request.UnitId}, nil
 }
 
-func (game *Game) Attack(playerId int, request api.AttackRequest) (*api.AttackResponse, error) {
-	return game.world.Attack(playerId, request.Attacker, request.AttackIndex, request.Target)
+func (gameWrapper *GameWrapper) verifyValidMove(unitId int, player *game.Player, locations []game.Location) error {
+	if len(locations) < 1 {
+		message := "must supply more than zero locations"
+		logger.Warnf(message)
+		return errors.New(message)
+	}
+
+	tiles := make([]game.Terrain, len(locations))
+	terrain := gameWrapper.world.GetTerrain()
+	for i, location := range locations {
+		tiles[i] = terrain[location.GetX()][location.GetY()]
+	}
+	for _, location := range locations[1:] {
+		err := gameWrapper.world.IsUnitAtLocation(location)
+		if err != nil {
+			logger.Warn(err)
+			return errors.New(fmt.Sprintf("Cannot pass through units at (%d, %d)", location.GetX(), location.GetY()))
+		}
+	}
+	unit, err := gameWrapper.world.GetAndVerifyOwnedUnit(player, locations[0])
+	if err != nil {
+		return err
+	}
+	return game.ValidMove(unit.GetMovement().GetDistance(), unit.GetMovement(), tiles, locations)
 }
 
-func (game *Game) EndTurn(playerId int, request api.EndTurnRequest) (*api.EndTurnResponse, error) {
-	return game.world.EndTurn(playerId)
+func (gameWrapper *GameWrapper) verifiedMoveUnit(unitId int, start game.Location, end game.Location) error {
+	return gameWrapper.world.MoveUnitFromTo(unitId, start, end)
+}
+
+func (gameWrapper *GameWrapper) Attack(playerId int, request api.AttackRequest) (*api.AttackResponse, error) {
+	return gameWrapper.world.Attack(playerId, request.Attacker, request.AttackIndex, request.Target)
+}
+
+func (gameWrapper *GameWrapper) EndTurn(playerId int, request api.EndTurnRequest) (*api.EndTurnResponse, error) {
+	return gameWrapper.world.EndTurn(playerId)
 }
