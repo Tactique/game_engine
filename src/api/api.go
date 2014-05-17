@@ -49,10 +49,12 @@ type ViewPlayersResponse struct {
 }
 
 type MoveRequest struct {
+	UnitId int `json:"unitId"`
 	Move []*LocationStruct `json:"move"`
 }
 
 type MoveResponse struct {
+	UnitId int `json:"unitId"`
 	Move []*LocationStruct `json:"move"`
 }
 
