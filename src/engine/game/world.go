@@ -151,8 +151,8 @@ func (world *World) verifyOwnedUnit(player *Player, unit *Unit) error {
 	}
 }
 
-func (world *World) GetAndVerifyOwnedUnit(player *Player, location Location) (*Unit, error) {
-	unit, err := world.GetUnitAtLocation(location)
+func (world *World) GetAndVerifyOwnedUnit(player *Player, unitId int) (*Unit, error) {
+	unit, err := world.GetUnitFromId(unitId)
 	if err != nil {
 		return nil, err
 	}
@@ -231,32 +231,6 @@ func (world *World) MoveUnitFromTo(unitId int, start Location, end Location) err
 		delete(world.unitMap, start)
 		return nil
 	}
-}
-
-func (world *World) Attack(
-	playerId int, attacker *api.LocationStruct,
-	attackIndex int, target *api.LocationStruct) (*api.AttackResponse, error) {
-	player, err := world.GetAndVerifyTurnOwner(playerId)
-	if err != nil {
-		return nil, err
-	}
-	attackingUnit, err := world.GetAndVerifyOwnedUnit(player, LocationFromRequest(attacker))
-	if err != nil {
-		return nil, err
-	}
-	defendingUnit, err := world.GetUnitAtLocation(LocationFromRequest(target))
-	if err != nil {
-		return nil, err
-	}
-	alive, err := damageUnit(attackingUnit, attackIndex, defendingUnit)
-	// TODO When a unit is dead mark is as such
-	logger.Errorf("unit is %s (alive)", alive)
-	if err != nil {
-		return nil, err
-	}
-	return &api.AttackResponse{
-		Attacker: attacker, AttackIndex: attackIndex,
-		Target: target}, nil
 }
 
 func (world *World) EndTurn(playerId int) (*api.EndTurnResponse, error) {

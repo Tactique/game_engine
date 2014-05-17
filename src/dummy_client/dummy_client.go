@@ -24,7 +24,7 @@ var BuiltMoveRequest []byte = PanicSerialize("move:26", &api.MoveRequest{
 		&api.LocationStruct{X: 0, Y: 1}}})
 
 var BuiltAttackRequest []byte = PanicSerialize("attack:26", &api.AttackRequest{
-	Attacker:    &api.LocationStruct{X: 0, Y: 1},
+	Attacker:    0,
 	AttackIndex: 0,
 	Target:      &api.LocationStruct{X: 0, Y: 3}})
 

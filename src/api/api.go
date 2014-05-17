@@ -49,23 +49,23 @@ type ViewPlayersResponse struct {
 }
 
 type MoveRequest struct {
-	UnitId int `json:"unitId"`
-	Move []*LocationStruct `json:"move"`
+	UnitId int               `json:"unitId"`
+	Move   []*LocationStruct `json:"move"`
 }
 
 type MoveResponse struct {
-	UnitId int `json:"unitId"`
-	Move []*LocationStruct `json:"move"`
+	UnitId int               `json:"unitId"`
+	Move   []*LocationStruct `json:"move"`
 }
 
 type AttackRequest struct {
-	Attacker    *LocationStruct `json:"attacker"`
+	Attacker    int             `json:"attacker"`
 	AttackIndex int             `json:"attackIndex"`
 	Target      *LocationStruct `json:"target"`
 }
 
 type AttackResponse struct {
-	Attacker    *LocationStruct `json:"attacker"`
+	Attacker    int             `json:"attacker"`
 	AttackIndex int             `json:"attackIndex"`
 	Target      *LocationStruct `json:"target"`
 }

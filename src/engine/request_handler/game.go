@@ -111,7 +111,7 @@ func (gameWrapper *GameWrapper) verifyValidMove(unitId int, player *game.Player,
 			return errors.New(fmt.Sprintf("Cannot pass through units at (%d, %d)", location.GetX(), location.GetY()))
 		}
 	}
-	unit, err := gameWrapper.world.GetAndVerifyOwnedUnit(player, locations[0])
+	unit, err := gameWrapper.world.GetAndVerifyOwnedUnit(player, unitId)
 	if err != nil {
 		return err
 	}
@@ -123,7 +123,27 @@ func (gameWrapper *GameWrapper) verifiedMoveUnit(unitId int, start game.Location
 }
 
 func (gameWrapper *GameWrapper) Attack(playerId int, request api.AttackRequest) (*api.AttackResponse, error) {
-	return gameWrapper.world.Attack(playerId, request.Attacker, request.AttackIndex, request.Target)
+	player, err := gameWrapper.world.GetAndVerifyTurnOwner(playerId)
+	if err != nil {
+		return nil, err
+	}
+	attackingUnit, err := gameWrapper.world.GetAndVerifyOwnedUnit(player, request.Attacker)
+	if err != nil {
+		return nil, err
+	}
+	defendingUnit, err := gameWrapper.world.GetUnitAtLocation(game.LocationFromRequest(request.Target))
+	if err != nil {
+		return nil, err
+	}
+	alive, err := game.DamageUnit(attackingUnit, request.AttackIndex, defendingUnit)
+	// TODO When a unit is dead mark is as such
+	logger.Errorf("unit is %s (alive)", alive)
+	if err != nil {
+		return nil, err
+	}
+	return &api.AttackResponse{
+		Attacker: request.Attacker, AttackIndex: request.AttackIndex,
+		Target: request.Target}, nil
 }
 
 func (gameWrapper *GameWrapper) EndTurn(playerId int, request api.EndTurnRequest) (*api.EndTurnResponse, error) {
