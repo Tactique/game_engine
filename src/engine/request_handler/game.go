@@ -2,9 +2,9 @@ package request_handler
 
 import (
 	"api"
-	"fmt"
 	"engine/game"
 	"errors"
+	"fmt"
 	"github.com/Tactique/golib/logger"
 )
 
@@ -88,7 +88,7 @@ func (gameWrapper *GameWrapper) MoveUnit(playerId int, request api.MoveRequest) 
 		return nil, err
 	}
 	return &api.MoveResponse{
-		Move: request.Move,
+		Move:   request.Move,
 		UnitId: request.UnitId}, nil
 }
 

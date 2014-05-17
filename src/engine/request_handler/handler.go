@@ -9,7 +9,7 @@ import (
 
 type RequestHandler struct {
 	sessionGameWrapper *GameWrapper
-	gameRequest map[string]func([]byte, int, *GameWrapper) []byte
+	gameRequest        map[string]func([]byte, int, *GameWrapper) []byte
 }
 
 func NewRequestHandler() *RequestHandler {

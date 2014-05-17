@@ -164,7 +164,7 @@ func (world *World) AddUnit(
 	health int, attacks []*attack, armor *armor, movement *Movement) error {
 	logger.Infof("Adding unit at (x: %d, y: %d)", location.x, location.y)
 	unitId := world.nextUnitId
-	_, okUnitLocation:= world.unitMap[location]
+	_, okUnitLocation := world.unitMap[location]
 	_, okUnitId := world.units[unitId]
 	if !(okUnitLocation && okUnitId) {
 		newUnit := NewUnit(
@@ -234,8 +234,8 @@ func (world *World) MoveUnitFromTo(unitId int, start Location, end Location) err
 }
 
 func (world *World) Attack(
-		playerId int, attacker *api.LocationStruct,
-		attackIndex int, target *api.LocationStruct) (*api.AttackResponse, error) {
+	playerId int, attacker *api.LocationStruct,
+	attackIndex int, target *api.LocationStruct) (*api.AttackResponse, error) {
 	player, err := world.GetAndVerifyTurnOwner(playerId)
 	if err != nil {
 		return nil, err
