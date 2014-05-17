@@ -147,5 +147,17 @@ func (gameWrapper *GameWrapper) Attack(playerId int, request api.AttackRequest) 
 }
 
 func (gameWrapper *GameWrapper) EndTurn(playerId int, request api.EndTurnRequest) (*api.EndTurnResponse, error) {
-	return gameWrapper.world.EndTurn(playerId)
+	err := gameWrapper.world.VerifyTurnOwner(playerId)
+	if err != nil {
+		return nil, err
+	}
+	gameWrapper.world.StepTurnOwner()
+	currentOwner := gameWrapper.world.GetTurnOwner()
+	units := make(map[string]*api.UnitStruct, 0)
+	for loc, unit := range gameWrapper.world.GetOwnedUnits(currentOwner) {
+		units[fmt.Sprintf("%d", unit.GetId())] = unit.Serialize(loc)
+	}
+	return &api.EndTurnResponse{
+		PlayerId:     playerId,
+		ChangedUnits: units}, nil
 }

@@ -1,7 +1,6 @@
 package game
 
 import (
-	"api"
 	"errors"
 	"fmt"
 	"github.com/Tactique/golib/logger"
@@ -95,15 +94,19 @@ func (world *World) getPlayer(playerId int) (*Player, error) {
 	return nil, errors.New("Player not playing")
 }
 
-func (world *World) verifyTurnOwner(playerId int) error {
+func (world *World) VerifyTurnOwner(playerId int) error {
 	if playerId != world.players[world.turnOwner].playerId {
 		return errors.New("Not the turn owner")
 	}
 	return nil
 }
 
+func (world *World) GetTurnOwner() *Player {
+	return world.players[world.turnOwner]
+}
+
 func (world *World) GetAndVerifyTurnOwner(playerId int) (*Player, error) {
-	err := world.verifyTurnOwner(playerId)
+	err := world.VerifyTurnOwner(playerId)
 	if err != nil {
 		return nil, err
 	}
@@ -188,6 +191,16 @@ func (world *World) GetUnits() map[Location]Unit {
 	return copiedUnitMap
 }
 
+func (world *World) GetOwnedUnits(player *Player) map[Location]Unit {
+	copiedUnitMap := make(map[Location]Unit, 0)
+	for loc, unit := range world.unitMap {
+		if unit.nation == player.nation {
+			copiedUnitMap[loc] = *unit
+		}
+	}
+	return copiedUnitMap
+}
+
 func (world *World) GetTerrain() [][]Terrain {
 	return world.terrain
 }
@@ -202,10 +215,6 @@ func (world *World) GetPlayers() []Player {
 
 func (world *World) GetNumPlayers() int {
 	return world.numPlayers
-}
-
-func (world *World) GetTurnOwner() *Player {
-	return world.players[world.turnOwner]
 }
 
 func (world *World) MoveUnitFromTo(unitId int, start Location, end Location) error {
@@ -233,26 +242,19 @@ func (world *World) MoveUnitFromTo(unitId int, start Location, end Location) err
 	}
 }
 
-func (world *World) EndTurn(playerId int) (*api.EndTurnResponse, error) {
-	err := world.verifyTurnOwner(playerId)
-	if err != nil {
-		return nil, err
-	}
+func (world *World) StepTurnOwner() {
 	nextOwner := world.turnOwner + 1
 	if nextOwner >= world.numPlayers {
 		world.turnOwner = 0
 	} else {
 		world.turnOwner = nextOwner
 	}
-	currentOwner := world.players[world.turnOwner]
-	units := make(map[string]*api.UnitStruct, 0)
-	for loc, unit := range world.unitMap {
-		if unit.nation == currentOwner.nation {
+}
+
+func (world *World) ResetAllUnits(player *Player) {
+	for _, unit := range world.unitMap {
+		if unit.nation == player.nation {
 			unit.turnReset()
-			units[fmt.Sprintf("%d", unit.id)] = unit.Serialize(loc)
 		}
 	}
-	return &api.EndTurnResponse{
-		PlayerId:     playerId,
-		ChangedUnits: units}, nil
 }
