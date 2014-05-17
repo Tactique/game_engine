@@ -1,3 +1,3 @@
 package game
 
-type terrain int
+type Terrain int

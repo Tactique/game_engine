@@ -4,26 +4,26 @@ import (
 	"api"
 )
 
-type player struct {
+type Player struct {
 	playerId int
 	nation   nation
 	team     team
 }
 
-func newPlayer(playerId int, nation nation, team team) *player {
-	return &player{playerId: playerId, nation: nation, team: team}
+func NewPlayer(playerId int, nation nation, team team) *Player {
+	return &Player{playerId: playerId, nation: nation, team: team}
 }
 
-func (player *player) Serialize() *api.PlayerStruct {
+func (player *Player) Serialize() *api.PlayerStruct {
 	return &api.PlayerStruct{
 		Nation: int(player.nation),
 		Team:   int(player.team)}
 }
 
-func (player *player) GetPlayerId() int {
+func (player *Player) GetPlayerId() int {
 	return player.playerId
 }
 
-func (player *player) GetNation() int {
+func (player *Player) GetNation() int {
 	return int(player.nation)
 }

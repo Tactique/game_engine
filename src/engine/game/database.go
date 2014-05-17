@@ -16,16 +16,16 @@ func newDatabase() (*sql.DB, error) {
 	return sql.Open("sqlite3", dbPath)
 }
 
-func loadTerrains(db *sql.DB) ([]terrain, error) {
+func loadTerrains(db *sql.DB) ([]Terrain, error) {
 	query := "select cellType from cell;"
-	terrains := make([]terrain, 0)
+	terrains := make([]Terrain, 0)
 	rows, err := db.Query(query)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 	for rows.Next() {
-		var terrain terrain
+		var terrain Terrain
 		err := rows.Scan(&terrain)
 		if err != nil {
 			return nil, err
@@ -56,7 +56,7 @@ func loadNations(db *sql.DB) ([]nation, error) {
 	return nations, nil
 }
 
-func loadUnit(db *sql.DB, name string) (int, []*attack, *armor, *movement, error) {
+func loadUnit(db *sql.DB, name string) (int, []*attack, *armor, *Movement, error) {
 	query := fmt.Sprintf("select health, attack_oneId, armorId, movementId from unit where name = \"%s\";", name)
 	rows, err := db.Query(query)
 	if err != nil {
@@ -185,7 +185,7 @@ func loadArmorType(db *sql.DB, armorType_id int) (armorType, error) {
 	return armorType(dbArmorType), nil
 }
 
-func loadMovement(db *sql.DB, movement_id int) (*movement, error) {
+func loadMovement(db *sql.DB, movement_id int) (*Movement, error) {
 	query := fmt.Sprintf("select speedMapId, name, distance from movement where id = %d;", movement_id)
 	rows, err := db.Query(query)
 	if err != nil {
@@ -208,10 +208,10 @@ func loadMovement(db *sql.DB, movement_id int) (*movement, error) {
 	if err != nil {
 		return nil, err
 	}
-	return newMovement(name, distance, speedMap), nil
+	return NewMovement(name, distance, speedMap), nil
 }
 
-func loadSpeedMap(db *sql.DB, speedMap_id int) (map[terrain]multiplier, error) {
+func loadSpeedMap(db *sql.DB, speedMap_id int) (map[Terrain]multiplier, error) {
 	query := fmt.Sprintf("select speeds from speedMap where id = %d;", speedMap_id)
 	rows, err := db.Query(query)
 	if err != nil {
@@ -233,13 +233,13 @@ func loadSpeedMap(db *sql.DB, speedMap_id int) (map[terrain]multiplier, error) {
 	if err != nil {
 		return nil, err
 	}
-	speedMap := make(map[terrain]multiplier, len(stringSpeedMap))
+	speedMap := make(map[Terrain]multiplier, len(stringSpeedMap))
 	for cellType, cost := range stringSpeedMap {
 		intCell, err := strconv.Atoi(cellType)
 		if err != nil {
 			return nil, err
 		}
-		speedMap[terrain(intCell)] = multiplier(cost)
+		speedMap[Terrain(intCell)] = multiplier(cost)
 	}
 	return speedMap, nil
 }

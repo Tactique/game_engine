@@ -4,20 +4,28 @@ import (
 	"api"
 )
 
-type location struct {
+type Location struct {
 	x int
 	y int
 }
 
-func newLocation(x int, y int) location {
-	return location{x: x, y: y}
+func NewLocation(x int, y int) Location {
+	return Location{x: x, y: y}
 }
 
-func locationFromRequest(requestLocation *api.LocationStruct) location {
-	return newLocation(requestLocation.X, requestLocation.Y)
+func LocationFromRequest(requestLocation *api.LocationStruct) Location {
+	return NewLocation(requestLocation.X, requestLocation.Y)
 }
 
-func (location location) serialize() *api.LocationStruct {
+func (location Location) GetX() int {
+	return location.x
+}
+
+func (location Location) GetY() int {
+	return location.y
+}
+
+func (location Location) serialize() *api.LocationStruct {
 	return &api.LocationStruct{
 		X: location.x,
 		Y: location.y}

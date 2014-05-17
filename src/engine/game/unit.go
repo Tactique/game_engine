@@ -6,21 +6,21 @@ import (
 	"github.com/Tactique/golib/logger"
 )
 
-type unit struct {
+type Unit struct {
 	name      string
 	id        int
 	health    int
 	maxHealth int
 	nation    nation
-	movement  *movement
+	movement  *Movement
 	canMove   bool
 	attacks   []*attack
 	armor     *armor
 	canAttack bool
 }
 
-func newUnit(name string, id int, nation nation, health int, attacks []*attack, armor *armor, movement *movement) *unit {
-	return &unit{
+func NewUnit(name string, id int, nation nation, health int, attacks []*attack, armor *armor, movement *Movement) *Unit {
+	return &Unit{
 		name: name, id: id, health: health, maxHealth: health,
 		nation:   nation,
 		movement: movement, canMove: true,
@@ -28,7 +28,7 @@ func newUnit(name string, id int, nation nation, health int, attacks []*attack, 
 		armor: armor}
 }
 
-func (unit *unit) Serialize(loc location) *api.UnitStruct {
+func (unit *Unit) Serialize(loc Location) *api.UnitStruct {
 	attacks := make([]*api.AttackStruct, len(unit.attacks))
 	for i, attack := range unit.attacks {
 		attacks[i] = attack.serialize()
@@ -46,16 +46,20 @@ func (unit *unit) Serialize(loc location) *api.UnitStruct {
 		Armor:     unit.armor.serialize()}
 }
 
-func (unit *unit) GetId() int {
+func (unit *Unit) GetId() int {
 	return unit.id
 }
 
-func (unit *unit) turnReset() {
+func (unit *Unit) GetMovement() *Movement {
+	return unit.movement
+}
+
+func (unit *Unit) turnReset() {
 	unit.canMove = true
 	unit.canAttack = true
 }
 
-func (unit *unit) receiveDamage(delta int) (bool, error) {
+func (unit *Unit) receiveDamage(delta int) (bool, error) {
 	logger.Debug("%s taking damage", unit.name)
 	if delta < 0 {
 		message := "Cannot receive a negative amount of damage"
@@ -65,7 +69,7 @@ func (unit *unit) receiveDamage(delta int) (bool, error) {
 	return unit.changeHealth(unit.health - delta), nil
 }
 
-func (unit *unit) changeHealth(newHealth int) bool {
+func (unit *Unit) changeHealth(newHealth int) bool {
 	logger.Infof("Unit %s is being attacked with %d health", unit.name, unit.health)
 	unit.health = newHealth
 	if unit.health > unit.maxHealth {

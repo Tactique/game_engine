@@ -11,7 +11,7 @@ func calculateDamage(attack *attack, armor *armor) int {
 	return damage
 }
 
-func damageUnit(attacker *unit, index int, defender *unit) (bool, error) {
+func damageUnit(attacker *Unit, index int, defender *Unit) (bool, error) {
 	if len(attacker.attacks) > index {
 		alive, err := defender.receiveDamage(calculateDamage(attacker.attacks[index], defender.armor))
 		logger.Info("Defender is %t still alive with %d health", alive, defender.health)

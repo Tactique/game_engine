@@ -14,7 +14,7 @@ func getDistance(first int, second int) int {
 	}
 }
 
-func assertAllTilesTouch(locations []location) error {
+func assertAllTilesTouch(locations []Location) error {
 	oldLoc := locations[0]
 	for _, loc := range locations[1:] {
 		distance := (getDistance(loc.x, oldLoc.x) + getDistance(loc.y, oldLoc.y))
@@ -29,7 +29,7 @@ func assertAllTilesTouch(locations []location) error {
 	return nil
 }
 
-func validMove(moves int, movementType *movement, tiles []terrain, locations []location) error {
+func ValidMove(moves int, movementType *Movement, tiles []Terrain, locations []Location) error {
 	if len(locations) < 2 {
 		message := "Need at least two tiles, a start and an end"
 		logger.Infof(message+" (got %d)", len(locations))
