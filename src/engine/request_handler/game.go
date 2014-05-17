@@ -3,16 +3,16 @@ package request_handler
 import (
 	"api"
 	"fmt"
-	"engine/game_engine"
+	"engine/game"
 	//"github.com/Tactique/golib/logger"
 )
 
 type Game struct {
-	world *game_engine.World
+	world *game.World
 }
 
 func NewGame(request api.NewRequest) (*Game, error) {
-	world, err := game_engine.NewWorld(request.Uids, request.Debug)
+	world, err := game.NewWorld(request.Uids, request.Debug)
 	return &Game{world: world}, err
 }
 
